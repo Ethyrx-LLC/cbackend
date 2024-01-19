@@ -6,6 +6,7 @@ const ListingSchema = new Schema({
   user: { type: Schema.Types.ObjectId, ref: "User" },
   title: { type: String, required: true },
   content: { type: String, required: true },
+  category: { type: Schema.Types.ObjectId, ref: "Category" },
   likes: Number,
   comments: [
     {
