@@ -8,15 +8,7 @@ const ListingSchema = new Schema({
   content: { type: String, required: true },
   category: { type: Schema.Types.ObjectId, ref: "Category" },
   likes: Number,
-  comments: [
-    {
-      user: { type: Schema.Types.ObjectId, ref: "User" },
-      text: { type: String, required: true },
-      likes: Number,
-      dislikes: Number,
-      createdAt: { type: Date, default: Date.now },
-    },
-  ],
+  comments: [{ type: Schema.Types.ObjectId, ref: "Comments" }],
   urgency: Number,
   views: Number,
   createdAt: { type: Date, default: Date.now },
