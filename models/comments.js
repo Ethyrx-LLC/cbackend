@@ -4,6 +4,7 @@ const Schema = mongoose.Schema;
 const CommentsSchema = new Schema({
   user: { type: Schema.Types.ObjectId, ref: "User" },
   text: { type: String, required: true },
+  listing: { type: Schema.Types.ObjectId, ref: "Listing" },
   likes: Number,
   dislikes: Number,
   createdAt: { type: Date, default: Date.now },
