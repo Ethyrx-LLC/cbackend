@@ -1,29 +1,24 @@
 require("dotenv").config;
 const jwt = require("jsonwebtoken");
 const User = require("../models/user");
-const cookie = require("cookie");
 const bcrypt = require("bcryptjs");
 const asyncHandler = require("express-async-handler");
 const { body, validationResult } = require("express-validator");
 
-exports.create_users_get = asyncHandler(async (req, res, next) => {
-  const user = User.find().populate("posts").exec();
+exports.users_get = asyncHandler(async (req, res, next) => {
+  const users = User.find().populate("posts").exec();
+  res.json({ users: users });
+});
+
+exports.user_get = asyncHandler(async (req, res, next) => {
+  const user = User.findById(req.params.id).populate("posts").exec();
   res.json({ user: user });
 });
+
 exports.create_users_post = [
-  body("first_name", "First name must be more than 1 letter")
-    .trim()
-    .isLength({ min: 1 })
-    .escape(),
-  body("last_name", "Last name must be more than 1 letter")
-    .trim()
-    .isLength({ min: 1 })
-    .escape(),
+  body("username", "Username must be more than 1 letter").trim().isLength({ min: 1 }).escape(),
   body("email", "Please use correct email form").trim().isEmail().escape(),
-  body("password", "Password must be more than 6 characters")
-    .trim()
-    .isLength({ min: 6 })
-    .escape(),
+  body("password", "Password must be more than 6 characters").trim().isLength({ min: 6 }).escape(),
   body("confirm_password", "Passwords are not matching")
     .trim()
     .custom((value, { req }) => {
@@ -31,6 +26,11 @@ exports.create_users_post = [
     }),
 
   asyncHandler(async (req, res, next) => {
+    const userExist = User.findOne({ username: req.body.username });
+
+    if (userExist) {
+      res.status(401).json({ message: "User already exists" });
+    }
     const errors = validationResult(req);
     bcrypt.hash(req.body.password, 10, async (err, hashedPassword) => {
       console.log("this works");
@@ -43,22 +43,21 @@ exports.create_users_post = [
       });
 
       if (!errors.isEmpty()) {
-        console.log(errors);
-        res.json({ error: errors.array() });
+        res.status(401).json({ error: errors.array() });
+      } else {
+        await user.save();
       }
-      await user.save();
     });
   }),
 ];
 
 exports.login_post = [
-  body("email", "Please use correct email form").trim().isEmail().escape(),
-  body("password", "Password must be more than 6 characters")
-    .trim()
-    .isLength({ min: 6 })
-    .escape(),
+  body("username", "Please enter correct username").trim().escape(),
+  body("password", "Password must be more than 6 characters").trim().isLength({ min: 6 }).escape(),
 
   asyncHandler(async (req, res, next) => {
+    const expirationDate = new Date();
+    expirationDate.setDate(expirationDate.getDate() + 7);
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
       res.status(403).res.json({ error: errors.array() });
@@ -68,15 +67,15 @@ exports.login_post = [
     });
     const match = await bcrypt.compare(req.body.password, user.password);
     console.log(match);
-    const accessToken = jwt.sign(
-      JSON.stringify(user),
-      process.env.TOKEN_SECRET
-    );
+    const accessToken = jwt.sign(JSON.stringify(user), process.env.TOKEN_SECRET);
     console.log(match);
     if (match) {
       res
         .status(200)
-        .cookie("token", accessToken)
+        .cookie("token", accessToken, {
+          httpOnly: true,
+          expires: expirationDate,
+        })
         .json({ message: "User Created" });
     } else {
       res.status("403").json("Please enter correct credentials");
