@@ -1,4 +1,4 @@
-require("dotenv").config;
+require("dotenv").config();
 const Listings = require("../models/listing");
 const asyncHandler = require("express-async-handler");
 const { body, validationResult } = require("express-validator");
@@ -12,9 +12,7 @@ exports.display_listings_all = asyncHandler(async (req, res, next) => {
 
 // Returns a specific listing based on ID
 exports.display_listing_detail = asyncHandler(async (req, res, next) => {
-  const listing = await Listings.findById(req.params.id)
-    .populate("user")
-    .exec();
+  const listing = await Listings.findById(req.params.id).populate("user").exec();
 
   if (listing === null) {
     res.status(404).json("Page not Found");
@@ -34,10 +32,7 @@ exports.create_listing_get = (req, res, next) => {
 };
 
 exports.create_listing_post = [
-  body("title", "Title must be more than 3 characters long")
-    .trim()
-    .isLength({ min: 3 })
-    .escape(),
+  body("title", "Title must be more than 3 characters long").trim().isLength({ min: 3 }).escape(),
   body("content", "Content must be more than 10 letters long")
     .trim()
     .isLength({ min: 10 })
