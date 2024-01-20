@@ -32,9 +32,7 @@ exports.create_users_post = [
 
   asyncHandler(async (req, res, next) => {
     const errors = validationResult(req);
-    const userObj = { ...req.body.credentials };
-    console.log(userObj);
-    bcrypt.hash(userObj.password, 10, async (err, hashedPassword) => {
+    bcrypt.hash(req.body.password, 10, async (err, hashedPassword) => {
       console.log("this works");
       const user = new User({
         first_name: req.body.first_name,
@@ -52,10 +50,6 @@ exports.create_users_post = [
     });
   }),
 ];
-
-exports.login_get = (req, res, next) => {
-  res.json({});
-};
 
 exports.login_post = [
   body("email", "Please use correct email form").trim().isEmail().escape(),
@@ -89,3 +83,7 @@ exports.login_post = [
     }
   }),
 ];
+
+exports.logout_post = (req, res, next) => {
+  res.status(200).clearCookie("token").json({ message: "Logged out" });
+};
