@@ -12,7 +12,15 @@ main().catch((err) => console.log(err));
 async function main() {
   await mongoose.connect(mongoDB);
 }
+app.use(cookieParser());
 app.use(logger("dev"));
+app.use(
+  cors({
+    origin: `http://localhost:3000`,
+    methods: `GET, POST, UPDATE, PATCH, DELETE`,
+    allowedHeaders: `Content-Type, Accepts, Authorization`,
+  })
+);
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
