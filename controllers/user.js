@@ -29,10 +29,7 @@ exports.create_users_post = [
   asyncHandler(async (req, res, next) => {
     const userExist = await User.findOne({ email: req.body.email });
 
-    if (userExist) {
-      res.status(401).json({ message: "User already exists" });
-      console.log(userExist);
-    } else {
+    if (userExist === null) {
       const errors = validationResult(req);
       bcrypt.hash(req.body.password, 10, async (err, hashedPassword) => {
         const user = new User({
@@ -48,6 +45,9 @@ exports.create_users_post = [
           await user.save();
         }
       });
+    } else {
+      res.status(401).json({ message: "User already exists" });
+      console.log(userExist);
     }
   }),
 ];
