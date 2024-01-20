@@ -27,7 +27,7 @@ exports.create_users_post = [
     }),
 
   asyncHandler(async (req, res, next) => {
-    const userExist = await User.findOne({ email: req.body.email });
+    const userExist = await User.findOne({ email: req.body.email }).exec();
 
     if (userExist === null) {
       const errors = validationResult(req);

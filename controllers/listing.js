@@ -86,17 +86,17 @@ exports.delete_listing_post = asyncHandler(async (req, res, next) => {
 
 exports.upvote_listing_post = asyncHandler(async (req, res, next) => {
   const token = req.token;
-  const listing = await Listings.findById(req.params.id);
+  const listing = await Listings.findById(req.params.id).exec();
   jwt.verify(token, KEY, async (err, authData) => {
     if (err) {
       res.status(401).json({ success: false, message: "Unauthorized" });
     } else {
       if (listing === null) {
-        res.json({ success: false, error: "No post found" });
+        res.status(403).json({ success: false, error: "No post found" });
       } else {
         listing.likes += 1;
         await listing.save();
-        res.json({ success: true, likes: listing.likes });
+        res.status(200).json({ success: true, likes: listing.likes });
       }
     }
   });
