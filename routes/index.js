@@ -14,7 +14,7 @@ router.delete("/listing-detail/:id/delete", authorize, listing_controller.delete
 router.put("/listing-detail/:id/upvote", authorize, listing_controller.upvote_listing_post);
 
 router.post("/user/create", user_controller.create_users_post);
-router.post("/user/login", user_controller.create_users_post);
+router.post("/user/login", user_controller.login_post);
 router.post("/user/logout", user_controller.logout_post);
 router.get("/users", user_controller.users_get);
 router.get("/user/:id", user_controller.user_get);

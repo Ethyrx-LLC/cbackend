@@ -3,7 +3,7 @@ const Listings = require("../models/listing");
 const asyncHandler = require("express-async-handler");
 const { body, validationResult } = require("express-validator");
 const jwt = require("jsonwebtoken");
-const KEY = process.env.SECRET_TOKEN;
+const KEY = process.env.TOKEN_SECRET;
 // Returns an array of listings
 exports.display_listings_all = asyncHandler(async (req, res, next) => {
   const listings = await Listings.find().populate("user").exec();
@@ -22,7 +22,8 @@ exports.display_listing_detail = asyncHandler(async (req, res, next) => {
 });
 
 exports.create_listing_get = (req, res, next) => {
-  jwt.verify(req.cookies.token, KEY, (err, authData) => {
+  const token = req.token;
+  jwt.verify(token, KEY, (err, authData) => {
     if (err) {
       res.json({ success: false, message: "User not logged in" });
     } else {
@@ -40,7 +41,8 @@ exports.create_listing_post = [
   body("category", "Please select a category").notEmpty(),
 
   asyncHandler(async (req, res, next) => {
-    jwt.verify(req.cookies.token, KEY, (err, authData) => {
+    const token = req.token;
+    jwt.verify(token, KEY, (err, authData) => {
       if (err) {
         res.status(401).json({ success: false, message: "Unauthorized" });
       } else {
@@ -66,8 +68,9 @@ exports.create_listing_post = [
 ];
 
 exports.delete_listing_post = asyncHandler(async (req, res, next) => {
+  const token = req.token;
   const listing = Listings.findById(req.params.id).exec();
-  jwt.verify(req.cookies.token, KEY, (err, authData) => {
+  jwt.verify(token, KEY, (err, authData) => {
     if (err) {
       res.status(401).json({ success: false, message: "Unauthorized" });
     } else {
@@ -82,8 +85,9 @@ exports.delete_listing_post = asyncHandler(async (req, res, next) => {
 });
 
 exports.upvote_listing_post = asyncHandler(async (req, res, next) => {
+  const token = req.token;
   const listing = await Listings.findById(req.params.id);
-  jwt.verify(req.cookies.token, KEY, (err, authData) => {
+  jwt.verify(token, KEY, (err, authData) => {
     if (err) {
       res.status(401).json({ success: false, message: "Unauthorized" });
     } else {

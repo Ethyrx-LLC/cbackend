@@ -4,6 +4,7 @@ const User = require("../models/user");
 const bcrypt = require("bcryptjs");
 const asyncHandler = require("express-async-handler");
 const { body, validationResult } = require("express-validator");
+const KEY = process.env.TOKEN_SECRET;
 
 exports.users_get = asyncHandler(async (req, res, next) => {
   const users = User.find().populate("posts").exec();
@@ -26,28 +27,28 @@ exports.create_users_post = [
     }),
 
   asyncHandler(async (req, res, next) => {
-    const userExist = User.findOne({ username: req.body.username });
+    const userExist = await User.findOne({ email: req.body.email });
 
     if (userExist) {
       res.status(401).json({ message: "User already exists" });
-    }
-    const errors = validationResult(req);
-    bcrypt.hash(req.body.password, 10, async (err, hashedPassword) => {
-      console.log("this works");
-      const user = new User({
-        first_name: req.body.first_name,
-        last_name: req.body.last_name,
-        email: req.body.email,
-        password: hashedPassword,
-        admin: false,
-      });
+      console.log(userExist);
+    } else {
+      const errors = validationResult(req);
+      bcrypt.hash(req.body.password, 10, async (err, hashedPassword) => {
+        const user = new User({
+          username: req.body.username,
+          email: req.body.email,
+          password: hashedPassword,
+          admin: false,
+        });
 
-      if (!errors.isEmpty()) {
-        res.status(401).json({ error: errors.array() });
-      } else {
-        await user.save();
-      }
-    });
+        if (!errors.isEmpty()) {
+          res.status(401).json({ error: errors.array() });
+        } else {
+          await user.save();
+        }
+      });
+    }
   }),
 ];
 
@@ -63,11 +64,11 @@ exports.login_post = [
       res.status(403).res.json({ error: errors.array() });
     }
     const user = await User.findOne({
-      email: req.body.email,
+      username: req.body.username,
     });
     const match = await bcrypt.compare(req.body.password, user.password);
     console.log(match);
-    const accessToken = jwt.sign(JSON.stringify(user), process.env.TOKEN_SECRET);
+    const accessToken = jwt.sign(JSON.stringify(user), KEY);
     console.log(match);
     if (match) {
       res
@@ -76,7 +77,7 @@ exports.login_post = [
           httpOnly: true,
           expires: expirationDate,
         })
-        .json({ message: "User Created" });
+        .json({ message: "User Logged in" });
     } else {
       res.status("403").json("Please enter correct credentials");
     }
