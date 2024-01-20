@@ -17,7 +17,7 @@ exports.display_listing_detail = asyncHandler(async (req, res, next) => {
   if (listing === null) {
     res.status(404).json("Page not Found");
   } else {
-    res.json({ success: true, listing: listing });
+    res.status(200).json({ success: true, listing: listing });
   }
 });
 
@@ -42,7 +42,7 @@ exports.create_listing_post = [
 
   asyncHandler(async (req, res, next) => {
     const token = req.token;
-    jwt.verify(token, KEY, (err, authData) => {
+    jwt.verify(token, KEY, async (err, authData) => {
       if (err) {
         res.status(401).json({ success: false, message: "Unauthorized" });
       } else {
@@ -50,7 +50,7 @@ exports.create_listing_post = [
       const errors = validationResult(req);
 
       const listing = new Listings({
-        user: authData.user.username,
+        user: authData.user,
         title: req.body.title,
         content: req.body.content,
         category: req.body.category,
@@ -60,8 +60,8 @@ exports.create_listing_post = [
       if (!errors.isEmpty()) {
         res.status(401).json({ success: false, error: errors.array() });
       } else {
-        listing.save();
-        res.status(200).json({ success: true });
+        await listing.save();
+        res.status(200).json({ success: true, listing: listing });
       }
     });
   }),
@@ -70,14 +70,14 @@ exports.create_listing_post = [
 exports.delete_listing_post = asyncHandler(async (req, res, next) => {
   const token = req.token;
   const listing = Listings.findById(req.params.id).exec();
-  jwt.verify(token, KEY, (err, authData) => {
+  jwt.verify(token, KEY, async (err, authData) => {
     if (err) {
       res.status(401).json({ success: false, message: "Unauthorized" });
     } else {
       if (listing === null) {
         res.json({ success: false, error: "No post found" });
       } else {
-        listing.deleteOne();
+        await listing.deleteOne();
         res.json({ success: true, error: "Post deleted" });
       }
     }
@@ -87,7 +87,7 @@ exports.delete_listing_post = asyncHandler(async (req, res, next) => {
 exports.upvote_listing_post = asyncHandler(async (req, res, next) => {
   const token = req.token;
   const listing = await Listings.findById(req.params.id);
-  jwt.verify(token, KEY, (err, authData) => {
+  jwt.verify(token, KEY, async (err, authData) => {
     if (err) {
       res.status(401).json({ success: false, message: "Unauthorized" });
     } else {
@@ -95,7 +95,7 @@ exports.upvote_listing_post = asyncHandler(async (req, res, next) => {
         res.json({ success: false, error: "No post found" });
       } else {
         listing.likes += 1;
-        listing.save();
+        await listing.save();
         res.json({ success: true, likes: listing.likes });
       }
     }
