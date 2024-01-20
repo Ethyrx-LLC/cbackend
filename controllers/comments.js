@@ -44,4 +44,38 @@ exports.delete_comment_post = asyncHandler(async (req, res, next) => {
   });
 });
 
-exports.upvote_comment_post;
+exports.upvote_comment_post = asyncHandler(async (req, res, next) => {
+  const comment = Comments.findById(req.params.id).exec();
+  const token = req.token;
+  jwt.verify(token, KEY, async (err, authData) => {
+    if (err) {
+      res.status(401).json({ success: false, message: "Unauthorized" });
+    } else {
+      if (listing === null) {
+        res.json({ success: false, error: "No post found" });
+      } else {
+        comment.likes += 1;
+        await comment.save();
+        res.json({ success: true, likes: comment.likes });
+      }
+    }
+  });
+});
+
+exports.downvote_comment_post = asyncHandler(async (req, res, next) => {
+  const comment = Comments.findById(req.params.id).exec();
+  const token = req.token;
+  jwt.verify(token, KEY, async (err, authData) => {
+    if (err) {
+      res.status(401).json({ success: false, message: "Unauthorized" });
+    } else {
+      if (listing === null) {
+        res.status(403).json({ success: false, error: "No post found" });
+      } else {
+        comment.dislikes += 1;
+        await comment.save();
+        res.status(200).json({ success: true, likes: comment.dislikes });
+      }
+    }
+  });
+});
