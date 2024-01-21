@@ -13,6 +13,7 @@ router.get("/listings", authorize, listing_controller.display_listings_all);
 router.get("/listing-detail/:id", authorize, listing_controller.display_listing_detail);
 router.delete("/listing-detail/:id/delete", authorize, listing_controller.delete_listing_post);
 router.put("/listing-detail/:id/upvote", authorize, listing_controller.upvote_listing_post);
+router.put("/listing-detail/:id/viewsincrease", authorize, listing_controller.upvote_listing_post);
 
 // USERS ROUTES
 router.post("/user/create", user_controller.create_users_post);

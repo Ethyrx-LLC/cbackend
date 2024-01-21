@@ -4,6 +4,7 @@ module.exports = function verifyToken(req, res, next) {
     req.token = bearerHeader;
     next();
   } else {
-    res.status(403).json("Invalid Token");
+    req.token = undefined;
+    next();
   }
 };

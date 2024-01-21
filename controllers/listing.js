@@ -25,7 +25,7 @@ exports.display_listing_detail = asyncHandler(async (req, res, next) => {
   const listing = await Listings.findById(req.params.id).populate("user").exec();
   jwt.verify(token, KEY, (err, authData) => {
     if (err) {
-      res.status(200).json({ success: false, authData: false });
+      res.status(200).json({ success: false, authData: false, listing });
     } else {
       if (listing === null) {
         res.status(404).json("Page not Found");
@@ -71,6 +71,9 @@ exports.create_listing_post = [
         title: req.body.title,
         content: req.body.content,
         category: req.body.category,
+        likes: 0,
+        views: 0,
+        date: new Date(),
         urgency: req.body.urgency || 0,
       });
 
@@ -120,6 +123,26 @@ exports.upvote_listing_post = asyncHandler(async (req, res, next) => {
         res.status(403).json({ success: false, error: "No post found" });
       } else {
         listing.likes += 1;
+        await listing.save();
+        res.status(200).json({ success: true, likes: listing.likes, authData });
+      }
+    }
+  });
+});
+
+exports.views_increase_listing_post = asyncHandler(async (req, res, next) => {
+  const token = req.token;
+  const listing = await Listings.findById(req.params.id).exec();
+  jwt.verify(token, KEY, async (err, authData) => {
+    if (err) {
+      res.status(401).json({ success: false, message: "Unauthorized" });
+      listing.views += 1;
+      await listing.save();
+    } else {
+      if (listing === null) {
+        res.status(403).json({ success: false, error: "No post found" });
+      } else {
+        listing.views += 1;
         await listing.save();
         res.status(200).json({ success: true, likes: listing.likes, authData });
       }
