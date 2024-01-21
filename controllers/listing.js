@@ -4,6 +4,7 @@ const asyncHandler = require("express-async-handler");
 const { body, validationResult } = require("express-validator");
 const jwt = require("jsonwebtoken");
 const Category = require("../models/category");
+const Comments = require("../models/comments");
 const KEY = process.env.TOKEN_SECRET;
 // Returns an array of listings
 exports.display_listings_all = asyncHandler(async (req, res, next) => {
@@ -76,6 +77,7 @@ exports.create_listing_post = [
 exports.delete_listing_post = asyncHandler(async (req, res, next) => {
   const token = req.token;
   const listing = Listings.findById(req.params.id).exec();
+
   jwt.verify(token, KEY, async (err, authData) => {
     if (err) {
       res.status(401).json({ success: false, message: "Unauthorized" });
@@ -84,6 +86,9 @@ exports.delete_listing_post = asyncHandler(async (req, res, next) => {
         res.json({ success: false, error: "No post found" });
       } else {
         await listing.deleteOne();
+        await Comments.deleteMany({
+          listing: listing._id,
+        });
         res.json({ success: true, error: "Post deleted" });
       }
     }
