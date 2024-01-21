@@ -10,7 +10,7 @@ const ListingSchema = new Schema({
   comments: [{ type: Schema.Types.ObjectId, ref: "Comments" }],
   urgency: Number,
   views: Number,
-  createdAt: Date,
+  createdAt: { type: Date },
 });
 
 ListingSchema.virtual("url").get(function () {
