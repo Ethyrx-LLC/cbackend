@@ -68,6 +68,7 @@ exports.create_listing_post = [
       } else {
         await listing.save();
         category.listings.push(listing);
+        await category.save();
         res.status(200).json({ success: true, listing: listing });
       }
     });
