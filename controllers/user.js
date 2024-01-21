@@ -11,7 +11,7 @@ exports.users_get = asyncHandler(async (req, res, next) => {
   const users = User.find().populate("posts").exec();
   jwt.verify(token, KEY, (err, authData) => {
     if (err) {
-      send.status(200).json({ users: users, authData: false });
+      res.status(200).json({ users: users, authData: false });
     } else {
       send.status(200).json({ users: users, authData });
     }
