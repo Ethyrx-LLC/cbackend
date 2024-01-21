@@ -22,6 +22,9 @@ async function listingCreate(index, title, content, category, urgency, user) {
     category: category,
     urgency: urgency,
     user: user, // Include the user field
+    likes: 0, // Initial value for likes
+    views: 0, // Initial value for views
+    createdAt: Date.now(),
   });
 
   await listing.save();
