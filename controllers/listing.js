@@ -3,6 +3,7 @@ const Listings = require("../models/listing");
 const asyncHandler = require("express-async-handler");
 const { body, validationResult } = require("express-validator");
 const jwt = require("jsonwebtoken");
+const Category = require("../models/category");
 const KEY = process.env.TOKEN_SECRET;
 // Returns an array of listings
 exports.display_listings_all = asyncHandler(async (req, res, next) => {
@@ -21,16 +22,18 @@ exports.display_listing_detail = asyncHandler(async (req, res, next) => {
   }
 });
 
-exports.create_listing_get = (req, res, next) => {
+exports.create_listing_get = asyncHandler(async (req, res, next) => {
+  const categories = Category.find().exec();
   const token = req.token;
+
   jwt.verify(token, KEY, (err, authData) => {
     if (err) {
-      res.json({ success: false, message: "User not logged in" });
+      res.status(401).json({ success: false, message: "User not logged in" });
     } else {
-      res.json({ success: true, authData });
+      res.status(200).json({ success: true, authData, categories });
     }
   });
-};
+});
 
 exports.create_listing_post = [
   body("title", "Title must be more than 3 characters long").trim().isLength({ min: 3 }).escape(),
@@ -57,10 +60,13 @@ exports.create_listing_post = [
         urgency: req.body.urgency || 0,
       });
 
+      const category = await Category.findById(req.body.category._id);
+
       if (!errors.isEmpty()) {
         res.status(401).json({ success: false, error: errors.array() });
       } else {
         await listing.save();
+        category.listings.push(listing);
         res.status(200).json({ success: true, listing: listing });
       }
     });
