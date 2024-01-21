@@ -67,9 +67,9 @@ exports.login_post = [
       username: req.body.username,
     });
     const match = await bcrypt.compare(req.body.password, user.password);
-    console.log(match);
+
     const accessToken = jwt.sign(JSON.stringify(user), KEY);
-    console.log(match);
+
     if (match) {
       res
         .status(200)
