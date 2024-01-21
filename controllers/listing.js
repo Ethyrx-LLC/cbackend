@@ -8,19 +8,32 @@ const Comments = require("../models/comments");
 const KEY = process.env.TOKEN_SECRET;
 // Returns an array of listings
 exports.display_listings_all = asyncHandler(async (req, res, next) => {
+  const token = req.token;
   const listings = await Listings.find().populate("user").exec();
-  res.json({ success: true, listings: listings });
+  jwt.verify(token, KEY, async (err, authData) => {
+    if (err) {
+      res.status(200).json({ success: true, listings: listings, authData: false });
+    } else {
+      res.status(200).json({ success: true, listings: listings, authData });
+    }
+  });
 });
 
 // Returns a specific listing based on ID
 exports.display_listing_detail = asyncHandler(async (req, res, next) => {
+  const token = req.token;
   const listing = await Listings.findById(req.params.id).populate("user").exec();
-
-  if (listing === null) {
-    res.status(404).json("Page not Found");
-  } else {
-    res.status(200).json({ success: true, listing: listing });
-  }
+  jwt.verify(token, KEY, (err, authData) => {
+    if (err) {
+      res.status(200).json({ success: false, authData: false });
+    } else {
+      if (listing === null) {
+        res.status(404).json("Page not Found");
+      } else {
+        res.status(200).json({ success: true, listing: listing, authData });
+      }
+    }
+  });
 });
 
 exports.create_listing_get = asyncHandler(async (req, res, next) => {
@@ -29,7 +42,7 @@ exports.create_listing_get = asyncHandler(async (req, res, next) => {
 
   jwt.verify(token, KEY, (err, authData) => {
     if (err) {
-      res.status(401).json({ success: false, message: "User not logged in" });
+      res.status(401).json({ success: false, message: "User not logged in", authData: false });
     } else {
       res.status(200).json({ success: true, authData, categories });
     }
@@ -48,7 +61,7 @@ exports.create_listing_post = [
     const token = req.token;
     jwt.verify(token, KEY, async (err, authData) => {
       if (err) {
-        res.status(401).json({ success: false, message: "Unauthorized" });
+        res.status(401).json({ success: false, message: "Unauthorized", authData: false });
       } else {
       }
       const errors = validationResult(req);
@@ -69,7 +82,7 @@ exports.create_listing_post = [
         await listing.save();
         category.listings.push(listing);
         await category.save();
-        res.status(200).json({ success: true, listing: listing });
+        res.status(200).json({ success: true, listing: listing, authData });
       }
     });
   }),
@@ -81,7 +94,7 @@ exports.delete_listing_post = asyncHandler(async (req, res, next) => {
 
   jwt.verify(token, KEY, async (err, authData) => {
     if (err) {
-      res.status(401).json({ success: false, message: "Unauthorized" });
+      res.status(401).json({ success: false, message: "Unauthorized", authData: false });
     } else {
       if (listing === null) {
         res.json({ success: false, error: "No post found" });
@@ -90,7 +103,7 @@ exports.delete_listing_post = asyncHandler(async (req, res, next) => {
         await Comments.deleteMany({
           listing: listing._id,
         });
-        res.json({ success: true, error: "Post deleted" });
+        res.json({ success: true, error: "Post deleted", authData });
       }
     }
   });
@@ -108,7 +121,7 @@ exports.upvote_listing_post = asyncHandler(async (req, res, next) => {
       } else {
         listing.likes += 1;
         await listing.save();
-        res.status(200).json({ success: true, likes: listing.likes });
+        res.status(200).json({ success: true, likes: listing.likes, authData });
       }
     }
   });

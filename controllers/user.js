@@ -7,13 +7,27 @@ const { body, validationResult } = require("express-validator");
 const KEY = process.env.TOKEN_SECRET;
 
 exports.users_get = asyncHandler(async (req, res, next) => {
+  const token = req.token;
   const users = User.find().populate("posts").exec();
-  res.json({ users: users });
+  jwt.verify(token, KEY, (err, authData) => {
+    if (err) {
+      send.status(200).json({ users: users, authData: false });
+    } else {
+      send.status(200).json({ users: users, authData });
+    }
+  });
 });
 
 exports.user_get = asyncHandler(async (req, res, next) => {
+  const token = req.token;
   const user = User.findById(req.params.id).populate("posts").exec();
-  res.json({ user: user });
+  jwt.verify(token, KEY, (err, authData) => {
+    if (err) {
+      send.status(200).json({ user: user, authData: false });
+    } else {
+      send.status(200).json({ user: user, authData });
+    }
+  });
 });
 
 exports.create_users_post = [

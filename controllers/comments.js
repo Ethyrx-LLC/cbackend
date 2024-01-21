@@ -1,22 +1,33 @@
 require("dotenv").config();
 const Comments = require("../models/comments");
-
 const jwt = require("jsonwebtoken");
 const asyncHandler = require("express-async-handler");
 const Listings = require("../models/listing");
 const KEY = process.env.TOKEN_SECRET;
-exports.list_comments_get = asyncHandler(async (req, res, next) => {
-  const comments = await Comments.find().populate("user").exec();
 
-  res.status(200).json({ success: true, comments: comments });
+exports.list_comments_get = asyncHandler(async (req, res, next) => {
+  const token = req.token;
+  jwt.verify(token, KEY, async (err, authData) => {
+    if (err) {
+      res
+        .status(403)
+        .json({ success: false, message: "Please login to create category", authData: false });
+    } else {
+      const comments = await Comments.find().populate("user").exec();
+
+      res.status(200).json({ success: true, comments: comments, authData });
+    }
+  });
 });
 
 exports.create_comment_post = asyncHandler(async (req, res, next) => {
   const token = req.token;
   const listing = await Listings.findById(req.params.id);
-  jwt.verify(token, KEY, async (err, auth) => {
+  jwt.verify(token, KEY, async (err, authData) => {
     if (err) {
-      res.status(403).json({ success: false, message: "Please login to create category" });
+      res
+        .status(403)
+        .json({ success: false, message: "Please login to create category", authData: false });
     } else {
       const comment = new Comments({
         user: auth,
@@ -28,19 +39,20 @@ exports.create_comment_post = asyncHandler(async (req, res, next) => {
       await comment.save();
       listing.comments.push(comment);
       await post.save();
-      res.status(200).json({ success: true, message: "Posted" });
+      res.status(200).json({ success: true, message: "Posted", authData });
     }
   });
 });
 
 exports.delete_comment_post = asyncHandler(async (req, res, next) => {
-  jwt.verify(req.token, KEY, (err, auth) => {
+  const token = req.token;
+  jwt.verify(token, KEY, (err, authData) => {
     if (err) {
       res.status(403).json({ success: false, message: "Please login to delete" });
     } else {
       Comments.findOneAndDelete({ comments: req.body.comment }).exec();
 
-      res.status(200).json({ success: true, message: "Deleted" });
+      res.status(200).json({ success: true, message: "Deleted", authData });
     }
   });
 });
@@ -57,7 +69,7 @@ exports.upvote_comment_post = asyncHandler(async (req, res, next) => {
       } else {
         comment.likes += 1;
         await comment.save();
-        res.json({ success: true, likes: comment.likes });
+        res.json({ success: true, likes: comment.likes, authData });
       }
     }
   });
@@ -65,6 +77,7 @@ exports.upvote_comment_post = asyncHandler(async (req, res, next) => {
 
 exports.downvote_comment_post = asyncHandler(async (req, res, next) => {
   const comment = Comments.findById(req.params.id).exec();
+  const listing = Listings.findById(req.params.id).exec();
   const token = req.token;
   jwt.verify(token, KEY, async (err, authData) => {
     if (err) {
@@ -75,7 +88,7 @@ exports.downvote_comment_post = asyncHandler(async (req, res, next) => {
       } else {
         comment.dislikes += 1;
         await comment.save();
-        res.status(200).json({ success: true, likes: comment.dislikes });
+        res.status(200).json({ success: true, likes: comment.dislikes, authData });
       }
     }
   });
