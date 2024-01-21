@@ -1,8 +1,9 @@
 require("dotenv").config();
-const Comments = require("../models/comment");
-const Posts = require("../models/post");
+const Comments = require("../models/comments");
+
 const jwt = require("jsonwebtoken");
 const asyncHandler = require("express-async-handler");
+const Listings = require("../models/listing");
 const KEY = process.env.TOKEN_SECRET;
 exports.list_comments_get = asyncHandler(async (req, res, next) => {
   const comments = await Comments.find().populate("user").exec();
@@ -12,7 +13,7 @@ exports.list_comments_get = asyncHandler(async (req, res, next) => {
 
 exports.create_comment_post = asyncHandler(async (req, res, next) => {
   const token = req.token;
-  const post = await Posts.findById(req.params.id);
+  const listing = await Listings.findById(req.params.id);
   jwt.verify(token, KEY, async (err, auth) => {
     if (err) {
       res.status(403).json({ success: false, message: "Please login to create category" });
@@ -25,7 +26,7 @@ exports.create_comment_post = asyncHandler(async (req, res, next) => {
         dislikes: 0,
       });
       await comment.save();
-      post.comments.push(comment);
+      listing.comments.push(comment);
       await post.save();
       res.status(200).json({ success: true, message: "Posted" });
     }
