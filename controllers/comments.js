@@ -15,7 +15,7 @@ exports.create_comment_post = asyncHandler(async (req, res, next) => {
   const post = await Posts.findById(req.params.id);
   jwt.verify(token, KEY, async (err, auth) => {
     if (err) {
-      res.status(403).json({ success: false, message: "Please login to post" });
+      res.status(403).json({ success: false, message: "Please login to create category" });
     } else {
       const comment = new Comments({
         user: auth,
