@@ -54,14 +54,14 @@ exports.create_listing_post = [
       const errors = validationResult(req);
 
       const listing = new Listings({
-        user: authData.user,
+        user: authData._id,
         title: req.body.title,
         content: req.body.content,
         category: req.body.category,
         urgency: req.body.urgency || 0,
       });
 
-      const category = await Category.findById(req.body.category._id);
+      const category = await Category.findById(req.body.category);
 
       if (!errors.isEmpty()) {
         res.status(401).json({ success: false, error: errors.array() });
