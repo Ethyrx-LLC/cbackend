@@ -91,6 +91,7 @@ exports.login_post = [
         .cookie("token", accessToken, {
           httpOnly: true,
           expires: expirationDate,
+          sameSite: "None",
         })
         .json({ message: "User Logged in", user: user });
     } else {
