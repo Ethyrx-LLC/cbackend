@@ -65,11 +65,11 @@ exports.create_listing_post = [
 
 			let category;
 			try {
+				category = await Category.findOne({ title: req.body.category });
 				if (!category) {
 					return res.status(400).json({ success: false, message: "Category not found" });
 				}
 			} catch (error) {
-				// Handle any potential errors in the database query
 				return res.status(500).json({ success: false, error: "Internal Server Error" });
 			}
 
@@ -80,8 +80,8 @@ exports.create_listing_post = [
 				category: category._id,
 				likes: 0,
 				views: 0,
-				date: new Date(),
-				urgency: req.body.urgency || 0
+				urgency: req.body.urgency || 0,
+				createdAt: new Date()
 			});
 
 			// The line below would not accept category as string.
