@@ -89,6 +89,7 @@ exports.login_post = [
       res
         .status(200)
         .cookie("token", accessToken, {
+          httpOnly: true,
           expires: expirationDate,
         })
         .json({ message: "User Logged in", user: user });
