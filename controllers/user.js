@@ -44,6 +44,7 @@ exports.create_users_post = [
     const userExist = await User.findOne({ email: req.body.email }).exec();
 
     if (userExist === null) {
+      console.log("null");
       const errors = validationResult(req);
       bcrypt.hash(req.body.password, 10, async (err, hashedPassword) => {
         const user = new User({
@@ -91,7 +92,7 @@ exports.login_post = [
           httpOnly: true,
           expires: expirationDate,
         })
-        .json({ message: "User Logged in" });
+        .json({ message: "User Logged in", user: user });
     } else {
       res.status("403").json("Please enter correct credentials");
     }
