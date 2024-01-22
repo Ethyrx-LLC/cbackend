@@ -23,7 +23,7 @@ app.use(
     origin: `http://localhost:5173`,
     methods: `GET, POST, UPDATE, PATCH, DELETE`,
     allowedHeaders: `Content-Type, Accepts, Authorization`,
-    credentials: "include",
+    credentials: true,
   })
 );
 
