@@ -14,7 +14,7 @@ exports.display_listings_all = asyncHandler(async (req, res, next) => {
     if (err) {
       res.status(200).json({ success: true, listings: listings, authData: false });
     } else {
-      res.status(200).json({ success: true, listings: listings, authData });
+      res.status(200).json({ success: true, listings: listings, authData: authData });
     }
   });
 });
