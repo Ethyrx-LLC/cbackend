@@ -13,7 +13,7 @@ exports.users_get = asyncHandler(async (req, res, next) => {
     if (err) {
       res.status(200).json({ users: users, authData: false });
     } else {
-      send.status(200).json({ users: users, authData });
+      res.status(200).json({ users: users, authData });
     }
   });
 });
@@ -23,9 +23,9 @@ exports.user_get = asyncHandler(async (req, res, next) => {
   const user = User.findById(req.params.id).populate("listings").populate("comments").exec();
   jwt.verify(token, KEY, (err, authData) => {
     if (err) {
-      send.status(200).json({ user: user, authData: false });
+      res.status(200).json({ user: user, authData: false });
     } else {
-      send.status(200).json({ user: user, authData });
+      res.status(200).json({ user: user, authData });
     }
   });
 });
