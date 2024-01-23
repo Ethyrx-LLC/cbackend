@@ -86,12 +86,12 @@ exports.login_post = [
     const accessToken = jwt.sign(JSON.stringify(user), KEY);
 
     if (match) {
+      console.log("it matches");
       res
         .status(200)
         .cookie("token", accessToken, {
           httpOnly: true,
           expires: expirationDate,
-          sameSite: "None",
         })
         .json({ message: "User Logged in", user: user });
     } else {
