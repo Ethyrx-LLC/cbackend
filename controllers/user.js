@@ -8,13 +8,13 @@ const passport = require("passport");
 exports.users_get = asyncHandler(async (req, res, next) => {
   const users = User.find().populate("listings").populate("comments").exec();
 
-  res.status(200).json({ users: users });
+  res.status(200).json({ user: req.user, users: users });
 });
 
 exports.user_get = asyncHandler(async (req, res, next) => {
   const user = await User.findById(req.params.id).populate("listings").populate("comments").exec();
 
-  res.status(200).json({ user: user });
+  res.status(200).json({ user: req.user, user: user });
 });
 
 exports.create_users_post = [
@@ -63,8 +63,8 @@ exports.login_post = [
       res.status(403).json({ user: user, error: errors.array() });
     } else {
       return passport.authenticate("local", {
-        successRedirect: "/auth/signup",
-        failureRedirect: "/auth/signup",
+        successRedirect: "/",
+        failureRedirect: "/",
         failureMessage: true,
       })(req, res, next);
     }

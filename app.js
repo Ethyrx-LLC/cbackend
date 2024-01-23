@@ -25,10 +25,10 @@ app.use(
     secret: process.env.TOKEN_SECRET,
     resave: false,
     saveUninitialized: false,
-    cookie: { secure: true },
   })
 );
-
+app.use(passport.initialize());
+app.use(passport.session());
 app.use(
   cors({
     origin: `http://localhost:3000`,
@@ -48,8 +48,6 @@ app.use(
 
 app.use(express.json());
 app.use(cookieParser());
-app.use(passport.initialize());
-app.use(passport.session());
 app.use(express.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, "public")));
 app.use("/", indexRouter);

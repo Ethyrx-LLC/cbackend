@@ -9,6 +9,7 @@ module.exports = function (passport) {
     new LocalStrategy(async (username, password, done) => {
       try {
         const user = await User.findOne({ username: username });
+        console.log(user);
         if (!user) {
           return done(null, false, { message: "Incorrect username" });
         }
@@ -23,13 +24,11 @@ module.exports = function (passport) {
     })
   );
 };
-passport.serializeUser(function (user, cb) {
-  process.nextTick(function () {
-    return cb(null, user.id);
-  });
+passport.serializeUser((user, done) => {
+  done(null, user.id);
 });
 
-passport.deserializeUser(async function (user, cb) {
+passport.deserializeUser(async (id, done) => {
   try {
     const user = await User.findById(id);
     done(null, user);
