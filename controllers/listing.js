@@ -39,8 +39,6 @@ exports.create_listing_post = [
   body("category", "Please select a category").notEmpty(),
 
   asyncHandler(async (req, res, next) => {
-    const token = req.token;
-
     const errors = validationResult(req);
 
     const poster = await User.findById(authData._id).exec();

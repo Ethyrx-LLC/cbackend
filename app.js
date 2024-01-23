@@ -45,15 +45,14 @@ app.use(
     },
   })
 );
-app.use("/", indexRouter);
 
 app.use(express.json());
+app.use(cookieParser());
 app.use(passport.initialize());
 app.use(passport.session());
 app.use(express.urlencoded({ extended: false }));
-app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "public")));
-
+app.use("/", indexRouter);
 const errorHandler = (error, req, res, bext) => {
   const errorMsg = {
     error_Message: error.message,

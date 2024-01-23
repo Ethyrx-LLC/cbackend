@@ -1,6 +1,5 @@
 require("dotenv").config();
 const User = require("../models/user");
-const bcrypt = require("bcryptjs");
 const emoji = require("node-emoji");
 const asyncHandler = require("express-async-handler");
 const { body, validationResult } = require("express-validator");
@@ -55,20 +54,19 @@ exports.create_users_post = [
 ];
 
 exports.login_post = [
-  body("username", "Please enter correct username").trim().escape(),
-  body("password", "Password must be more than 6 characters").trim().isLength({ min: 6 }).escape(),
-
+  body("username", "username").trim().isLength({ min: 3 }).escape(),
+  body("password", "username").trim().isLength({ min: 3 }).escape(),
   asyncHandler(async (req, res, next) => {
-    console.log(req);
     const errors = validationResult(req);
+    console.log(req.body.username);
     if (!errors.isEmpty()) {
-      res.status(403).res.json({ error: errors.array() });
+      res.status(403).json({ user: user, error: errors.array() });
     } else {
-      console.log("else");
-      passport.authenticate("local", { failureRedirect: "/auth/signup", failureMessage: true }),
-        function (req, res) {
-          res.redirect("/auth/signup");
-        };
+      return passport.authenticate("local", {
+        successRedirect: "/auth/signup",
+        failureRedirect: "/auth/signup",
+        failureMessage: true,
+      })(req, res, next);
     }
   }),
 ];
