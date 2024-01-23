@@ -60,7 +60,7 @@ exports.login_post = [
     const errors = validationResult(req);
     console.log(req.body.username);
     if (!errors.isEmpty()) {
-      res.status(403).json({ user: user, error: errors.array() });
+      res.status(403).json({ error: errors.array() });
     } else {
       return passport.authenticate("local", {
         successRedirect: "/",
