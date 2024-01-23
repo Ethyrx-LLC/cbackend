@@ -6,7 +6,9 @@ var logger = require("morgan");
 const cors = require("cors");
 const mongoose = require("mongoose");
 const compression = require("compression");
-errorhandler = require("errorhandler");
+const passport = require("passport");
+const session = require("express-session");
+require("./middleware/passport")(passport);
 var indexRouter = require("./routes/index");
 const helmet = require("helmet");
 var app = express();
@@ -18,6 +20,15 @@ async function main() {
 app.use(compression());
 app.use(cookieParser());
 app.use(logger("dev"));
+app.use(
+  session({
+    secret: process.env.TOKEN_SECRET,
+    resave: false,
+    saveUninitialized: false,
+    cookie: { secure: true },
+  })
+);
+
 app.use(
   cors({
     origin: `http://localhost:3000`,
@@ -34,12 +45,14 @@ app.use(
     },
   })
 );
+app.use("/", indexRouter);
+
 app.use(express.json());
+app.use(passport.initialize());
+app.use(passport.session());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "public")));
-
-app.use("/", indexRouter);
 
 const errorHandler = (error, req, res, bext) => {
   const errorMsg = {

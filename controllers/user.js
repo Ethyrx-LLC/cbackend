@@ -1,34 +1,21 @@
 require("dotenv").config();
-const jwt = require("jsonwebtoken");
 const User = require("../models/user");
 const bcrypt = require("bcryptjs");
 const emoji = require("node-emoji");
 const asyncHandler = require("express-async-handler");
 const { body, validationResult } = require("express-validator");
-const KEY = process.env.TOKEN_SECRET;
+const passport = require("passport");
 
 exports.users_get = asyncHandler(async (req, res, next) => {
-  const token = req.token;
   const users = User.find().populate("listings").populate("comments").exec();
-  jwt.verify(token, KEY, (err, authData) => {
-    if (err) {
-      res.status(200).json({ users: users, authData: false });
-    } else {
-      res.status(200).json({ users: users, authData });
-    }
-  });
+
+  res.status(200).json({ users: users });
 });
 
 exports.user_get = asyncHandler(async (req, res, next) => {
-  const token = req.token;
   const user = await User.findById(req.params.id).populate("listings").populate("comments").exec();
-  jwt.verify(token, KEY, (err, authData) => {
-    if (err) {
-      res.status(200).json({ user: user, authData: false });
-    } else {
-      send.status(200).json({ user: user, authData });
-    }
-  });
+
+  res.status(200).json({ user: user });
 });
 
 exports.create_users_post = [
@@ -45,7 +32,6 @@ exports.create_users_post = [
     const userExist = await User.findOne({ email: req.body.email }).exec();
 
     if (userExist === null) {
-      console.log("null");
       const errors = validationResult(req);
       bcrypt.hash(req.body.password, 10, async (err, hashedPassword) => {
         const user = new User({
@@ -73,31 +59,16 @@ exports.login_post = [
   body("password", "Password must be more than 6 characters").trim().isLength({ min: 6 }).escape(),
 
   asyncHandler(async (req, res, next) => {
-    const expirationDate = new Date();
-    expirationDate.setDate(expirationDate.getDate() + 7);
+    console.log(req);
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
       res.status(403).res.json({ error: errors.array() });
-    }
-    const user = await User.findOne({
-      username: req.body.username,
-    });
-    const match = await bcrypt.compare(req.body.password, user.password);
-
-    const accessToken = jwt.sign(JSON.stringify(user), KEY);
-
-    if (match) {
-      console.log("it matches");
-      res
-        .status(200)
-        .cookie("token", accessToken, {
-          httpOnly: true,
-          expires: expirationDate,
-          sameSite: "None",
-        })
-        .json({ message: "User Logged in", user: user });
     } else {
-      res.status("403").json("Please enter correct credentials");
+      console.log("else");
+      passport.authenticate("local", { failureRedirect: "/auth/signup", failureMessage: true }),
+        function (req, res) {
+          res.redirect("/auth/signup");
+        };
     }
   }),
 ];
@@ -107,28 +78,13 @@ exports.logout_post = (req, res, next) => {
 };
 
 exports.emoji_set = asyncHandler(async (req, res, next) => {
-  const token = req.token;
-  const expirationDate = new Date();
-  expirationDate.setDate(expirationDate.getDate() + 7);
   const user = await User.findById(req.params.id).populate("listings").populate("comments").exec();
-  jwt.verify(token, KEY, async (err, authData) => {
-    if (err) {
-      res.status(200).json({ user: user, authData: false });
-    } else {
-      const newAcessToken = jwt.sign(JSON.stringify(user), KEY);
-      // Backend should not expect frontend to send sanitized data, so we undress the emoji here
-      const userEmoji = emoji.unemojify(req.body.emoji);
-      user.emoji = userEmoji;
-      await user.save();
-      res
-        .status(200)
-        .clearCookie("token")
-        .cookie("token", newAcessToken, {
-          httpOnly: true,
-          expires: expirationDate,
-          sameSite: "None",
-        })
-        .json({ user: user, authData });
-    }
-  });
+
+  const userEmoji = emoji.unemojify(req.body.emoji);
+  user.emoji = userEmoji;
+
+  res.status(200);
+  res.json({ authData });
+
+  await user.save();
 });
