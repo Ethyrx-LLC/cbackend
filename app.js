@@ -54,7 +54,7 @@ const errorHandler = (error, req, res, bext) => {
 
   res
     .status(status)
-    .json("Internal error occured, our monkeys are hard at work to figure out what went wrong");
+    .json("Internal error occured, our monkeys are hard at work to figure out what went wrong!");
 };
 app.use(errorHandler);
 
