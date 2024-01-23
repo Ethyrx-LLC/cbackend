@@ -76,13 +76,9 @@ exports.logout_post = (req, res, next) => {
 };
 
 exports.emoji_set = asyncHandler(async (req, res, next) => {
-  const user = await User.findById(req.params.id).populate("listings").populate("comments").exec();
-
+  const user = await User.findById(req.params.id).exec();
   const userEmoji = emoji.unemojify(req.body.emoji);
   user.emoji = userEmoji;
-
-  res.status(200);
-  res.json({ authData });
-
   await user.save();
+  res.status(200).json({ user_emoji: req.user.emoji });
 });
