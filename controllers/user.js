@@ -21,12 +21,12 @@ exports.users_get = asyncHandler(async (req, res, next) => {
 
 exports.user_get = asyncHandler(async (req, res, next) => {
   const token = req.token;
-  const user = User.findById(req.params.id).populate("listings").populate("comments").exec();
+  const user = await User.findById(req.params.id).populate("listings").populate("comments").exec();
   jwt.verify(token, KEY, (err, authData) => {
     if (err) {
       res.status(200).json({ user: user, authData: false });
     } else {
-      res.status(200).json({ user: user, authData });
+      send.status(200).json({ user: user, authData });
     }
   });
 });

@@ -6,6 +6,7 @@ var logger = require("morgan");
 const cors = require("cors");
 const mongoose = require("mongoose");
 const compression = require("compression");
+errorhandler = require("errorhandler");
 var indexRouter = require("./routes/index");
 const helmet = require("helmet");
 var app = express();
@@ -20,7 +21,7 @@ app.use(cookieParser());
 app.use(logger("dev"));
 app.use(
   cors({
-    origin: `http://localhost:5173`,
+    origin: `http://localhost:3000`,
     methods: `GET, POST, UPDATE, PATCH, DELETE`,
     allowedHeaders: `Content-Type, Accepts, Authorization`,
     credentials: true,
@@ -40,5 +41,22 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "public")));
 
 app.use("/", indexRouter);
+
+const errorHandler = (error, req, res, bext) => {
+  const errorMsg = {
+    error_Message: error.message,
+    error_Route: req.url,
+    error_Method: req.method,
+    error: error.stack,
+  };
+
+  console.log(errorMsg);
+  const status = error.status || 400;
+
+  res
+    .status(status)
+    .json("Internal error occured, our monkeys are hard at work to figure out what went wrong");
+};
+app.use(errorHandler);
 
 module.exports = app;
