@@ -3,6 +3,7 @@ const Comments = require("../models/comments");
 const jwt = require("jsonwebtoken");
 const asyncHandler = require("express-async-handler");
 const Listings = require("../models/listing");
+const User = require("../models/user");
 const KEY = process.env.TOKEN_SECRET;
 
 exports.list_comments_get = asyncHandler(async (req, res, next) => {
@@ -29,8 +30,9 @@ exports.create_comment_post = asyncHandler(async (req, res, next) => {
         .status(403)
         .json({ success: false, message: "Please login to create category", authData: false });
     } else {
+      const user = await User.findById(auth._id).exec();
       const comment = new Comments({
-        user: auth,
+        user: auth._id,
         listing: req.params.id,
         text: req.body.comment,
         likes: 0,
@@ -38,7 +40,9 @@ exports.create_comment_post = asyncHandler(async (req, res, next) => {
       });
       await comment.save();
       listing.comments.push(comment);
+      user.comments.push(comment);
       await post.save();
+      await user.save();
       res.status(200).json({ success: true, message: "Posted", authData });
     }
   });
