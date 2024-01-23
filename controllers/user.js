@@ -2,6 +2,7 @@ require("dotenv").config();
 const jwt = require("jsonwebtoken");
 const User = require("../models/user");
 const bcrypt = require("bcryptjs");
+const emoji = require("node-emoji");
 const asyncHandler = require("express-async-handler");
 const { body, validationResult } = require("express-validator");
 const KEY = process.env.TOKEN_SECRET;
@@ -113,8 +114,9 @@ exports.emoji_set = asyncHandler(async (req, res, next) => {
       res.status(200).json({ user: user, authData: false });
     } else {
       console.log(req.body.emoji);
-      const emoji = req.body.emoji;
-      user.emoji = emoji;
+      const userEmoji = req.body.emoji;
+      const emojified = emoji.emojify(userEmoji);
+      user.emoji = emojified;
       await user.save();
       res.status(200).json({ user: user, authData });
     }
