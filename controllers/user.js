@@ -118,8 +118,7 @@ exports.emoji_set = asyncHandler(async (req, res, next) => {
       const newAcessToken = jwt.sign(JSON.stringify(user), KEY);
 
       const userEmoji = req.body.emoji;
-      const emojified = emoji.emojify(userEmoji);
-      user.emoji = emojified;
+      user.emoji = userEmoji;
       await user.save();
       res
         .status(200)
