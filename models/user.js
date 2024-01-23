@@ -6,6 +6,7 @@ const UserSchema = new Schema({
   email: String,
   password: String,
   admin: Boolean,
+  emoji: String,
   listings: [{ type: Schema.Types.ObjectId, ref: "Listing" }],
   comments: [{ type: Schema.Types.ObjectId, ref: "Comments" }],
 });

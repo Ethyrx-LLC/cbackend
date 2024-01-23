@@ -104,3 +104,19 @@ exports.login_post = [
 exports.logout_post = (req, res, next) => {
   res.status(200).clearCookie("token").json({ message: "Logged out" });
 };
+
+exports.emoji_set = asyncHandler(async (req, res, next) => {
+  const token = req.token;
+  const user = User.findById(req.params.id).populate("listings").populate("comments").exec();
+  jwt.verify(token, KEY, (err, authData) => {
+    if (err) {
+      res.status(200).json({ user: user, authData: false });
+    } else {
+      res.status(200).json({ user: user, authData });
+      console.log(req.body.emoji);
+      const emoji = req.body.emoji;
+      user.emoji = emoji;
+      user.save();
+    }
+  });
+});
