@@ -11,7 +11,6 @@ var indexRouter = require("./routes/index");
 const helmet = require("helmet");
 var app = express();
 const mongoDB = process.env.MONGO_URI;
-console.log(mongoDB);
 main().catch((err) => console.log(err));
 async function main() {
   await mongoose.connect(mongoDB);

@@ -108,12 +108,13 @@ exports.logout_post = (req, res, next) => {
 
 exports.emoji_set = asyncHandler(async (req, res, next) => {
   const token = req.token;
-  const user = User.findById(req.params.id).populate("listings").populate("comments").exec();
+  const user = await User.findById(req.params.id).populate("listings").populate("comments").exec();
   jwt.verify(token, KEY, async (err, authData) => {
     if (err) {
       res.status(200).json({ user: user, authData: false });
     } else {
       console.log(req.body.emoji);
+      console.log(user);
       const userEmoji = req.body.emoji;
       const emojified = emoji.emojify(userEmoji);
       user.emoji = emojified;
