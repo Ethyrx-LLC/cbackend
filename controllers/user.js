@@ -112,11 +112,11 @@ exports.emoji_set = asyncHandler(async (req, res, next) => {
     if (err) {
       res.status(200).json({ user: user, authData: false });
     } else {
-      res.status(200).json({ user: user, authData });
       console.log(req.body.emoji);
       const emoji = req.body.emoji;
       user.emoji = emoji;
       await user.save();
+      res.status(200).json({ user: user, authData });
     }
   });
 });
