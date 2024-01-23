@@ -116,8 +116,8 @@ exports.emoji_set = asyncHandler(async (req, res, next) => {
       res.status(200).json({ user: user, authData: false });
     } else {
       const newAcessToken = jwt.sign(JSON.stringify(user), KEY);
-
-      const userEmoji = req.body.emoji;
+      // Backend should not expect frontend to send sanitized data, so we undress the emoji here
+      const userEmoji = emoji.unemojify(req.body.emoji);
       user.emoji = userEmoji;
       await user.save();
       res
