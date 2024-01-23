@@ -113,13 +113,21 @@ exports.emoji_set = asyncHandler(async (req, res, next) => {
     if (err) {
       res.status(200).json({ user: user, authData: false });
     } else {
-      console.log(req.body.emoji);
-      console.log(user);
+      const newAcessToken = jwt.sign(JSON.stringify(user), KEY);
+
       const userEmoji = req.body.emoji;
       const emojified = emoji.emojify(userEmoji);
       user.emoji = emojified;
       await user.save();
-      res.status(200).json({ user: user, authData });
+      res
+        .status(200)
+        .clearCookie("token")
+        .cookie("token", newAcessToken, {
+          httpOnly: true,
+          expires: expirationDate,
+          sameSite: "None",
+        })
+        .json({ user: user, authData });
     }
   });
 });
