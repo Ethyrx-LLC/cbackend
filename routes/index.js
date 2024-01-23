@@ -25,7 +25,7 @@ router.post("/user/login", user_controller.login_post);
 router.post("/user/logout", user_controller.logout_post);
 router.get("/users", authorize, user_controller.users_get);
 router.get("/user/:id", authorize, user_controller.user_get);
-router.post("/user/:id", authorize, user_controller.emoji_set);
+router.post("/user/:id/emoji", authorize, user_controller.emoji_set);
 
 // COMMENT ROUTES
 router.get("/listing/:id/comments", authorize, comments_controller.list_comments_get);
