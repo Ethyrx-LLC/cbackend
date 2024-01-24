@@ -41,12 +41,12 @@ exports.create_listing_post = [
   asyncHandler(async (req, res, next) => {
     const errors = validationResult(req);
 
-    const poster = await User.findById(authData._id).exec();
+    const poster = await User.findById(variableName._id).exec();
     console.log(poster);
     const category = await Category.findOne({ title: req.body.category });
     console.log(category);
     const listing = new Listings({
-      user: authData._id,
+      user: req.variableName._id,
       title: req.body.title,
       content: req.body.content,
       category: category._id,
@@ -60,14 +60,14 @@ exports.create_listing_post = [
     //const category = await Category.findById(req.body.category);
 
     if (!errors.isEmpty()) {
-      res.status(401).json({ user: req.user, success: false, error: errors.array() });
+      res.status(401).json({ success: false, error: errors.array() });
     } else {
       await listing.save();
       poster.listings.push(listing);
       category.listings.push(listing);
       await category.save();
       await poster.save();
-      res.status(200).json({ user: req.user, success: true, listing: listing });
+      res.status(200).json({ success: true, listing: listing });
     }
   }),
 ];
@@ -76,13 +76,13 @@ exports.delete_listing_post = asyncHandler(async (req, res, next) => {
   const listing = Listings.findById(req.params.id).exec();
 
   if (listing === null) {
-    res.json({ user: req.user, success: false, error: "No post found" });
+    res.json({ success: false, error: "No post found" });
   } else {
     await listing.deleteOne();
     await Comments.deleteMany({
       listing: listing._id,
     });
-    res.json({ user: req.user, success: true, error: "Post deleted", authData });
+    res.json({ success: true, error: "Post deleted", authData });
   }
 });
 
@@ -90,11 +90,11 @@ exports.upvote_listing_post = asyncHandler(async (req, res, next) => {
   const listing = await Listings.findById(req.params.id).exec();
 
   if (listing === null) {
-    res.status(403).json({ user: req.user, success: false, error: "No post found" });
+    res.status(403).json({ success: false, error: "No post found" });
   } else {
     listing.likes += 1;
     await listing.save();
-    res.status(200).json({ user: req.user, success: true, likes: listing.likes, authData });
+    res.status(200).json({ success: true, likes: listing.likes, authData });
   }
 });
 
@@ -102,10 +102,10 @@ exports.views_increase_listing_post = asyncHandler(async (req, res, next) => {
   const listing = await Listings.findById(req.params.id).exec();
 
   if (listing === null) {
-    res.status(403).json({ user: req.user, success: false, error: "No post found" });
+    res.status(403).json({ success: false, error: "No post found" });
   } else {
     listing.views += 1;
     await listing.save();
-    res.status(200).json({ user: req.user, success: true, likes: listing.likes, authData });
+    res.status(200).json({ success: true, likes: listing.likes, authData });
   }
 });

@@ -35,4 +35,7 @@ router.get("/category/:id", categories_controller.category_detail_get);
 router.post("/category/create", categories_controller.category_add_post);
 router.delete("/category/delete/:id", categories_controller.category_delete_post);
 
+// USER API
+router.get("/cookie", user_controller.cookie);
+
 module.exports = router;

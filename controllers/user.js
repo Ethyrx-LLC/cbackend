@@ -8,13 +8,13 @@ const passport = require("passport");
 exports.users_get = asyncHandler(async (req, res, next) => {
   const users = User.find().populate("listings").populate("comments").exec();
 
-  res.status(200).json({ user: req.user, users: users });
+  res.status(200).json({ users: users });
 });
 
 exports.user_get = asyncHandler(async (req, res, next) => {
   const user = await User.findById(req.params.id).populate("listings").populate("comments").exec();
 
-  res.status(200).json({ user: req.user, user: user });
+  res.status(200).json({ user: user });
 });
 
 exports.create_users_post = [
@@ -72,7 +72,7 @@ exports.login_post = [
 ];
 
 exports.logout_post = (req, res, next) => {
-  res.status(200).clearCookie("token").json({ message: "Logged out" });
+  res.status(200).clearCookie("connect.sid").json({ message: "Logged out" });
 };
 
 exports.emoji_set = asyncHandler(async (req, res, next) => {
@@ -81,4 +81,8 @@ exports.emoji_set = asyncHandler(async (req, res, next) => {
   user.emoji = userEmoji;
   await user.save();
   res.status(200).json({ user_emoji: req.user.emoji });
+});
+
+exports.cookie = asyncHandler(async (req, res, next) => {
+  res.status(200).json({ user: req.user });
 });
