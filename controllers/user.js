@@ -62,7 +62,28 @@ exports.login_post = [
     if (!errors.isEmpty()) {
       res.status(403).json({ error: errors.array() });
     } else {
-      passport.authenticate("local")(req, res, next);
+      passport.authenticate("local", (err, theUser, failureDetails) => {
+        if (err) {
+          res.status(500).json({ message: "Something went wrong authenticating user" });
+          return;
+        }
+
+        if (!theUser) {
+          res.status(401).json(failureDetails);
+          return;
+        }
+
+        // Save user in session
+        req.login(theUser, (err) => {
+          if (err) {
+            res.status(500).json({ message: "Session save went bad." });
+            return;
+          }
+
+          console.log("---123456789098765432345678---", req.user);
+          res.status(200).json({ errors: false, user: theUser });
+        });
+      })(req, res, next);
     }
   }),
 ];
@@ -80,7 +101,10 @@ exports.emoji_set = asyncHandler(async (req, res, next) => {
 });
 
 exports.cookie = asyncHandler(async (req, res, next) => {
-  const user = await User.findById(req.session.passport.user).exec();
+  console.log(req.user);
+
+  console.log(req.cookies);
+  const user = await User.findById(req.user).exec();
 
   res.status(200).json({ user });
 });

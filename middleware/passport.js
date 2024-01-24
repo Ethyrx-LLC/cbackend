@@ -1,7 +1,6 @@
 const passport = require("passport");
-const LocalStrategy = require("passport-local");
+const LocalStrategy = require("passport-local").Strategy;
 const User = require("../models/user");
-const session = require("express-session");
 const bcrypt = require("bcryptjs");
 
 module.exports = function (passport) {
@@ -9,7 +8,6 @@ module.exports = function (passport) {
     new LocalStrategy(async (username, password, done) => {
       try {
         const user = await User.findOne({ username: username });
-
         if (!user) {
           return done(null, false, { message: "Incorrect credentials" });
         }
@@ -25,15 +23,19 @@ module.exports = function (passport) {
   );
 };
 passport.serializeUser((user, done) => {
+  console.log("SERIALIZE" + user);
   done(null, user.id);
 });
 
-passport.deserializeUser(async (id, done) => {
+passport.deserializeUser((id, done) => {
   try {
-    const user = await User.findById(id);
+    const user = User.findById(id).exec();
+    console.log("DESERIALIZE" + user);
 
     done(null, user);
   } catch (err) {
+    console.log("ERR" + user);
+
     done(err);
   }
 });

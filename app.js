@@ -1,63 +1,46 @@
 require("dotenv").config();
 var express = require("express");
 var path = require("path");
+
 var cookieParser = require("cookie-parser");
 var logger = require("morgan");
 const cors = require("cors");
+const bodyParser = require("body-parser");
+const session = require("express-session");
 const mongoose = require("mongoose");
 const compression = require("compression");
 const passport = require("passport");
-const session = require("express-session");
+
 require("./middleware/passport")(passport);
 var indexRouter = require("./routes/index");
-const helmet = require("helmet");
+
 var app = express();
 const mongoDB = process.env.MONGO_URI;
 main().catch((err) => console.log(err));
 async function main() {
   await mongoose.connect(mongoDB);
 }
-app.use(compression());
-app.use(logger("dev"));
 app.use(
-  cors({
-    origin: `http://localhost:3000`,
-    methods: `GET, POST, UPDATE, PATCH, DELETE`,
-    allowedHeaders: `Content-Type, Accepts, Authorization`,
-    credentials: true,
-  })
+  cors({ credentials: true, origin: "http://localhost:3000", allowedHeaders: ["Content-Type"] })
 );
+app.use(cookieParser());
 app.use(
   session({
     secret: process.env.TOKEN_SECRET,
     resave: false,
     saveUninitialized: false,
-    cookie: {
-      sameSite: "none",
-      maxAge: 7 * 24 * 60 * 60 * 1000,
-      httpOnly: false,
-    },
   })
 );
-
 app.use(passport.initialize());
 app.use(passport.session());
 
-app.use(
-  helmet.contentSecurityPolicy({
-    directives: {
-      "script-src": ["'self'", "code.jquery.com", "cdn.jsdelivr.net"],
-    },
-  })
-);
-app.use((req, res, next) => {
-  res.locals.currentUser = req.user;
-  next();
-});
+app.use(compression());
+app.use(logger("dev"));
+app.use(bodyParser.json());
+
 app.use(express.json());
-app.use(cookieParser());
-app.use(express.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, "public")));
+app.use(express.urlencoded({ extended: false }));
 app.use("/", indexRouter);
 const errorHandler = (error, req, res, bext) => {
   const errorMsg = {
