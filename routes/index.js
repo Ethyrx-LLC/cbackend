@@ -37,5 +37,4 @@ router.delete("/category/delete/:id", categories_controller.category_delete_post
 
 // USER API
 router.get("/cookie", user_controller.cookie);
-
 module.exports = router;

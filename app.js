@@ -18,7 +18,6 @@ async function main() {
   await mongoose.connect(mongoDB);
 }
 app.use(compression());
-app.use(cookieParser());
 app.use(logger("dev"));
 app.use(
   cors({
@@ -50,7 +49,10 @@ app.use(
     },
   })
 );
-
+app.use((req, res, next) => {
+  res.locals.currentUser = req.user;
+  next();
+});
 app.use(express.json());
 app.use(cookieParser());
 app.use(express.urlencoded({ extended: false }));
