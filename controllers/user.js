@@ -84,5 +84,6 @@ exports.emoji_set = asyncHandler(async (req, res, next) => {
 });
 
 exports.cookie = asyncHandler(async (req, res, next) => {
-  res.status(200).json({ user: req.user });
+  const user = req.user;
+  res.status(200).json({ user });
 });
