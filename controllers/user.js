@@ -62,11 +62,7 @@ exports.login_post = [
     if (!errors.isEmpty()) {
       res.status(403).json({ error: errors.array() });
     } else {
-      return passport.authenticate("local", {
-        successRedirect: "/",
-        failureRedirect: "/",
-        failureMessage: true,
-      })(req, res, next);
+      return passport.authenticate("local")(req, res, next);
     }
   }),
 ];

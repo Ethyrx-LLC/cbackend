@@ -21,6 +21,14 @@ app.use(compression());
 app.use(cookieParser());
 app.use(logger("dev"));
 app.use(
+  cors({
+    origin: `http://localhost:3000`,
+    methods: `GET, POST, UPDATE, PATCH, DELETE`,
+    allowedHeaders: `Content-Type, Accepts, Authorization`,
+    credentials: true,
+  })
+);
+app.use(
   session({
     secret: process.env.TOKEN_SECRET,
     resave: false,
@@ -29,20 +37,11 @@ app.use(
       sameSite: "none",
       maxAge: 7 * 24 * 60 * 60 * 1000,
       httpOnly: false,
-      secure: true,
     },
   })
 );
 app.use(passport.initialize());
 app.use(passport.session());
-app.use(
-  cors({
-    origin: `http://localhost:3000`,
-    methods: `GET, POST, UPDATE, PATCH, DELETE`,
-    allowedHeaders: `Content-Type, Accepts, Authorization`,
-    credentials: true,
-  })
-);
 
 app.use(
   helmet.contentSecurityPolicy({
