@@ -54,8 +54,8 @@ exports.create_users_post = [
 ];
 
 exports.login_post = [
-  body("username", "username").trim().isLength({ min: 3 }).escape(),
-  body("password", "username").trim().isLength({ min: 3 }).escape(),
+  body("username", "User name must be more than 3 letters").trim().isLength({ min: 3 }).escape(),
+  body("password", "Password must be more than 3 letter").trim().isLength({ min: 3 }).escape(),
   asyncHandler(async (req, res, next) => {
     const errors = validationResult(req);
     console.log(req.body.username);
