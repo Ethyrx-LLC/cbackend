@@ -10,7 +10,6 @@
   "dependencies": {
     "bcryptjs": "^2.4.3",
     "compression": "^1.7.4",
-    "cookie": "^0.6.0",
     "cookie-parser": "~1.4.4",
     "cors": "^2.8.5",
     "crypto": "^1.0.1",
@@ -22,8 +21,6 @@
     "express-session": "^1.17.3",
     "express-validator": "^7.0.1",
     "helmet": "^7.1.0",
-    "jsonwebtoken": "^9.0.2",
-    "moment": "^2.30.1",
     "mongoose": "^8.1.0",
     "morgan": "~1.9.1",
     "node-emoji": "^2.1.3",

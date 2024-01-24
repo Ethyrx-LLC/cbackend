@@ -62,7 +62,7 @@ exports.login_post = [
     if (!errors.isEmpty()) {
       res.status(403).json({ error: errors.array() });
     } else {
-      return passport.authenticate("local")(req, res, next);
+      passport.authenticate("local")(req, res, next);
     }
   }),
 ];
@@ -80,6 +80,7 @@ exports.emoji_set = asyncHandler(async (req, res, next) => {
 });
 
 exports.cookie = asyncHandler(async (req, res, next) => {
-  const user = req.user;
-  res.status(200).json({ user: user, cookie: req.cookies, currentUser: res.locals.currentUser });
+  const user = await User.findById(req.session.passport.user).exec();
+
+  res.status(200).json({ user });
 });

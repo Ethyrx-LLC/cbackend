@@ -9,7 +9,7 @@ module.exports = function (passport) {
     new LocalStrategy(async (username, password, done) => {
       try {
         const user = await User.findOne({ username: username });
-        console.log(user);
+
         if (!user) {
           return done(null, false, { message: "Incorrect credentials" });
         }
@@ -31,6 +31,7 @@ passport.serializeUser((user, done) => {
 passport.deserializeUser(async (id, done) => {
   try {
     const user = await User.findById(id);
+
     done(null, user);
   } catch (err) {
     done(err);
