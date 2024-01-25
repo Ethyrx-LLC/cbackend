@@ -81,6 +81,7 @@ exports.login_post = [
           }
 
           console.log("---123456789098765432345678---", req.user);
+          res.cookie("userID", theUser.id, { maxAge: 7 * 24 * 60 * 60 * 1000 });
           res.status(200).json({ errors: false, user: theUser });
         });
       })(req, res, next);
@@ -89,7 +90,7 @@ exports.login_post = [
 ];
 
 exports.logout_post = (req, res, next) => {
-  res.status(200).clearCookie("connect.sid").json({ message: "Logged out" });
+  res.status(200).clearCookie("connect.sid").clearCookie("userID").json({ message: "Logged out" });
 };
 
 exports.emoji_set = asyncHandler(async (req, res, next) => {
