@@ -29,6 +29,7 @@ app.use(
     secret: process.env.TOKEN_SECRET,
     resave: false,
     saveUninitialized: false,
+    rolling: true,
     cookie: {
       maxAge: 7 * 24 * 60 * 60 * 1000,
     },
