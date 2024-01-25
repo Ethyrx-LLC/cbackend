@@ -71,13 +71,13 @@ exports.login_post = [
             return;
           }
 
-          if (!theUser) {
+          if (!user) {
             res.status(401).json(failureDetails);
             return;
           }
 
           // Save user in session
-          req.login(theUser, (err) => {
+          req.login(user, (err) => {
             if (err) {
               res.status(500).json({ message: "Session save went bad." });
               return;
@@ -85,7 +85,7 @@ exports.login_post = [
 
             console.log("---123456789098765432345678---", req.user);
             res.cookie("userID", user.id, { maxAge: 7 * 24 * 60 * 60 * 1000 });
-            res.status(200).json({ errors: false, user: theUser });
+            res.status(200).json({ errors: false, user: user });
           });
         }
       )(req, res, next);
