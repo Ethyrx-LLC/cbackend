@@ -11,11 +11,14 @@ exports.list_comments_get = asyncHandler(async (req, res, next) => {
 });
 
 exports.create_comment_post = asyncHandler(async (req, res, next) => {
-  const user = await User.findById(req.user._id).exec();
+  const user = await User.findById(req.user).exec();
+  if (!user) {
+    return "No user found !";
+  }
   console.log(user);
   const listing = await Listings.findById(req.params.id).populate("user").exec();
   const comment = new Comments({
-    user: req.user._id,
+    user: req.user,
     listing: req.params.id,
     text: req.body.comment,
     likes: 0,
@@ -24,7 +27,7 @@ exports.create_comment_post = asyncHandler(async (req, res, next) => {
   await comment.save();
   listing.comments.push(comment);
   user.comments.push(comment);
-  await post.save();
+  await listing.save();
   await user.save();
   res.status(200).json({ success: true, message: "Posted" });
 });
