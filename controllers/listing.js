@@ -41,12 +41,12 @@ exports.create_listing_post = [
   asyncHandler(async (req, res, next) => {
     const errors = validationResult(req);
 
-    const poster = await User.findById(variableName._id).exec();
+    const poster = await User.findById(req.user._id).exec();
     console.log(poster);
     const category = await Category.findOne({ title: req.body.category });
     console.log(category);
     const listing = new Listings({
-      user: req.variableName._id,
+      user: req.user._id,
       title: req.body.title,
       content: req.body.content,
       category: category._id,

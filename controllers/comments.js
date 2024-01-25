@@ -11,10 +11,10 @@ exports.list_comments_get = asyncHandler(async (req, res, next) => {
 });
 
 exports.create_comment_post = asyncHandler(async (req, res, next) => {
-  const user = await User.findById(req.variableName._id).exec();
+  const user = await User.findById(req.user._id).exec();
   const listing = await Listings.findById(req.params.id).populate("user").exec();
   const comment = new Comments({
-    user: variableName._id,
+    user: req.user._id,
     listing: req.params.id,
     text: req.body.comment,
     likes: 0,
