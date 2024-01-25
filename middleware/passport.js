@@ -28,13 +28,10 @@ passport.serializeUser((user, done) => {
 });
 
 passport.deserializeUser(async (id, done) => {
-  console.log("GOT HERE" + user);
   try {
-    console.log("DESERIALIZE" + user);
     const user = await User.findById(id);
     done(null, user);
   } catch (err) {
-    console.log("DESERIALIZE ERR" + user);
     done(err);
   }
 });
