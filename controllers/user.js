@@ -101,10 +101,6 @@ exports.emoji_set = asyncHandler(async (req, res, next) => {
 });
 
 exports.cookie = asyncHandler(async (req, res, next) => {
-  console.log(req.user);
-
-  console.log(req.cookies);
   const user = await User.findById(req.user).exec();
-
-  res.status(200).json({ user });
+  res.status(200).json({ user: user });
 });
