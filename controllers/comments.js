@@ -33,7 +33,7 @@ exports.create_comment_post = asyncHandler(async (req, res, next) => {
 });
 
 exports.delete_comment_post = asyncHandler(async (req, res, next) => {
-  await Comments.findOneAndDelete({ comments: req.body.comment }).exec();
+  await Comments.findOneAndDelete({ comment: req.body.comment }).exec();
 
   res.status(200).json({ success: true, message: "Deleted" });
 });
