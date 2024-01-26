@@ -5,7 +5,9 @@ const Listings = require("../models/listing");
 const User = require("../models/user");
 
 exports.list_comments_get = asyncHandler(async (req, res, next) => {
-  const comments = await Comments.find().populate("user").exec();
+  const comments = await Comments.find()
+    .populate({ path: "user", select: "username", select: "emoji" })
+    .exec();
 
   res.status(200).json({ success: true, comments: comments });
 });
