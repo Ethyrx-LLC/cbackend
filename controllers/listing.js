@@ -8,14 +8,17 @@ const User = require("../models/user");
 
 // Returns an array of listings
 exports.display_listings_all = asyncHandler(async (req, res, next) => {
-  const listings = await Listings.find().populate("user").exec();
+  const listings = await Listings.find().populate("user").populate("comments").exec();
 
   res.status(200).json({ user: req.user, success: true, listings });
 });
 
 // Returns a specific listing based on ID
 exports.display_listing_detail = asyncHandler(async (req, res, next) => {
-  const listing = await Listings.findById(req.params.id).populate("user").exec();
+  const listing = await Listings.findById(req.params.id)
+    .populate("user")
+    .populate("comments")
+    .exec();
 
   if (listing === null) {
     res.status(404).json("Page not Found");
