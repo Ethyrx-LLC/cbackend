@@ -16,7 +16,7 @@ exports.display_listings_all = asyncHandler(async (req, res, next) => {
 // Returns a specific listing based on ID
 exports.display_listing_detail = asyncHandler(async (req, res, next) => {
   const listing = await Listings.findById(req.params.id)
-    .populate({ path: "user", select: "username", select: "emoji" })
+    .populate({ path: "user", select: "_id username emoji" })
     .populate("comments")
     .exec();
 
