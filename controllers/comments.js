@@ -7,13 +7,13 @@ const User = require("../models/user");
 exports.list_comments_get = asyncHandler(async (req, res, next) => {
   const comments = await Comments.find()
     .populate({ path: "user", select: "username emoji" })
+    .populate({ path: "listing", select: "_id" })
     .exec();
-  const listing = await Listings.findById(req.params.id)
-    .populate({ path: "user", select: "username emoji" })
-    .populate("comments")
-    .exec();
-
-  res.status(200).json({ success: true, author: comments.user, comments: listing.comments });
+  let commentsInListing = [];
+  for (let comment of comments) {
+    if (comment.listing.id === req.params.id) commentsInListing.push(comment.listing);
+  }
+  res.status(200).json({ success: true, comments: commentsInListing });
 });
 
 exports.create_comment_post = asyncHandler(async (req, res, next) => {
