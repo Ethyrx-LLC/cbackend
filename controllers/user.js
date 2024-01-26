@@ -106,6 +106,6 @@ exports.emoji_set = asyncHandler(async (req, res, next) => {
 });
 
 exports.cookie = asyncHandler(async (req, res, next) => {
-  const user = await User.findById(req.user).exec();
+  const user = await User.findById(req.user).populate("listings").populate("comments").exec();
   res.status(200).json(user);
 });
