@@ -10,10 +10,10 @@ exports.list_comments_get = asyncHandler(async (req, res, next) => {
     .exec();
   const listing = await Listings.findById(req.params.id)
     .populate({ path: "user", select: "username emoji" })
-    .populate({ path: "comments", select: "user text" })
+    .populate("comments")
     .exec();
 
-  res.status(200).json({ success: true, comments: listing.comments });
+  res.status(200).json({ success: true, author: comments.user, comments: listing.comments });
 });
 
 exports.create_comment_post = asyncHandler(async (req, res, next) => {
