@@ -8,10 +8,12 @@ exports.list_comments_get = asyncHandler(async (req, res, next) => {
   const comments = await Comments.find()
     .populate({ path: "user", select: "username emoji" })
     .exec();
+  const listing = await Listings.findById(req.params.id)
+    .populate({ path: "user", select: "username emoji" })
+    .populate({ path: "comments", select: "user text" })
+    .exec();
 
-  if (comments.listings._id === req.params.id) {
-    res.status(200).json({ success: true, comments: comments });
-  }
+  res.status(200).json({ success: true, comments: listing.comments });
 });
 
 exports.create_comment_post = asyncHandler(async (req, res, next) => {
