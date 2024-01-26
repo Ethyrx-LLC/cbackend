@@ -11,7 +11,7 @@ exports.list_comments_get = asyncHandler(async (req, res, next) => {
     .exec();
   let commentsInListing = [];
   for (let comment of comments) {
-    if (comment.listing.id === req.params.id) commentsInListing.push(comment.listing);
+    if (comment.listing.id === req.params.id) commentsInListing.push(comment);
   }
   res.status(200).json({ success: true, comments: commentsInListing });
 });
