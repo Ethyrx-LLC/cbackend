@@ -9,7 +9,9 @@ exports.list_comments_get = asyncHandler(async (req, res, next) => {
     .populate({ path: "user", select: "username emoji" })
     .exec();
 
-  res.status(200).json({ success: true, comments: comments });
+  if (comments.listings._id === req.params.id) {
+    res.status(200).json({ success: true, comments: comments });
+  }
 });
 
 exports.create_comment_post = asyncHandler(async (req, res, next) => {
@@ -42,9 +44,9 @@ exports.delete_comment_post = asyncHandler(async (req, res, next) => {
 });
 
 exports.upvote_comment_post = asyncHandler(async (req, res, next) => {
-  const comment = Comments.findById(req.params.id).exec();
-  const listing = await Listings.findById(req.params.id).populate("user").exec();
-  if (listing === null) {
+  const comment = await Comments.findById(req.params.id).exec();
+  console.log(comment);
+  if (comment === null) {
     res.json({ success: false, error: "No post found" });
   } else {
     comment.likes += 1;
@@ -54,10 +56,9 @@ exports.upvote_comment_post = asyncHandler(async (req, res, next) => {
 });
 
 exports.downvote_comment_post = asyncHandler(async (req, res, next) => {
-  const comment = Comments.findById(req.params.id).exec();
-  const listing = Listings.findById(req.params.id).exec();
+  const comment = await Comments.findById(req.params.id).exec();
 
-  if (listing === null) {
+  if (comment === null) {
     res.status(403).json({ success: false, error: "No post found" });
   } else {
     comment.dislikes += 1;

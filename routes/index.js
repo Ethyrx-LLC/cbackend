@@ -26,8 +26,8 @@ router.post("/user/:id/emoji", user_controller.emoji_set);
 router.get("/listing/:id/comments", comments_controller.list_comments_get);
 router.post("/listing/:id/comment/create", comments_controller.create_comment_post);
 router.delete("/listing/:id/comment/delete/:id", comments_controller.delete_comment_post);
-router.post("/listing/:id/comment/upvote/:id", comments_controller.upvote_comment_post);
-router.post("/listing/:id/comment/downvote/:id", comments_controller.downvote_comment_post);
+router.put("/listing/:id/comment/upvote/:id", comments_controller.upvote_comment_post);
+router.put("/listing/:id/comment/downvote/:id", comments_controller.downvote_comment_post);
 
 // CATEGORY ROUTES
 router.get("/categories", categories_controller.list_categories_get);
