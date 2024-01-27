@@ -23,6 +23,8 @@ exports.display_listing_detail = asyncHandler(async (req, res, next) => {
   if (listing === null) {
     res.status(404).json("Page not Found");
   } else {
+    listing.views += 1;
+    await listing.save();
     res.status(200).json({ user: req.user, success: true, listing: listing });
   }
 });
