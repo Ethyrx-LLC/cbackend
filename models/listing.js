@@ -8,6 +8,7 @@ const ListingSchema = new Schema({
   category: { type: Schema.Types.ObjectId, ref: "Category" },
   likes: Number,
   comments: [{ type: Schema.Types.ObjectId, ref: "Comments" }],
+  last_commenter: { type: Schema.Types.ObjectId, ref: "User" },
   urgency: Number,
   views: Number,
   createdAt: { type: Date },
