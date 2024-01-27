@@ -8,7 +8,10 @@ const User = require("../models/user");
 
 // Returns an array of listings
 exports.display_listings_all = asyncHandler(async (req, res, next) => {
-  const listings = await Listings.find().populate("user").populate("comments").exec();
+  const listings = await Listings.find()
+    .populate({ path: "user", select: "username emoji" })
+    .populate({ path: "comments", select: "user createdAt" })
+    .exec();
 
   res.status(200).json({ user: req.user, success: true, listings });
 });
