@@ -91,14 +91,26 @@ exports.delete_listing_post = asyncHandler(async (req, res, next) => {
 
 exports.upvote_listing_post = asyncHandler(async (req, res, next) => {
   const listing = await Listings.findById(req.params.id).exec();
-
+  const user = await User.findById(req.user).exec();
   if (listing === null) {
     res.status(403).json({ success: false, error: "No post found" });
-  } else {
-    listing.likes += 1;
-    await listing.save();
-    res.status(200).json({ success: true, likes: listing.likes, authData });
   }
+
+  for (let listingLikes of user.listing_likes) {
+    if (listingLikes._id.equals(listing._id)) {
+      const found = user.listing_likes.findIndex((cm) => cm._id.equals(listing._id));
+      user.listing_likes.splice(found, 1);
+      listing.likes -= 1;
+      await user.save();
+      await listing.save();
+      return res.json({ success: true, likes: listing.likes, user_likes: user.listing_likes });
+    }
+  }
+  user.listing_likes.push(push);
+  listing.likes += 1;
+  await listing.save();
+  await user.save();
+  res.status(200).json({ success: true, likes: listing.likes, user_likes: user.listing_likes });
 });
 
 exports.views_increase_listing_post = asyncHandler(async (req, res, next) => {

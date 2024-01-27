@@ -22,7 +22,6 @@ exports.create_comment_post = asyncHandler(async (req, res, next) => {
     return console.log("no user");
   }
 
-  console.log(req.body.comment);
   const listing = await Listings.findById(req.params.id).populate("user").exec();
   const comment = new Comments({
     user: req.user.id,
