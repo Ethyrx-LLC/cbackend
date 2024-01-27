@@ -109,6 +109,6 @@ exports.views_increase_listing_post = asyncHandler(async (req, res, next) => {
   } else {
     listing.views += 1;
     await listing.save();
-    res.status(200).json({ success: true, likes: listing.likes, authData });
+    res.status(200).json({ success: true, likes: listing.likes });
   }
 });
