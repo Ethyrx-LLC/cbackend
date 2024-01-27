@@ -24,13 +24,18 @@ exports.display_listing_detail = asyncHandler(async (req, res, next) => {
     .exec();
 
   const lastComment = listing.comments[listing.comments.length - 1];
+  console.log(lastComment);
+  console.log(lastComment.user);
   const lastPoster = await User.findById(lastComment.user).exec();
 
   if (listing === null) {
     res.status(404).json("Page not Found");
   } else {
     listing.views += 1;
-    listing.last_commenter = lastPoster;
+
+    if (lastPoster !== null) {
+      listing.last_commenter = lastPoster;
+    }
 
     await listing.save();
     res.status(200).json({ user: req.user, success: true, listing: listing });
