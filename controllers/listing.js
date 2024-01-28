@@ -24,8 +24,6 @@ exports.display_listing_detail = asyncHandler(async (req, res, next) => {
     .exec();
 
   const lastComment = listing.comments[listing.comments.length - 1];
-  console.log(lastComment);
-  console.log(lastComment.user);
   const lastPoster = await User.findById(lastComment.user).exec();
 
   if (listing === null) {
@@ -60,9 +58,9 @@ exports.create_listing_post = [
     const errors = validationResult(req);
 
     const poster = await User.findById(req.user._id).exec();
-    console.log(poster);
+
     const category = await Category.findOne({ title: req.body.category });
-    console.log(category);
+
     const listing = new Listings({
       user: req.user._id,
       title: req.body.title,
