@@ -7,6 +7,7 @@ const logger = require("morgan");
 const cors = require("cors");
 const bodyParser = require("body-parser");
 const session = require("express-session");
+const { Server } = require("socket.io");
 const mongoose = require("mongoose");
 const compression = require("compression");
 const passport = require("passport");
@@ -37,17 +38,17 @@ app.use(
 app.use(cookieParser());
 
 // Configure and use session middleware with MongoDB as store
-app.use(
-  session({
-    secret: process.env.TOKEN_SECRET,
-    resave: false,
-    saveUninitialized: false,
-    store: MongoStore.create({ mongoUrl: mongoDB }),
-    cookie: {
-      maxAge: 7 * 24 * 60 * 60 * 1000,
-    },
-  })
-);
+const sessionMiddleware = session({
+  secret: process.env.TOKEN_SECRET,
+  resave: false,
+  saveUninitialized: false,
+  store: MongoStore.create({ mongoUrl: mongoDB }),
+  cookie: {
+    maxAge: 7 * 24 * 60 * 60 * 1000,
+  },
+});
+
+app.use(sessionMiddleware);
 
 // Initialize and use passport for authentication
 app.use(passport.initialize());
