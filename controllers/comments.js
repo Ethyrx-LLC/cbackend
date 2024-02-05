@@ -55,6 +55,7 @@ exports.create_comment_post = asyncHandler(async (req, res, next) => {
 
 // Delete a comment
 exports.delete_comment_post = asyncHandler(async (req, res, next) => {
+  console.log(req.body.comment);
   // Find and delete the specified comment
   await Comments.findOneAndDelete({ text: req.body.comment }).exec();
 
