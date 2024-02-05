@@ -107,17 +107,17 @@ exports.create_listing_post = [
 // Handle the deletion of a listing
 exports.delete_listing_post = asyncHandler(async (req, res, next) => {
   // Fetch the listing to be deleted
-  const listing = Listings.findById(req.params.id).exec();
+  const listing = await Listings.findById(req.params.id).exec();
 
   // Check if the listing exists
   if (listing === null) {
     res.json({ success: false, error: "No post found" });
   } else {
     // Delete the listing and associated comments
-    await listing.deleteOne();
+    await Listings.findByIdAndDelete(req.params.id).exec();
     await Comments.deleteMany({
       listing: listing._id,
-    });
+    }).exec();
     // Respond with success
     res.json({ success: true, error: "Post deleted", authData });
   }
