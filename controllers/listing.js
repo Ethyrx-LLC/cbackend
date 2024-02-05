@@ -119,7 +119,7 @@ exports.delete_listing_post = asyncHandler(async (req, res, next) => {
       listing: listing._id,
     }).exec();
     // Respond with success
-    res.json({ success: true, error: "Post deleted", authData });
+    res.json({ success: true, error: "Post deleted" });
   }
 });
 
