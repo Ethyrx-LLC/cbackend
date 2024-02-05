@@ -56,7 +56,7 @@ exports.create_comment_post = asyncHandler(async (req, res, next) => {
 // Delete a comment
 exports.delete_comment_post = asyncHandler(async (req, res, next) => {
   // Find and delete the specified comment
-  await Comments.findOneAndDelete({ comment: req.body.comment }).exec();
+  await Comments.findOneAndDelete({ text: req.body.comment }).exec();
 
   // Respond with success message
   res.status(200).json({ success: true, message: "Deleted" });
