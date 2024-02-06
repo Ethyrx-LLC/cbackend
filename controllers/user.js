@@ -47,6 +47,7 @@ exports.create_users_post = [
         const user = new User({
           username: req.body.username,
           email: req.body.email,
+          perms: 0,
           password: hashedPassword,
           admin: false,
         });
