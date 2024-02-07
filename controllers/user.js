@@ -5,6 +5,7 @@ const emoji = require("node-emoji");
 const asyncHandler = require("express-async-handler");
 const { body, validationResult } = require("express-validator");
 const passport = require("passport");
+const { ROLE } = require("../middleware/permissions");
 
 // Get all users with populated listings and comments
 exports.users_get = asyncHandler(async (req, res, next) => {
@@ -47,7 +48,7 @@ exports.create_users_post = [
         const user = new User({
           username: req.body.username,
           email: req.body.email,
-          perms: 0,
+          perms: ROLE.BASIC,
           password: hashedPassword,
           admin: false,
         });
