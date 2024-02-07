@@ -95,13 +95,12 @@ exports.create_listing_post = [
       // Save the new listing, update poster and category references
 
       await listing.save();
-      console.log(listing._id);
       poster.listings.push(listing);
       category.listings.push(listing);
       await category.save();
       await poster.save();
       // Respond with success and the created listing
-      res.status(200).json({ success: true, listing: listing, newListingID: listing._id });
+      res.status(200).json({ success: true, listing: listing });
     }
   }),
 ];
