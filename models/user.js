@@ -6,7 +6,7 @@ const UserSchema = new Schema({
   email: String,
   password: String,
   emoji: String,
-  perms: Number,
+  perms: Object,
   listing_likes: [{ type: Schema.Types.ObjectId, ref: "Listing" }],
   comment_likes: [{ type: Schema.Types.ObjectId, ref: "Comments" }],
   comment_dislikes: [{ type: Schema.Types.ObjectId, ref: "Comments" }],
