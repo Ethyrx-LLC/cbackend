@@ -93,13 +93,16 @@ exports.create_listing_post = [
       res.status(401).json({ success: false, error: errors.array() });
     } else {
       // Save the new listing, update poster and category references
-      await listing.save();
+      let newID;
+      await listing.save(function (err, listing) {
+        newID = listing;
+      });
       poster.listings.push(listing);
       category.listings.push(listing);
       await category.save();
       await poster.save();
       // Respond with success and the created listing
-      res.status(200).json({ success: true, listing: listing });
+      res.status(200).json({ success: true, listing: listing, newListingID: newID });
     }
   }),
 ];
