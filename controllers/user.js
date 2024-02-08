@@ -124,6 +124,9 @@ exports.logout_post = (req, res, next) => {
 exports.emoji_set = asyncHandler(async (req, res, next) => {
   const user = await User.findById(req.params.id).exec();
   const userEmoji = emoji.unemojify(req.body.emoji);
+  if (userEmoji === undefined) {
+    res.status(401).json("Emoji does not exist!");
+  }
   user.emoji = userEmoji;
   await user.save();
   res.status(200).json({ user_emoji: req.user.emoji });
