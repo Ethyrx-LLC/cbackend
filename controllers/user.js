@@ -49,7 +49,7 @@ exports.create_users_post = [
         const user = new User({
           username: req.body.username,
           email: req.body.email,
-          perms: ROLE.BASIC,
+          role: ROLE.BASIC,
           password: hashedPassword,
           admin: false,
         });

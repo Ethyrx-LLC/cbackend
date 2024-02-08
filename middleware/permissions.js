@@ -1,7 +1,7 @@
 const ROLE = {
-  ADMIN: "admin",
-  MOD: "mod",
-  BASIC: "user",
+  ADMIN: 100,
+  MOD: 50,
+  BASIC: 0,
 };
 
 function AuthorizeDashboard(req, res, next) {
