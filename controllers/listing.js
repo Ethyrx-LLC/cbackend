@@ -9,9 +9,13 @@ const User = require("../models/user");
 
 // Returns an array of listings with populated user and comments data
 exports.display_listings_all = asyncHandler(async (req, res, next) => {
+  const page = parseInt(req.query.page) || 1;
+  const limit = parseInt(req.query.limit) || 10;
+  const startIndex = (page - 1) * limit;
   // Fetch listings with user and comments population
   const listings = await Listings.find()
-    .limit(10)
+    .skip(startIndex)
+    .limit(limit)
     .sort({ createdAt: -1 })
     .populate({ path: "user", select: "username emoji" })
     .populate({
