@@ -8,7 +8,7 @@ const initSocketServer = () => {
   io.on("connection", (socket) => {
     console.log(socket.id);
     socket.on("online-status", (status) => {
-      socket.emit("online", status);
+      io.emit("online", status);
     });
   });
 
