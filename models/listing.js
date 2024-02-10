@@ -11,7 +11,7 @@ const ListingSchema = new Schema({
 
   urgency: Number,
   views: Number,
-  createdAt: { type: Date },
+  createdAt: { type: Date, index: true },
 });
 
 ListingSchema.virtual("url").get(function () {
