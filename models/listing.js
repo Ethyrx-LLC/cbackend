@@ -18,4 +18,6 @@ ListingSchema.virtual("url").get(function () {
   return "/" + this._id;
 });
 
+ListingSchema.index({ createdAt: -1 });
+
 module.exports = mongoose.model("Listing", ListingSchema);
