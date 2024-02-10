@@ -9,7 +9,7 @@ const initSocketServer = () => {
     socket.on("new-user-add", (userID) => {
       if (!onlineUsers.some((user) => user.userId === userID)) {
         // if user is not added before
-        onlineUsers.push({ userId: userID, socketId: socket.id });
+        onlineUsers.push({ userId: userID });
         console.log("new user is here!", onlineUsers);
       }
       // send all active users to new user
