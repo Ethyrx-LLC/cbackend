@@ -18,6 +18,7 @@ exports.display_listings_all = asyncHandler(async (req, res, next) => {
     .limit(limit)
     .sort({ createdAt: -1 })
     .hint({ createdAt: -1 })
+    .lean()
     .populate({ path: "user", select: "username emoji" })
     .populate({
       path: "comments",
@@ -37,6 +38,7 @@ exports.display_listings_all = asyncHandler(async (req, res, next) => {
 exports.display_listing_detail = asyncHandler(async (req, res, next) => {
   // Fetch listing by ID with user and comments population
   const listing = await Listings.findById(req.params.id)
+    .lean()
     .populate({ path: "user", select: "_id username emoji createdAt" })
     .populate("comments")
     .exec();

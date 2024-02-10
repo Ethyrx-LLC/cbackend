@@ -10,14 +10,17 @@ const { ROLE } = require("../middleware/permissions");
 
 // Get all users with populated listings and comments
 exports.users_get = asyncHandler(async (req, res, next) => {
-  const users = await User.find().exec();
-  console.log(users);
+  const users = await User.find().lean().exec();
   res.status(200).json({ users: users });
 });
 
 // Get a specific user with populated listings and comments based on ID
 exports.user_get = asyncHandler(async (req, res, next) => {
-  const user = await User.findById(req.params.id).populate("listings").populate("comments").exec();
+  const user = await User.findById(req.params.id)
+    .lean()
+    .populate("listings")
+    .populate("comments")
+    .exec();
 
   res.status(200).json({ user: user });
 });

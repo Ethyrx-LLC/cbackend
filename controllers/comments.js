@@ -9,6 +9,7 @@ const User = require("../models/user");
 exports.list_comments_get = asyncHandler(async (req, res, next) => {
   // Fetch comments with user and listing population
   const comments = await Comments.find()
+    .lean()
     .populate({ path: "user", select: "username emoji" })
     .populate({ path: "listing", select: "_id" })
     .exec();

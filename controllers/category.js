@@ -6,7 +6,7 @@ const Categories = require("../models/category");
 // Get all categories with populated listings
 exports.list_categories_get = asyncHandler(async (req, res, next) => {
   // Fetch categories with populated listings
-  const categories = await Categories.find().populate("listings").exec();
+  const categories = await Categories.find().lean().populate("listings").exec();
 
   // Respond with the categories
   res.status(200).json({ success: true, categories: categories });
