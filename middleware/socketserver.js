@@ -6,14 +6,21 @@ const initSocketServer = () => {
   });
 
   io.on("connection", (socket) => {
+    console.log(socket.id);
+    socket.on("online-status", (status) => {
+      io.emit("online", status);
+    });
+
     socket.on("new-user-add", (userID) => {
       if (!onlineUsers.some((user) => user.userId === userID)) {
         // if user is not added before
-        onlineUsers.push(userID);
+        onlineUsers.push({ userId: userID, socketId: socket.id });
         console.log("new user is here!", onlineUsers);
       }
       // send all active users to new user
-      io.emit("get-users", onlineUsers);
+      if (userID !== null) {
+        io.emit("get-users", onlineUsers);
+      }
     });
     socket.on("disconnect", () => {
       onlineUsers = onlineUsers.filter((user) => user.socketId !== socket.id);
