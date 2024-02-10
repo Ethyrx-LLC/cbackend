@@ -7,10 +7,10 @@ const logger = require("morgan");
 const cors = require("cors");
 const bodyParser = require("body-parser");
 const session = require("express-session");
-const { Server } = require("socket.io");
 const mongoose = require("mongoose");
 const compression = require("compression");
 const passport = require("passport");
+const initSocketServer = require("./middleware/socketserver");
 
 // Import passport middleware configuration
 require("./middleware/passport")(passport);
@@ -87,6 +87,9 @@ const errorHandler = (error, req, res, next) => {
     .status(status)
     .json("Internal error occurred, our monkeys are hard at work to figure out what went wrong!");
 };
+
+const io = initSocketServer();
+app.set("socketServer", io);
 
 // Use the custom error handling middleware
 app.use(errorHandler);
