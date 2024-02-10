@@ -15,6 +15,20 @@ const initSocketServer = () => {
       // send all active users to new user
       io.emit("get-users", onlineUsers);
     });
+    socket.on("disconnect", () => {
+      onlineUsers = onlineUsers.filter((user) => user.socketId !== socket.id);
+      console.log("user disconnected", onlineUsers);
+      // send all online users to all users
+      io.emit("get-users", onlineUsers);
+    });
+
+    socket.on("offline", () => {
+      // remove user from active users
+      onlineUsers = onlineUsers.filter((user) => user.socketId !== socket.id);
+      console.log("user is offline", onlineUsers);
+      // send all online users to all users
+      io.emit("get-users", onlineUsers);
+    });
   });
 
   return io;
