@@ -9,6 +9,7 @@ const bodyParser = require("body-parser");
 const session = require("express-session");
 const mongoose = require("mongoose");
 const compression = require("compression");
+const helmet = require("helmet");
 const passport = require("passport");
 const initSocketServer = require("./middleware/socketserver");
 
@@ -20,6 +21,14 @@ const indexRouter = require("./routes/index");
 
 // Create an Express application
 const app = express();
+
+app.use(
+  helmet.contentSecurityPolicy({
+    directives: {
+      "script-src": ["'self'", "code.jquery.com", "cdn.jsdelivr.net"],
+    },
+  })
+);
 
 // Set up MongoDB connection
 const mongoDB = process.env.MONGO_URI;
