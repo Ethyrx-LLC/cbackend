@@ -30,9 +30,6 @@ app.use(
   })
 );
 
-const compression = require("compression");
-const helmet = require("helmet");
-
 // Set up rate limiter: maximum of twenty requests per minute
 const RateLimit = require("express-rate-limit");
 const limiter = RateLimit({
@@ -55,7 +52,7 @@ async function main() {
 
 // Configure middleware and settings
 app.use(
-  cors({ credentials: true, origin: "http://localhost:1337", allowedHeaders: ["Content-Type"] })
+  cors({ credentials: true, origin: "http://localhost:3000", allowedHeaders: ["Content-Type"] })
 );
 app.use(cookieParser());
 
