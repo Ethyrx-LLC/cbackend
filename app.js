@@ -55,7 +55,7 @@ async function main() {
 
 // Configure middleware and settings
 app.use(
-  cors({ credentials: true, origin: "http://localhost:3000", allowedHeaders: ["Content-Type"] })
+  cors({ credentials: true, origin: "http://localhost:1337", allowedHeaders: ["Content-Type"] })
 );
 app.use(cookieParser());
 
@@ -67,6 +67,7 @@ const sessionMiddleware = session({
   store: MongoStore.create({ mongoUrl: mongoDB }),
   cookie: {
     maxAge: 7 * 24 * 60 * 60 * 1000,
+    httpOnly: true,
   },
 });
 
