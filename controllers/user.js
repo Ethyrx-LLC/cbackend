@@ -133,6 +133,7 @@ exports.login_post = [
                     // Save user in session
                     req.login(user, (err) => {
                         if (err) {
+                            console.log("LOGIN FAILED USER.JS WORKS")
                             res.status(500).json({
                                 message: "Session save went bad.",
                             })
@@ -141,7 +142,7 @@ exports.login_post = [
 
                         console.log("LOGIN IN USER.JS WORKS")
 
-                        res.status(200).json({ errors: false, user: user })
+                        res.status(200).json({ errors: false })
                     })
                 }
             )(req, res, next)
