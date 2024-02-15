@@ -16,7 +16,16 @@ exports.users_get = asyncHandler(async (req, res, next) => {
 
 // Get a specific user with populated listings and comments based on ID
 exports.user_get = asyncHandler(async (req, res, next) => {
-  const user = await User.findById(req.params.id)
+  const param = req.params.id;
+  
+  // objectids lengths = 24
+  const isObjectId = param.length === 24 && /^[0-9a-fA-F]+$/.test(param);
+  
+  const condition = isObjectId ? 
+    { $or: [{ username: new RegExp(`^${param}$`, "i") }, { _id: new mongoose.Types.ObjectId(param) }]} : 
+    { username: new RegExp(`^${param}$`, "i") };
+  
+  const user = await User.findOne(condition)
     .lean()
     .populate("listings")
     .populate("comments")
