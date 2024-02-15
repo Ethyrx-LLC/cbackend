@@ -61,7 +61,7 @@ app.use(
         origin:
             env === "development"
                 ? "http://localhost:3000"
-                : process.env.BACKEND_URL,
+                : process.env.FRONTEND_URL,
         allowedHeaders: ["Content-Type"],
     })
 )
