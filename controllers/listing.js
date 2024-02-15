@@ -157,7 +157,7 @@ exports.upvote_listing_post = asyncHandler(async (req, res, next) => {
   }
 
   // If user hasn't upvoted, add the upvote
-  user.listing_likes.push(push);
+  user.listing_likes.push(listing);
   listing.likes += 1;
   await listing.save();
   await user.save();
