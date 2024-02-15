@@ -8,8 +8,6 @@ const cors = require("cors")
 const bodyParser = require("body-parser")
 const session = require("express-session")
 const mongoose = require("mongoose")
-const apicache = require("apicache")
-let cache = apicache.middleware
 const compression = require("compression")
 const helmet = require("helmet")
 const passport = require("passport")
@@ -17,7 +15,7 @@ const initSocketServer = require("./middleware/socketserver")
 const app = express()
 // Import passport middleware configuration
 require("./middleware/passport")(passport)
-app.use(cache("5 minutes"))
+
 // Import routes
 const indexRouter = require("./routes/index")
 
