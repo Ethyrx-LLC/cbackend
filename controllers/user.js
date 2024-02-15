@@ -6,7 +6,7 @@ const asyncHandler = require("express-async-handler")
 const { body, validationResult } = require("express-validator")
 const bcrypt = require("bcryptjs")
 const passport = require("passport")
-const { ROLE } = require("../middleware/permissions");
+const { ROLE } = require("../middleware/permissions")
 const mongoose = require("mongoose")
 
 // Get all users with populated listings and comments
