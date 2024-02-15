@@ -34,7 +34,7 @@ app.use(
 const RateLimit = require("express-rate-limit")
 const limiter = RateLimit({
     windowMs: 1 * 60 * 1000, // 1 minute
-    max: 99999, // todo: temporary
+    max: 20,
 })
 // Apply rate limiter to all requests
 app.use(limiter)
@@ -76,12 +76,9 @@ const sessionMiddleware = session({
         httpOnly: true,
         sameSite: "none",
         secure: true,
-        secure: true,
-        sameSite: "none",
-        domain: "staging.kameelist.com",
-        path: "/",
     },
 })
+
 app.use(sessionMiddleware)
 
 // Initialize and use passport for authentication
