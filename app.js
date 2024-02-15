@@ -22,6 +22,9 @@ const indexRouter = require("./routes/index")
 // Create an Express application
 const app = express()
 
+// Enable trust proxy
+app.set("trust proxy", true)
+
 app.use(
     helmet.contentSecurityPolicy({
         directives: {
