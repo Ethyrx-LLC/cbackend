@@ -76,9 +76,12 @@ const sessionMiddleware = session({
         httpOnly: true,
         sameSite: "none",
         secure: true,
+        secure: true,
+        sameSite: "none",
+        domain: "staging.kameelist.com",
+        path: "/",
     },
 })
-
 app.use(sessionMiddleware)
 
 // Initialize and use passport for authentication
