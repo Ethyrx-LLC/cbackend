@@ -34,7 +34,7 @@ app.use(
 const RateLimit = require("express-rate-limit")
 const limiter = RateLimit({
     windowMs: 1 * 60 * 1000, // 1 minute
-    max: 99999,
+    max: 99999, // todo: temporary
 })
 // Apply rate limiter to all requests
 app.use(limiter)
