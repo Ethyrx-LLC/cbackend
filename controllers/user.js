@@ -141,7 +141,7 @@ exports.login_post = [
                         }
 
                         console.log("LOGIN IN USER.JS WORKS")
-
+                        res.cookie("cookieName", "meowy")
                         res.status(200).json({ errors: false })
                     })
                 }
