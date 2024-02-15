@@ -25,13 +25,13 @@ const app = express()
 // Enable trust proxy
 app.set("trust proxy", true)
 
-app.use(
+/* app.use(
     helmet.contentSecurityPolicy({
         directives: {
             "script-src": ["'self'", "code.jquery.com", "cdn.jsdelivr.net"],
         },
     })
-)
+) */
 
 // Set up rate limiter: maximum of twenty requests per minute
 const RateLimit = require("express-rate-limit")
@@ -74,6 +74,14 @@ const sessionMiddleware = session({
     resave: false,
     saveUninitialized: false,
     store: MongoStore.create({ mongoUrl: mongoDB }),
+    cookie: {
+        maxAge: 7 * 24 * 60 * 60 * 1000,
+        httpOnly: true,
+        secure: true,
+        sameSite: "none",
+        domain: "kameelist.com",
+        path: "/",
+    },
 })
 app.use(sessionMiddleware)
 
