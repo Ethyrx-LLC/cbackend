@@ -25,13 +25,13 @@ const app = express()
 // Enable trust proxy
 app.set("trust proxy", true)
 
-/* app.use(
+app.use(
     helmet.contentSecurityPolicy({
         directives: {
             "script-src": ["'self'", "code.jquery.com", "cdn.jsdelivr.net"],
         },
     })
-) */
+)
 
 // Set up rate limiter: maximum of twenty requests per minute
 const RateLimit = require("express-rate-limit")

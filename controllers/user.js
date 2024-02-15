@@ -139,7 +139,7 @@ exports.login_post = [
                             return
                         }
 
-                        console.log("---123456789098765432345678---", req.user)
+                        console.log("LOGIN IN USER.JS WORKS")
 
                         res.status(200).json({ errors: false, user: user })
                     })
