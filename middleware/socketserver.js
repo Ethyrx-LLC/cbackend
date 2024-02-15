@@ -7,7 +7,11 @@ let onlineUsers = []
 const initSocketServer = () => {
     // Create a new Socket.IO server instance
     const io = new Server(3001, {
-        cors: [process.env.NODE_ENV === "development" ? "http://localhost:5173" : process.env.FRONTEND_URL],
+        cors: [
+            process.env.NODE_ENV === "development"
+                ? "http://localhost:5173"
+                : process.env.FRONTEND_URL,
+        ],
     })
 
     // Event handler for a new socket connection
