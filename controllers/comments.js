@@ -6,7 +6,7 @@ const Listings = require("../models/listing")
 const User = require("../models/user")
 
 // Get comments for a specific listing
-exports.list_comments_get = asyncHandler(async (req, res, next) => {
+exports.list_comments_get = asyncHandler(async (req, res) => {
     // Fetch comments with user and listing population
     const comments = await Comments.find()
         .populate({ path: "user", select: "username emoji" })
@@ -25,7 +25,7 @@ exports.list_comments_get = asyncHandler(async (req, res, next) => {
 })
 
 // Create a new comment for a listing
-exports.create_comment_post = asyncHandler(async (req, res, next) => {
+exports.create_comment_post = asyncHandler(async (req, res) => {
     // Fetch user and listing based on provided IDs
     const user = await User.findById(req.user).exec()
     if (req.user === null) {
@@ -57,7 +57,7 @@ exports.create_comment_post = asyncHandler(async (req, res, next) => {
 })
 
 // Delete a comment
-exports.delete_comment_post = asyncHandler(async (req, res, next) => {
+exports.delete_comment_post = asyncHandler(async (req, res) => {
     console.log(req.params.id)
     // Find and delete the specified comment
     await Comments.findByIdAndDelete(req.params.id).exec()
@@ -67,7 +67,7 @@ exports.delete_comment_post = asyncHandler(async (req, res, next) => {
 })
 
 // Upvote a comment
-exports.upvote_comment_post = asyncHandler(async (req, res, next) => {
+exports.upvote_comment_post = asyncHandler(async (req, res) => {
     // Fetch comment and user
     const comment = await Comments.findById(req.params.id).exec()
     const user = await User.findById(req.user).exec()
@@ -110,7 +110,7 @@ exports.upvote_comment_post = asyncHandler(async (req, res, next) => {
 })
 
 // Downvote a comment
-exports.downvote_comment_post = asyncHandler(async (req, res, next) => {
+exports.downvote_comment_post = asyncHandler(async (req, res) => {
     // Fetch comment and user
     const comment = await Comments.findById(req.params.id).exec()
     const user = await User.findById(req.user).exec()

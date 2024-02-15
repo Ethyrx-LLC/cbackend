@@ -67,14 +67,16 @@ app.use(cookieParser())
 
 // Configure and use session middleware with MongoDB as store
 const sessionMiddleware = session({
-    secret: process.env.TOKEN_SECRET,
-    resave: false,
-    saveUninitialized: false,
-    store: MongoStore.create({ mongoUrl: mongoDB }),
-    cookie: {
-        maxAge: 7 * 24 * 60 * 60 * 1000,
-        httpOnly: true,
-    },
+  secret: process.env.TOKEN_SECRET,
+  resave: false,
+  saveUninitialized: false,
+  store: MongoStore.create({ mongoUrl: mongoDB }),
+  cookie: {
+      maxAge: 7 * 24 * 60 * 60 * 1000,
+      httpOnly: true,
+      sameSite: "strict",
+      secure: true,
+  },
 })
 
 app.use(sessionMiddleware)

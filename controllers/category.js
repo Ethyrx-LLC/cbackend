@@ -4,7 +4,7 @@ const asyncHandler = require("express-async-handler")
 const Categories = require("../models/category")
 
 // Get all categories with populated listings
-exports.list_categories_get = asyncHandler(async (req, res, next) => {
+exports.list_categories_get = asyncHandler(async (req, res) => {
     // Fetch categories with populated listings
     const categories = await Categories.find()
         .lean()
@@ -16,7 +16,7 @@ exports.list_categories_get = asyncHandler(async (req, res, next) => {
 })
 
 // Get details of a specific category based on ID with populated listings
-exports.category_detail_get = asyncHandler(async (req, res, next) => {
+exports.category_detail_get = asyncHandler(async (req, res) => {
     // Fetch a specific category with populated listings based on ID
     const category = await Categories.findOne(req.params.id)
         .populate("listings")
@@ -27,7 +27,7 @@ exports.category_detail_get = asyncHandler(async (req, res, next) => {
 })
 
 // Add a new category
-exports.category_add_post = asyncHandler(async (req, res, next) => {
+exports.category_add_post = asyncHandler(async (req, res) => {
     // Create a new category
     const category = new Categories({
         user: req.variableName._id, // Replace "variableName" with the actual variable name
@@ -42,7 +42,7 @@ exports.category_add_post = asyncHandler(async (req, res, next) => {
 })
 
 // Delete a category based on ID
-exports.category_delete_post = asyncHandler(async (req, res, next) => {
+exports.category_delete_post = asyncHandler(async (req, res) => {
     // Fetch all categories with populated listings
     const categories = await Categories.find().populate("listings").exec()
 

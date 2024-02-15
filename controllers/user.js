@@ -6,16 +6,17 @@ const asyncHandler = require("express-async-handler")
 const { body, validationResult } = require("express-validator")
 const bcrypt = require("bcryptjs")
 const passport = require("passport")
-const { ROLE } = require("../middleware/permissions")
+const { ROLE } = require("../middleware/permissions");
+const mongoose = require("mongoose")
 
 // Get all users with populated listings and comments
-exports.users_get = asyncHandler(async (req, res, next) => {
+exports.users_get = asyncHandler(async (req, res) => {
     const users = await User.find().lean().exec()
     res.status(200).json({ users: users })
 })
 
 // Get a specific user with populated listings and comments based on ID
-exports.user_get = asyncHandler(async (req, res, next) => {
+exports.user_get = asyncHandler(async (req, res) => {
     const param = req.params.id
 
     // objectids lengths = 24
@@ -58,7 +59,7 @@ exports.create_users_post = [
         }),
 
     // Process the creation of a new user
-    asyncHandler(async (req, res, next) => {
+    asyncHandler(async (req, res) => {
         // Check if the user already exists
         const userExist = await User.findOne({ email: req.body.email }).exec()
 
@@ -149,12 +150,12 @@ exports.login_post = [
 ]
 
 // Process user logout
-exports.logout_post = (req, res, next) => {
+exports.logout_post = (req, res) => {
     res.status(200).clearCookie("connect.sid").json({ message: "Logged out" })
 }
 
 // Set emoji for a user
-exports.emoji_set = asyncHandler(async (req, res, next) => {
+exports.emoji_set = asyncHandler(async (req, res) => {
     const user = await User.findById(req.params.id).exec()
     const userEmoji = emoji.unemojify(req.body.emoji)
     if (userEmoji === undefined) {
@@ -166,7 +167,7 @@ exports.emoji_set = asyncHandler(async (req, res, next) => {
 })
 
 // Get user details using a cookie
-exports.cookie = asyncHandler(async (req, res, next) => {
+exports.cookie = asyncHandler(async (req, res) => {
     const user = await User.findById(req.user)
         .populate("listings")
         .populate("comments")
