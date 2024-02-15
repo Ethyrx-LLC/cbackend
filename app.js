@@ -75,9 +75,9 @@ const sessionMiddleware = session({
     store: MongoStore.create({ mongoUrl: mongoDB }),
     cookie: {
         maxAge: 7 * 24 * 60 * 60 * 1000,
-        secure: true,
+        secure: env === "development" ? false : true,
         sameSite: "none",
-        domain: "kameelist.com",
+        domain: env === "development" ? "" : "kameelist.com",
         path: "/",
     },
 })
