@@ -39,7 +39,7 @@ const initSocketServer = () => {
         })
 
         // Event handler for "disconnect" event
-        socket.on("disconnectSocket", () => {
+        socket.on("disconnect-socket", () => {
             // Remove the disconnected user from onlineUsers array
             onlineUsers = onlineUsers.filter(
                 (user) => user.socketId !== socket.id
