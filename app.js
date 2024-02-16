@@ -104,7 +104,7 @@ app.use(express.urlencoded({ extended: false }))
 app.use("/", indexRouter)
 
 // Error handling middleware
-const errorHandler = (error, req, res) => {
+const errorHandler = (error, req, res, next) => { // eslint-disable-line no-unused-vars
     const errorMsg = {
         error_Message: error.message,
         error_Route: req.url,
@@ -112,14 +112,14 @@ const errorHandler = (error, req, res) => {
         error: error.stack,
     }
 
-    console.log(errorMsg)
-    console.log("THE ERROR STATUS IS:" + error.status)
-    const status = error.status || 400
-    console.log("THE STATUS IS:" + status)
+    console.log(errorMsg);
+    console.log("THE ERROR STATUS IS:" + error.status);
+    const status = error.status || 500; // Default to 500 for internal server errors
+    console.log("THE STATUS IS:" + status);
 
-    res.status(status).json(
-        "Internal error occurred, our monkeys are hard at work to figure out what went wrong!"
-    )
+    res.status(status).json({
+        error: "Internal error occurred, our monkeys are hard at work to figure out what went wrong!"
+    });
 }
 
 const io = initSocketServer()
