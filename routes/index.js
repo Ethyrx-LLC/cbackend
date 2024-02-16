@@ -3,18 +3,23 @@ const router = express.Router()
 const listing_controller = require("../controllers/listing")
 const user_controller = require("../controllers/user")
 /* const { cacheRoute, clearCache, cacheCookie } = require("../middleware/cache") */
+const findUserLocation = require("../middleware/location")
 const comments_controller = require("../controllers/comments")
 const categories_controller = require("../controllers/category")
 
 // LISTINGS ROUTE
-router.get("/listings/create", listing_controller.create_listing_get)
-router.post("/listings/create", listing_controller.create_listing_post)
-router.get("/listings", listing_controller.display_listings_all)
 router.get(
-    "/listings/:id",
+    "/listings/create",
 
-    listing_controller.display_listing_detail
+    listing_controller.create_listing_get
 )
+router.post("/listings/create", listing_controller.create_listing_post)
+router.get(
+    "/listings",
+    findUserLocation,
+    listing_controller.display_listings_all
+)
+router.get("/listings/:id", listing_controller.display_listing_detail)
 router.delete("/listings/:id/delete", listing_controller.delete_listing_post)
 router.put("/listings/:id/upvote", listing_controller.upvote_listing_post)
 
