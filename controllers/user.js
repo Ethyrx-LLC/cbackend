@@ -151,7 +151,7 @@ exports.login_post = [
 
 // Process user logout
 exports.logout_post = (req, res) => {
-    res.status(200).clearCookie("connect.sid").json({ message: "Logged out" })
+    res.status(200).clearCookie("connect.sid", { domain: "kameelist.com" }).json({ message: "Logged out" })
 }
 
 // Set emoji for a user
