@@ -89,7 +89,6 @@ exports.create_users_post = [
             })
         } else {
             res.status(401).json({ message: "User already exists" })
-            console.log(userExist)
         }
     }),
 ]
@@ -133,14 +132,12 @@ exports.login_post = [
                     // Save user in session
                     req.login(user, (err) => {
                         if (err) {
-                            console.log("LOGIN FAILED USER.JS WORKS")
                             res.status(500).json({
                                 message: "Session save went bad.",
                             })
                             return
                         }
 
-                        console.log("LOGIN IN USER.JS WORKS")
                         res.status(200).json({ errors: false })
                     })
                 }
