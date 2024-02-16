@@ -1,17 +1,13 @@
 const express = require("express")
 const router = express.Router()
-const { cacheRoute } = require("../middleware/cache")
 const listing_controller = require("../controllers/listing")
 const user_controller = require("../controllers/user")
+const cacheRoute = require("../middleware/cache")
 const comments_controller = require("../controllers/comments")
 const categories_controller = require("../controllers/category")
 
 // LISTINGS ROUTE
-router.get(
-    "/listings/create",
-    cacheRoute,
-    listing_controller.create_listing_get
-)
+router.get("/listings/create", listing_controller.create_listing_get)
 router.post("/listings/create", listing_controller.create_listing_post)
 router.get("/listings", cacheRoute, listing_controller.display_listings_all)
 router.get(
