@@ -75,7 +75,7 @@ const sessionMiddleware = session({
     cookie: {
         maxAge: 7 * 24 * 60 * 60 * 1000,
         secure: env === "development" ? false : true,
-        sameSite: "none",
+        sameSite: "strict",
         domain: env === "development" ? "" : "kameelist.com",
         path: "/",
     },
