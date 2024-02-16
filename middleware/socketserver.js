@@ -16,8 +16,6 @@ const initSocketServer = () => {
 
     // Event handler for a new socket connection
     io.on("connection", (socket) => {
-        console.log(socket.id)
-
         // Event handler for "online-status" event
         socket.on("online-status", (status) => {
             // Broadcast "online" event to all connected sockets
