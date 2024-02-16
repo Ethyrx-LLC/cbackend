@@ -2,7 +2,7 @@ const express = require("express")
 const router = express.Router()
 const listing_controller = require("../controllers/listing")
 const user_controller = require("../controllers/user")
-const { cacheRoute, clearCache } = require("../middleware/cache")
+const { cacheRoute, clearCache, cacheCookie } = require("../middleware/cache")
 const comments_controller = require("../controllers/comments")
 const categories_controller = require("../controllers/category")
 
@@ -63,5 +63,5 @@ router.delete(
 )
 
 // USER API
-router.get("/cookies", cacheRoute, user_controller.cookie)
+router.get("/cookies", cacheCookie, user_controller.cookie)
 module.exports = router
