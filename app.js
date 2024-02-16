@@ -113,7 +113,9 @@ const errorHandler = (error, req, res) => {
     }
 
     console.log(errorMsg)
+    console.log("THE ERROR STATUS IS:" + error.status)
     const status = error.status || 400
+    console.log("THE STATUS IS:" + status)
 
     res.status(status).json(
         "Internal error occurred, our monkeys are hard at work to figure out what went wrong!"

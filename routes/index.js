@@ -31,11 +31,7 @@ router.post(
     "/listings/:id/comments/create",
     comments_controller.create_comment_post
 )
-router.get(
-    "/listings/:id/comments",
-
-    comments_controller.list_comments_get
-)
+router.get("/listings/:id/comments", comments_controller.list_comments_get)
 router.delete(
     "/listings/:id/comments/:id/delete",
     comments_controller.delete_comment_post
