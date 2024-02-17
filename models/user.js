@@ -12,6 +12,7 @@ const UserSchema = new Schema({
     comment_dislikes: [{ type: Schema.Types.ObjectId, ref: "Comments" }],
     listings: [{ type: Schema.Types.ObjectId, ref: "Listing" }],
     comments: [{ type: Schema.Types.ObjectId, ref: "Comments" }],
+    alerts: [{ type: Schema.Types.ObjectId, ref: "Alerts" }],
     createdAt: { type: Date, default: Date.now },
 })
 
