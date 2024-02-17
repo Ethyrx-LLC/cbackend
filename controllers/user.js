@@ -115,7 +115,7 @@ exports.login_post = [
             // Authenticate the user using passport
             passport.authenticate(
                 "local",
-                { successRedirect: "/cookie" },
+                { successRedirect: "/cookies" },
                 (err, user, failureDetails) => {
                     if (err) {
                         res.status(500).json({
@@ -138,7 +138,7 @@ exports.login_post = [
                             return
                         }
 
-                        res.status(200).json({ errors: false })
+                        res.status(200).json({ errors: false, success: true })
                     })
                 }
             )(req, res, next)

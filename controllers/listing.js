@@ -82,6 +82,10 @@ exports.create_listing_post = [
 
     // Process the creation of a new listing
     asyncHandler(async (req, res) => {
+        console.log(req.body.title)
+        console.log(req.body.content)
+        console.log(req.body.category)
+
         // Validate request body
         const errors = validationResult(req)
 
