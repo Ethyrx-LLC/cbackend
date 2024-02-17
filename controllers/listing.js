@@ -82,10 +82,6 @@ exports.create_listing_post = [
 
     // Process the creation of a new listing
     asyncHandler(async (req, res) => {
-        console.log(req.body.title)
-        console.log(req.body.content)
-        console.log(req.body.category)
-
         // Validate request body
         const errors = validationResult(req)
 
@@ -93,14 +89,14 @@ exports.create_listing_post = [
         const poster = await User.findById(req.user._id).exec()
 
         // Fetch the category based on the title provided in the request body
-        const category = await Category.findOne({ title: req.body.category })
+        const category = await Category.findById(req.body.category)
 
         // Create a new listing object
         const listing = new Listings({
             user: req.user._id,
             title: req.body.title,
             content: req.body.content,
-            category: category._id,
+            category: req.body.category,
             likes: 0,
             views: 0,
             urgency: req.body.urgency || 0,
