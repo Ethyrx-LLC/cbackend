@@ -1,0 +1,24 @@
+name: Deploy
+on:
+    push:
+        branches:
+            - production
+jobs:
+    build:
+        name: Build
+        runs-on: ubuntu-latest
+        steps:
+            - name: executing remote ssh commands using password
+              uses: appleboy/ssh-action@master
+              with:
+                  host: ${{ secrets.SSH_HOST }}
+                  username: ${{ secrets.SSH_USER }}
+                  key: ${{ secrets.SSH_KEY }}
+                  script: |
+                      cd /home/kameelist/cbackend
+                      git checkout production
+                      git pull
+                      git reset --hard
+                      git clean -f -d
+                      npm i
+                      pm2 restart 'Kameelist Backend'
