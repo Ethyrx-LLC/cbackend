@@ -13,12 +13,12 @@ router.get(
 
     listing_controller.create_listing_get
 )
-router.post("/listings/create", listing_controller.create_listing_post)
-router.get(
-    "/listings",
+router.post(
+    "/listings/create",
     findUserLocation,
-    listing_controller.display_listings_all
+    listing_controller.create_listing_post
 )
+router.get("/listings", listing_controller.display_listings_all)
 router.get("/listings/:id", listing_controller.display_listing_detail)
 router.delete("/listings/:id/delete", listing_controller.delete_listing_post)
 router.put("/listings/:id/upvote", listing_controller.upvote_listing_post)
