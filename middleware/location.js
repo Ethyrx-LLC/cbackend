@@ -1,7 +1,7 @@
 const { lookup } = require("geoip-lite")
 
 function findUserLocation(req, res, next) {
-    console.log(lookup(req.ip))
+    req.userLocation = lookup(req.ip)
 
     next()
 }

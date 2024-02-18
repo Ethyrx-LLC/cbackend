@@ -115,7 +115,11 @@ exports.create_listing_post = [
             await category.save()
             await poster.save()
             // Respond with success and the created listing
-            res.status(200).json({ success: true, listing: listing })
+            res.status(200).json({
+                success: true,
+                listing: listing,
+                location: req.location,
+            })
         }
     }),
 ]
