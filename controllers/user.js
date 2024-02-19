@@ -167,7 +167,7 @@ exports.emoji_set = asyncHandler(async (req, res) => {
 })
 
 exports.alerts_get = asyncHandler(async (req, res) => {
-    const userId = req.user.id
+    const userId = req.user
     console.log(userId)
     const notifications = await Alerts.find({ user_id: userId })
         .lean()
@@ -213,6 +213,7 @@ exports.mark_all_as_read = asyncHandler(async (req, res) => {
 
 // Get user details using a cookie
 exports.cookie = asyncHandler(async (req, res) => {
+    console.log(req.user)
     const user = await User.findById(req.user)
         .populate("listings")
         .populate("comments")
