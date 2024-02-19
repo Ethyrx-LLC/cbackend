@@ -2,6 +2,7 @@
 require("dotenv").config()
 const Comments = require("../models/comments")
 const asyncHandler = require("express-async-handler")
+const Alerts = require("../models/alerts")
 const Listings = require("../models/listing")
 const User = require("../models/user")
 
@@ -47,6 +48,16 @@ exports.create_comment_post = asyncHandler(async (req, res) => {
 
     // Save the new comment, update references in listing and user
     await comment.save()
+
+    const alert = new Alerts({
+        user: listing.user.id,
+        message: comment,
+        link: req.params.id,
+        is_read: false,
+        createdAt: Date.now(),
+    })
+
+    await alert.save()
     listing.comments.push(comment)
     user.comments.push(comment)
     await listing.save()

@@ -165,6 +165,15 @@ exports.emoji_set = asyncHandler(async (req, res) => {
     res.status(200).json({ user_emoji: req.user.emoji })
 })
 
+exports.get_alerts = asyncHandler(async (req, res, next) => {
+    const userId = req.user._id // Assuming you have user authentication middleware
+    const notifications = await Alerts.find({ user_id: userId })
+        .sort({ created_at: -1 })
+        .limit(10) // Limit to the latest 10 notifications
+
+    res.json(notifications)
+})
+
 // Get user details using a cookie
 exports.cookie = asyncHandler(async (req, res) => {
     const user = await User.findById(req.user)
