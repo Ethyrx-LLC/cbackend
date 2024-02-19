@@ -206,9 +206,10 @@ exports.mark_all_as_read = asyncHandler(async (req, res) => {
     await Alerts.updateMany(
         { user_id: user, is_read: false },
         { $set: { is_read: true } }
-    ).exec()
+    )
+        .save()
+        .exec()
 
-    Alerts.save()
     res.status(200).json({ message: "All notifications marked as read" })
 })
 
