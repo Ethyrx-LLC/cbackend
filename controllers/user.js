@@ -167,9 +167,25 @@ exports.emoji_set = asyncHandler(async (req, res) => {
 })
 
 exports.alerts_get = asyncHandler(async (req, res) => {
-    const userId = req.user._id // Assuming you have user authentication middleware
+    const userId = req.user._id
     const notifications = await Alerts.find({ user_id: userId })
         .lean()
+        .populate({
+            path: "comment",
+            select: "user text",
+            populate: {
+                path: "user",
+                select: "username emoji", // fields to select from the User model
+            },
+        })
+        .populate({
+            path: "listing",
+            select: "user title _id",
+            populate: {
+                path: "user",
+                select: "username emoji", // fields to select from the User model
+            },
+        })
         .sort({ created_at: -1 })
         .limit(10) // Limit to the latest 10 notifications
 
