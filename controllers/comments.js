@@ -48,7 +48,7 @@ exports.create_comment_post = asyncHandler(async (req, res) => {
 
     const alert = new Alerts({
         user_id: listing.user,
-        message: comment,
+        message: comment.id,
         listing: comment.listing,
         link: req.params.id,
         is_read: false,
