@@ -28,6 +28,7 @@ router.post("/users/create", user_controller.create_users_post)
 router.post("/users/login", user_controller.login_post)
 router.post("/users/logout", user_controller.logout_post)
 router.get("/users", user_controller.users_get)
+router.get("/users/alerts", user_controller.alerts_get)
 router.get("/users/:id", user_controller.user_get)
 router.post("/users/:id/emoji", user_controller.emoji_set)
 
