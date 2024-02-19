@@ -68,6 +68,7 @@ exports.create_users_post = [
             // Validate request body
             const errors = validationResult(req)
             const randomEmoji = emoji.random()
+            const unEmojify = emoji.unemojify(randomEmoji.emoji)
             // Hash the password
             bcrypt.hash(req.body.password, 10, async (err, hashedPassword) => {
                 // Create a new user
@@ -76,7 +77,7 @@ exports.create_users_post = [
                     email: req.body.email,
                     role: ROLE.BASIC,
                     password: hashedPassword,
-                    emoji: randomEmoji.emoji,
+                    emoji: unEmojify,
                     admin: false,
                 })
 
