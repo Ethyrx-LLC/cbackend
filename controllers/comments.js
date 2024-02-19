@@ -46,11 +46,9 @@ exports.create_comment_post = asyncHandler(async (req, res) => {
         dislikes: 0,
     })
 
-    console.log(comment)
-
     const alert = new Alerts({
         user_id: listing.user,
-        message: comment.id,
+        comment: comment,
         listing: comment.listing,
         link: req.params.id,
         is_read: false,
@@ -59,7 +57,7 @@ exports.create_comment_post = asyncHandler(async (req, res) => {
 
     // Save the new comment, update references in listing and user
     await comment.save()
-    console.log(comment)
+
     await alert.save()
     listing.comments.push(comment)
     user.comments.push(comment)
