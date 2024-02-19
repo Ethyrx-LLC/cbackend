@@ -97,6 +97,7 @@ exports.create_listing_post = [
             title: req.body.title,
             content: req.body.content,
             category: req.body.category,
+            location: req.userLocation,
             likes: 0,
             views: 0,
             urgency: req.body.urgency || 0,
@@ -117,7 +118,6 @@ exports.create_listing_post = [
             res.status(200).json({
                 success: true,
                 listing: listing,
-                location: req.userLocation,
             })
         }
     }),
