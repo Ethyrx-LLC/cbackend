@@ -2,6 +2,7 @@
 require("dotenv").config()
 const User = require("../models/user")
 const emoji = require("node-emoji")
+const Alerts = require("../models/alerts")
 const asyncHandler = require("express-async-handler")
 const { body, validationResult } = require("express-validator")
 const bcrypt = require("bcryptjs")
@@ -165,7 +166,7 @@ exports.emoji_set = asyncHandler(async (req, res) => {
     res.status(200).json({ user_emoji: req.user.emoji })
 })
 
-exports.get_alerts = asyncHandler(async (req, res, next) => {
+exports.get_alerts = asyncHandler(async (req, res) => {
     const userId = req.user._id // Assuming you have user authentication middleware
     const notifications = await Alerts.find({ user_id: userId })
         .sort({ created_at: -1 })
