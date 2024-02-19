@@ -50,7 +50,7 @@ exports.create_comment_post = asyncHandler(async (req, res) => {
     await comment.save()
 
     const alert = new Alerts({
-        user: listing.user.id,
+        user: listing.user,
         message: comment,
         link: req.params.id,
         is_read: false,
