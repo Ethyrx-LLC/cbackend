@@ -196,7 +196,7 @@ exports.mark_as_read = asyncHandler(async (req, res) => {
     const update = { is_read: true }
     await Alerts.findByIdAndUpdate(req.params.id, update).exec()
 
-    res.status(200).json({ message: "Motification marked as read" })
+    res.status(200).json({ message: "Notification marked as read" })
 })
 
 exports.mark_all_as_read = asyncHandler(async (req, res) => {
