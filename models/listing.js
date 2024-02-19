@@ -8,6 +8,7 @@ const ListingSchema = new Schema({
     category: { type: Schema.Types.ObjectId, ref: "Category" },
     likes: Number,
     comments: [{ type: Schema.Types.ObjectId, ref: "Comments" }],
+    photos: Array,
     location: Object,
     urgency: Number,
     views: Number,

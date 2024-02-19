@@ -98,6 +98,7 @@ exports.create_listing_post = [
             content: req.body.content,
             category: req.body.category,
             location: req.userLocation,
+            photos: req.files,
             likes: 0,
             views: 0,
             urgency: req.body.urgency || 0,
