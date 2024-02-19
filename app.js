@@ -76,8 +76,7 @@ const sessionMiddleware = session({
         maxAge: 7 * 24 * 60 * 60 * 1000,
         secure: env === "development" ? false : true,
         sameSite: env === "development" ? "none" : "strict",
-        domain:
-            env === "development" ? "" : "kameelist.com",
+        domain: env === "development" ? "" : "kameelist.com",
         path: "/",
     },
 })
