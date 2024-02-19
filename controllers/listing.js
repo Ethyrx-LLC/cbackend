@@ -108,8 +108,8 @@ exports.create_listing_post = [
             res.status(401).json({ success: false, error: errors.array() })
         } else {
             // Save the new listing, update poster and category references
-            console.log("THIS IS REQ" + req.userLocation)
-            console.log("THIS IS RES" + res.userLocation)
+            console.log(req.userLocation)
+            console.log(res.userLocation)
             await listing.save()
             poster.listings.push(listing)
             category.listings.push(listing)
