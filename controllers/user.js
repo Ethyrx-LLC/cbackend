@@ -180,8 +180,8 @@ exports.mark_as_read = asyncHandler(async (req, res) => {
     const user = await User.findById(req.user).exec()
 
     await Alerts.updateMany(
-        { user_id: user, read: false },
-        { $set: { read: true } }
+        { user_id: user, is_read: false },
+        { $set: { is_read: true } }
     )
 
     Alerts.save()
