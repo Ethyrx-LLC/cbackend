@@ -169,10 +169,23 @@ exports.emoji_set = asyncHandler(async (req, res) => {
 exports.alerts_get = asyncHandler(async (req, res) => {
     const userId = req.user._id // Assuming you have user authentication middleware
     const notifications = await Alerts.find({ user_id: userId })
+        .lean()
         .sort({ created_at: -1 })
         .limit(10) // Limit to the latest 10 notifications
 
     res.json(notifications)
+})
+
+exports.mark_as_read = asyncHandler(async (req, res) => {
+    const user = await User.findById(req.user).exec()
+
+    await Alerts.updateMany(
+        { user_id: user, read: false },
+        { $set: { read: true } }
+    )
+
+    Alerts.save()
+    res.status(200).json({ message: "All notifications marked as read" })
 })
 
 // Get user details using a cookie
