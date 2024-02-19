@@ -1,8 +1,13 @@
 const { lookup } = require("geoip-lite")
 
 function findUserLocation(req, res, next) {
-    req.userLocation = lookup(req.ip)
-    res.userLocation = lookup(req.ip)
+    const userCountry = lookup(req.ip)
+    req.userLocation = {
+        country: userCountry.country,
+        region: userCountry.region,
+        city: userCountry.city,
+        timezone: userCountry.timezone,
+    }
 
     next()
 }
