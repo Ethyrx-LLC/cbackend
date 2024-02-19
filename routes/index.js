@@ -6,6 +6,8 @@ const user_controller = require("../controllers/user")
 const findUserLocation = require("../middleware/location")
 const comments_controller = require("../controllers/comments")
 const categories_controller = require("../controllers/category")
+const multer = require("multer")
+const upload = multer({ dest: "/hdd" })
 
 // LISTINGS ROUTE
 router.get(
@@ -15,6 +17,7 @@ router.get(
 )
 router.post(
     "/listings/create",
+    upload.array("photos", 8),
     findUserLocation,
     listing_controller.create_listing_post
 )
