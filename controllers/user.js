@@ -167,7 +167,7 @@ exports.emoji_set = asyncHandler(async (req, res) => {
 })
 
 exports.alerts_get = asyncHandler(async (req, res) => {
-    const userId = req.user
+    const userId = req.user.id
     console.log(userId)
     const notifications = await Alerts.find({ user_id: userId })
         .lean()
