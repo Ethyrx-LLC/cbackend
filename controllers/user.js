@@ -13,7 +13,7 @@ const mongoose = require("mongoose")
 // Get all users with populated listings and comments
 exports.users_get = asyncHandler(async (req, res) => {
     const users = await User.find().lean().exec()
-    res.status(200).json({ users: users })
+    res.status(200).json({ success: true, users: users })
 })
 
 // Get a specific user with populated listings and comments based on ID
@@ -38,7 +38,7 @@ exports.user_get = asyncHandler(async (req, res) => {
         .populate("comments")
         .exec()
 
-    res.status(200).json({ user: user })
+    res.status(200).json({ success: true, user: user })
 })
 
 // Create a new user
@@ -82,14 +82,20 @@ exports.create_users_post = [
 
                 // Check for validation errors
                 if (!errors.isEmpty()) {
-                    res.status(401).json({ error: errors.array() })
+                    res.status(401).json({
+                        success: false,
+                        error: errors.array(),
+                    })
                 } else {
                     // Save the new user
                     await user.save()
                 }
             })
         } else {
-            res.status(401).json({ message: "User already exists" })
+            res.status(401).json({
+                success: false,
+                message: "User already exists",
+            })
         }
     }),
 ]
@@ -151,7 +157,7 @@ exports.login_post = [
 exports.logout_post = (req, res) => {
     res.status(200)
         .clearCookie("connect.sid", { domain: "kameelist.com" })
-        .json({ message: "Logged out" })
+        .json({ success: true, message: "Logged out" })
 }
 
 // Set emoji for a user
@@ -159,11 +165,14 @@ exports.emoji_set = asyncHandler(async (req, res) => {
     const user = await User.findById(req.params.id).exec()
     const userEmoji = emoji.unemojify(req.body.emoji)
     if (userEmoji === undefined) {
-        res.status(401).json("Emoji does not exist!")
+        res.status(401).json({
+            success: false,
+            message: "Emoji does not exist!",
+        })
     }
     user.emoji = userEmoji
     await user.save()
-    res.status(200).json({ user_emoji: req.user.emoji })
+    res.status(200).json({ success: true, user_emoji: req.user.emoji })
 })
 
 exports.alerts_get = asyncHandler(async (req, res) => {
@@ -189,7 +198,7 @@ exports.alerts_get = asyncHandler(async (req, res) => {
         .sort({ created_at: -1 })
         .limit(10) // Limit to the latest 10 notifications
 
-    res.json(notifications)
+    res.json({ success: true, notifications })
 })
 
 exports.mark_as_read = asyncHandler(async (req, res) => {
@@ -197,7 +206,10 @@ exports.mark_as_read = asyncHandler(async (req, res) => {
     await Alerts.findByIdAndUpdate(req.params.id, update).exec()
 
     Alerts.save()
-    res.status(200).json({ message: "Motification marked as read" })
+    res.status(200).json({
+        success: true,
+        message: "Motification marked as read",
+    })
 })
 
 exports.mark_all_as_read = asyncHandler(async (req, res) => {
@@ -209,7 +221,10 @@ exports.mark_all_as_read = asyncHandler(async (req, res) => {
     ).exec()
 
     Alerts.save()
-    res.status(200).json({ message: "All notifications marked as read" })
+    res.status(200).json({
+        success: true,
+        message: "All notifications marked as read",
+    })
 })
 
 // Get user details using a cookie
@@ -218,5 +233,5 @@ exports.cookie = asyncHandler(async (req, res) => {
         .populate("listings")
         .populate("comments")
         .exec()
-    res.status(200).json(user)
+    res.status(200).json({ success: true, user: user })
 })
