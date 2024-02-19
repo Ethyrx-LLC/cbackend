@@ -87,6 +87,7 @@ exports.create_users_post = [
                 } else {
                     // Save the new user
                     await user.save()
+                    res.status(200).json({ success: true })
                 }
             })
         } else {
