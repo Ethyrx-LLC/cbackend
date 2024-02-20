@@ -10,14 +10,10 @@ const multer = require("multer")
 const upload = multer({ dest: "/hdd" })
 
 // LISTINGS ROUTE
-router.get(
-    "/listings/create",
-
-    listing_controller.create_listing_get
-)
+router.get("/listings/create", listing_controller.create_listing_get)
 router.post(
     "/listings/create",
-    upload.array("photos", 8),
+    upload.array("photos", 6),
     findUserLocation,
     listing_controller.create_listing_post
 )
