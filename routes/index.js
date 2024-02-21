@@ -37,10 +37,10 @@ router.put("/users/alerts/:id/read", user_controller.mark_as_read)
 router.put("/users/alerts/read", user_controller.mark_all_as_read)
 
 // USER CHAT ROUTES
-router.post("users/:id/chats/create", chat_controller.new_chat)
-router.post("users/:id/chats/:id/messages/create", chat_controller.send_message)
-router.get("users/:id/chats", chat_controller.list_chats)
-router.get("users/:id/chats/:id/messages", chat_controller.all_messages)
+router.post("users/chats/create", chat_controller.new_chat)
+router.post("users/chats/:id/messages/create", chat_controller.send_message)
+router.get("users/chats", chat_controller.list_chats)
+router.get("users/chats/:id/messages", chat_controller.all_messages)
 
 // COMMENT ROUTES
 router.post(
