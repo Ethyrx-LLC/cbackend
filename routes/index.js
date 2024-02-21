@@ -28,11 +28,19 @@ router.post("/users/create", user_controller.create_users_post)
 router.post("/users/login", user_controller.login_post)
 router.post("/users/logout", user_controller.logout_post)
 router.get("/users", user_controller.users_get)
+router.get("/users/:id", user_controller.user_get)
+router.post("/users/:id/emoji", user_controller.emoji_set)
+
+// USER ALERT ROUTES
 router.get("/users/alerts", user_controller.alerts_get)
 router.put("/users/alerts/:id/read", user_controller.mark_as_read)
 router.put("/users/alerts/read", user_controller.mark_all_as_read)
-router.get("/users/:id", user_controller.user_get)
-router.post("/users/:id/emoji", user_controller.emoji_set)
+
+// USER CHAT ROUTES
+router.post("users/:id/chats/create", chat_controller.new_chat)
+router.post("users/:id/chats/:id/messages/create", chat_controller.send_message)
+router.get("users/:id/chats", chat_controller.list_chats)
+router.get("users/:id/chats/:id/messages", chat_controller.all_messages)
 
 // COMMENT ROUTES
 router.post(
@@ -61,12 +69,6 @@ router.delete(
     "/categories/:id/delete",
     categories_controller.category_delete_post
 )
-
-// CHAT ROUTES
-router.post("/chats/create", chat_controller.new_chat)
-router.post("/chats/:id/messages/create", chat_controller.send_message)
-router.get("/chats", chat_controller.list_chats)
-router.get("/chats/:id/messages", chat_controller.all_messages)
 
 // USER API
 router.get("/cookies", user_controller.cookie)
