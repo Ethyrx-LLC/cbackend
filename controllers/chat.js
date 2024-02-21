@@ -5,18 +5,21 @@ const asyncHandler = require("express-async-handler")
 
 // RECEIVE A MESSAGE
 exports.all_messages = asyncHandler(async (req, res) => {
-    const chat = Chat.findById(req.params.id).lean().populate("messages").exec()
+    const chat = await Chat.findById(req.params.id)
+        .populate({
+            path: "messages",
+            populate: {
+                path: "sender receiver",
+                select: "username emoji",
+            },
+        })
+        .lean()
+        .exec();
 
-    let status
-
-    if (!chat.messages || chat.messages.length === 0) {
-        status = "No messages"
-    }
 
     res.status(200).json({
         chat: chat,
         messages: chat.messages,
-        status: status,
     })
 })
 // SHOW ALL CONVERSATIONS
@@ -27,13 +30,9 @@ exports.list_chats = asyncHandler(async (req, res) => {
             select: "sender receiver",
             populate: [
                 {
-                    path: "sender",
+                    path: "sender receiver",
                     select: "username emoji",
-                },
-                {
-                    path: "receiver",
-                    select: "username emoji",
-                },
+                }
             ],
         })
         .exec()
