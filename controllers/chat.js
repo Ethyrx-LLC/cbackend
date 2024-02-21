@@ -19,7 +19,6 @@ exports.all_messages = asyncHandler(async (req, res) => {
 
     res.status(200).json({
         chat: chat,
-        messages: chat.messages,
     })
 })
 // SHOW ALL CONVERSATIONS
