@@ -20,7 +20,11 @@ exports.all_messages = asyncHandler(async (req, res) => {
         .lean()
         .exec()
 
-    console.log(req.params.id)
+    // https://stackoverflow.com/questions/11637353/comparing-mongoose-id-and-strings
+    // This is our check to prevent other users being able to view other peoples' conversations
+    if (!req.user._id.equals(chat.sender._id) && !req.user._id.equals(chat.receiver._id)) {
+        return res.status(401).json({ success: false })
+    }
 
     res.status(200).json({
         chat: chat,
@@ -64,9 +68,12 @@ exports.send_message = asyncHandler(async (req, res) => {
     const chat = await Chat.findById(req.params.id).exec()
     const sender = await User.findById(req.user).exec()
 
-    if (chat.sender !== req.user) {
+    // https://stackoverflow.com/questions/11637353/comparing-mongoose-id-and-strings
+    // This is our check to prevent other users being able to post into other conversations
+    if (!req.user._id.equals(chat.sender._id) && !req.user._id.equals(chat.receiver._id)) {
         return res.status(401).json({ success: false })
     }
+
     const message = new Message({
         sender: sender,
         message: req.body.message,
