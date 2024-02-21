@@ -58,8 +58,9 @@ exports.new_chat = asyncHandler(async (req, res) => {
 })
 // SEND A MESSAGE
 exports.send_message = asyncHandler(async (req, res) => {
-    const chat = Chat.findById(req.params.id).exec()
-    const sender = User.findById(req.user).exec()
+    const chat = await Chat.findById(req.params.id).exec()
+    console.log(chat)
+    const sender = await User.findById(req.user).exec()
     const message = new Message({
         sender: sender,
         message: req.body.message,
