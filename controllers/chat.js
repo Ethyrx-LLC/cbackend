@@ -13,14 +13,17 @@ exports.list_chats = asyncHandler(async (req, res) => {
     const userChats = await User.findById(req.user)
         .populate({
             path: "chats",
-            populate: {
-                path: "sender",
-                select: "username emoji",
-            },
-            populate: {
-                path: "receiver",
-                select: "username emoji",
-            },
+            select: "sender receiver",
+            populate: [
+                {
+                    path: "sender",
+                    select: "username emoji",
+                },
+                {
+                    path: "receiver",
+                    select: "username emoji",
+                },
+            ],
         })
         .exec()
     res.status(200).json({ success: true, chats: userChats.chats })
