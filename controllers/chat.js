@@ -6,7 +6,14 @@ const asyncHandler = require("express-async-handler")
 // RECEIVE A MESSAGE
 exports.all_messages = asyncHandler(async (req, res) => {
     const chat = Chat.findById(req.params.id).lean().exec()
-    res.status(200).json(chat.messages)
+
+    let status
+
+    if (chat.messages.length === 0) {
+        status = "No messages"
+    }
+
+    res.status(200).json({ messages: chat.messages, status: status })
 })
 // SHOW ALL CONVERSATIONS
 exports.list_chats = asyncHandler(async (req, res) => {
