@@ -7,7 +7,7 @@ const findUserLocation = require("../middleware/location")
 const comments_controller = require("../controllers/comments")
 const categories_controller = require("../controllers/category")
 const multer = require("multer")
-const upload = multer({ dest: "/hdd" })
+const upload = multer({ dest: "/hdd/kameelist/images" })
 
 // LISTINGS ROUTE
 router.get("/listings/create", listing_controller.create_listing_get)
