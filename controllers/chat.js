@@ -21,5 +21,6 @@ exports.new_chat = asyncHandler(async (req, res) => {
     })
 
     chat.save()
+    res.status(200).json({ success: true, chat })
 })
 // SEND A MESSAGE
