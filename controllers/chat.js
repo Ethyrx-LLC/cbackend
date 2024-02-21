@@ -6,6 +6,7 @@ const asyncHandler = require("express-async-handler")
 // RECEIVE A MESSAGE
 exports.all_messages = asyncHandler(async (req, res) => {
     const chat = await Chat.findById(req.params.id)
+        .lean()
         .populate({
             path: "messages",
             populate: {
@@ -17,12 +18,14 @@ exports.all_messages = asyncHandler(async (req, res) => {
             path: "sender receiver",
             select: "username emoji",
         })
-        .lean()
         .exec()
 
     // https://stackoverflow.com/questions/11637353/comparing-mongoose-id-and-strings
     // This is our check to prevent other users being able to view other peoples' conversations
-    if (!req.user._id.equals(chat.sender._id) && !req.user._id.equals(chat.receiver._id)) {
+    if (
+        !req.user._id.equals(chat.sender._id) &&
+        !req.user._id.equals(chat.receiver._id)
+    ) {
         return res.status(401).json({ success: false })
     }
 
@@ -33,6 +36,7 @@ exports.all_messages = asyncHandler(async (req, res) => {
 // SHOW ALL CONVERSATIONS
 exports.list_chats = asyncHandler(async (req, res) => {
     const userChats = await User.findById(req.user)
+        .lean()
         .populate({
             path: "chats",
             select: "sender receiver",
@@ -58,9 +62,7 @@ exports.new_chat = asyncHandler(async (req, res) => {
 
     sender.chats.push(chat)
     receiver.chats.push(chat)
-    chat.save()
-    sender.save()
-    receiver.save()
+    await Promise.all([sender.save(), receiver.save(), chat.save()])
     res.status(200).json({ success: true, chat })
 })
 // SEND A MESSAGE
@@ -70,7 +72,10 @@ exports.send_message = asyncHandler(async (req, res) => {
 
     // https://stackoverflow.com/questions/11637353/comparing-mongoose-id-and-strings
     // This is our check to prevent other users being able to post into other conversations
-    if (!req.user._id.equals(chat.sender._id) && !req.user._id.equals(chat.receiver._id)) {
+    if (
+        !req.user._id.equals(chat.sender._id) &&
+        !req.user._id.equals(chat.receiver._id)
+    ) {
         return res.status(401).json({ success: false })
     }
 
