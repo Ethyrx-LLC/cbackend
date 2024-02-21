@@ -1,14 +1,18 @@
+require("dotenv").config()
 const express = require("express")
 const router = express.Router()
 const listing_controller = require("../controllers/listing")
 const user_controller = require("../controllers/user")
-const chat_controller = require("../controllers/chat")
 /* const { cacheRoute, clearCache, cacheCookie } = require("../middleware/cache") */
 const findUserLocation = require("../middleware/location")
 const comments_controller = require("../controllers/comments")
 const categories_controller = require("../controllers/category")
+const chat_controller = require("../controllers/chat")
 const multer = require("multer")
-const upload = multer({ dest: "/hdd/kameelist/images" })
+const env = process.env.NODE_ENV || "development"
+const upload = multer({
+    dest: env === "development" ? "" : "/hdd/kameelist/images",
+})
 
 // LISTINGS ROUTE
 router.get("/listings/create", listing_controller.create_listing_get)
@@ -23,24 +27,24 @@ router.get("/listings/:id", listing_controller.display_listing_detail)
 router.delete("/listings/:id/delete", listing_controller.delete_listing_post)
 router.put("/listings/:id/upvote", listing_controller.upvote_listing_post)
 
-// USERS ROUTES
-router.post("/users/create", user_controller.create_users_post)
-router.post("/users/login", user_controller.login_post)
-router.post("/users/logout", user_controller.logout_post)
-router.get("/users", user_controller.users_get)
-router.get("/users/:id", user_controller.user_get)
-router.post("/users/:id/emoji", user_controller.emoji_set)
-
 // USER ALERT ROUTES
 router.get("/users/alerts", user_controller.alerts_get)
 router.put("/users/alerts/:id/read", user_controller.mark_as_read)
 router.put("/users/alerts/read", user_controller.mark_all_as_read)
 
 // USER CHAT ROUTES
-router.post("users/chats/create", chat_controller.new_chat)
-router.post("users/chats/:id/messages/create", chat_controller.send_message)
-router.get("users/chats", chat_controller.list_chats)
-router.get("users/chats/:id/messages", chat_controller.all_messages)
+router.post("/users/chats/create", chat_controller.new_chat)
+router.post("/users/chats/:id/messages/create", chat_controller.send_message)
+router.get("/users/chats", chat_controller.list_chats)
+router.get("/users/chats/:id/messages", chat_controller.all_messages)
+
+// USERS ROUTES
+router.post("/users/create", user_controller.create_users_post)
+router.post("/users/login", user_controller.login_post)
+router.post("/users/logout", user_controller.logout_post)
+router.get("/users", user_controller.users_get)
+router.post("/users/:id/emoji", user_controller.emoji_set)
+router.get("/users/:id", user_controller.user_get)
 
 // COMMENT ROUTES
 router.post(

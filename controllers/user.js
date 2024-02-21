@@ -215,7 +215,6 @@ exports.mark_all_as_read = asyncHandler(async (req, res) => {
 
 // Get user details using a cookie
 exports.cookie = asyncHandler(async (req, res) => {
-    console.log(req.user)
     const user = await User.findById(req.user)
         .populate("listings")
         .populate("comments")
