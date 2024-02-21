@@ -9,7 +9,7 @@ exports.all_messages = asyncHandler(async (req, res) => {
         .populate({
             path: "messages",
             populate: {
-                path: "sender receiver",
+                path: "sender",
                 select: "username emoji",
             },
         })
@@ -18,12 +18,12 @@ exports.all_messages = asyncHandler(async (req, res) => {
             select: "username emoji",
         })
         .lean()
-        .exec();
+        .exec()
 
     res.status(200).json({
         chat: chat,
-    });
-});
+    })
+})
 // SHOW ALL CONVERSATIONS
 exports.list_chats = asyncHandler(async (req, res) => {
     const userChats = await User.findById(req.user)
