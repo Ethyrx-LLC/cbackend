@@ -60,7 +60,7 @@ const initSocketServer = () => {
             io.emit("get-users", onlineUsers)
         })
 
-        socket.on("send-message", () => {})
+        socket.on("send-message", (data) => {})
     })
 
     // Return the configured Socket.IO server instance
