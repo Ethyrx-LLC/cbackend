@@ -25,7 +25,7 @@ exports.display_listings_all = asyncHandler(async (req, res) => {
             select: "user createdAt",
             populate: {
                 path: "user",
-                select: "username emoji", // fields to select from the User model
+                select: "username emoji",
             },
         })
         .exec()
