@@ -2,6 +2,7 @@ const express = require("express")
 const router = express.Router()
 const listing_controller = require("../controllers/listing")
 const user_controller = require("../controllers/user")
+const chat_controller = require("../controllers/chat")
 /* const { cacheRoute, clearCache, cacheCookie } = require("../middleware/cache") */
 const findUserLocation = require("../middleware/location")
 const comments_controller = require("../controllers/comments")
@@ -54,17 +55,20 @@ router.put(
 
 // CATEGORY ROUTES
 router.get("/categories", categories_controller.list_categories_get)
-router.get(
-    "/categories/:id",
-
-    categories_controller.category_detail_get
-)
+router.get("/categories/:id", categories_controller.category_detail_get)
 router.post("/categories/create", categories_controller.category_add_post)
 router.delete(
     "/categories/:id/delete",
     categories_controller.category_delete_post
 )
 
+// CHAT ROUTES
+router.post("/chats/create", chat_controller.new_chat)
+router.post("/chats/:id/messages/create", chat_controller.send_message)
+router.get("/chats", chat_controller.list_chats)
+router.get("/chats/:id/messages", chat_controller.all_messages)
+
 // USER API
 router.get("/cookies", user_controller.cookie)
+
 module.exports = router
