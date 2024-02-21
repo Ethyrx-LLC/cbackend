@@ -8,7 +8,7 @@ const UserSchema = new Schema({
     emoji: String,
     role: Number,
     listing_likes: [{ type: Schema.Types.ObjectId, ref: "Listing" }],
-    chats: [{ type: Schema.Types.ObjectId, ref: "Chats" }],
+    chats: [{ type: Schema.Types.ObjectId, ref: "Chat" }],
     comment_likes: [{ type: Schema.Types.ObjectId, ref: "Comments" }],
     comment_dislikes: [{ type: Schema.Types.ObjectId, ref: "Comments" }],
     listings: [{ type: Schema.Types.ObjectId, ref: "Listing" }],
