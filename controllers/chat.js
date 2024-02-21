@@ -9,7 +9,7 @@ exports.all_messages = asyncHandler(async (req, res) => {
 
     let status
 
-    if (chat.messages.length === 0) {
+    if (!chat.messages || chat.messages.length === 0) {
         status = "No messages"
     }
 
