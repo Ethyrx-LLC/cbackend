@@ -10,9 +10,9 @@ exports.all_messages = asyncHandler(async (req, res) => {
 })
 // SHOW ALL CONVERSATIONS
 exports.list_chats = asyncHandler(async (req, res) => {
-    const chats = await Chat.find().exec()
+    const userChats = await User.findById(req.user).lean().exec()
 
-    res.status(200).json({ success: true, chats })
+    res.status(200).json({ success: true, chats: userChats.chats })
 })
 
 // START A NEW CONVERSATION
@@ -24,7 +24,11 @@ exports.new_chat = asyncHandler(async (req, res) => {
         receiver: receiver,
     })
 
+    sender.chats.push(chat)
+    receiver.chats.push(chat)
     chat.save()
+    sender.save()
+    receiver.save()
     res.status(200).json({ success: true, chat })
 })
 // SEND A MESSAGE
