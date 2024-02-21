@@ -12,7 +12,7 @@ const ListingSchema = new Schema({
     location: Object,
     urgency: Number,
     views: Number,
-    createdAt: { type: Date, index: true },
+    createdAt: { type: Date, index: true, index: true },
 })
 
 ListingSchema.virtual("url").get(function () {
@@ -20,5 +20,7 @@ ListingSchema.virtual("url").get(function () {
 })
 
 ListingSchema.index({ createdAt: -1 })
+ListingSchema.index({ likes: 1 }, { sparse: true })
+ListingSchema.index({ urgency: 1 }, { sparse: true })
 
 module.exports = mongoose.model("Listing", ListingSchema)
