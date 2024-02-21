@@ -65,7 +65,7 @@ exports.send_message = asyncHandler(async (req, res) => {
     const sender = await User.findById(req.user).exec()
 
     if (chat.sender !== req.user) {
-        console.log("different user")
+        res.status(401).json({ success: false })
     }
     const message = new Message({
         sender: sender,
