@@ -20,6 +20,8 @@ exports.all_messages = asyncHandler(async (req, res) => {
         .lean()
         .exec()
 
+    console.log(req.params.id)
+
     res.status(200).json({
         chat: chat,
     })
@@ -60,8 +62,11 @@ exports.new_chat = asyncHandler(async (req, res) => {
 // SEND A MESSAGE
 exports.send_message = asyncHandler(async (req, res) => {
     const chat = await Chat.findById(req.params.id).exec()
-    console.log(chat)
     const sender = await User.findById(req.user).exec()
+
+    if (chat.sender !== req.user) {
+        console.log("different user")
+    }
     const message = new Message({
         sender: sender,
         message: req.body.message,

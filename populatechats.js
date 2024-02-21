@@ -50,7 +50,7 @@ async function createChats() {
     console.log("Adding Chats")
 
     const senderId = "65ab8ece801ccc839c0166a1" // Sender user ID
-    const receiverId = "65ae622bc21f8c25e206c683" // Receiver user ID
+    const receiverId = "65d3909c0d15af1ca2863606" // Receiver user ID
 
     await chatCreate(senderId, receiverId)
     // Add more chat creations as needed
