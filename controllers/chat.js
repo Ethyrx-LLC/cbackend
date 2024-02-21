@@ -76,5 +76,5 @@ exports.send_message = asyncHandler(async (req, res) => {
     chat.messages.push(message)
     message.save()
     chat.save()
-    res.status(200).json({ success: true, chat })
+    res.json({ success: true, chat })
 })
