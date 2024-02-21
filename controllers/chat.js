@@ -1,5 +1,5 @@
 const User = require("../models/user")
-const Message = require("../models/messages")
+/* const Message = require("../models/messages") */
 const Chat = require("../models/chat")
 const asyncHandler = require("express-async-handler")
 
@@ -12,4 +12,14 @@ exports.list_chats = asyncHandler(async (req, res) => {
 })
 
 // START A NEW CONVERSATION
+exports.new_chat = asyncHandler(async (req, res) => {
+    const sender = await User.findById(req.user).exec()
+    const receiver = await User.findById(req.params.id).exec()
+    const chat = new Chat({
+        sender: sender,
+        receiver: receiver,
+    })
+
+    chat.save()
+})
 // SEND A MESSAGE
