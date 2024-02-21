@@ -5,23 +5,7 @@ const asyncHandler = require("express-async-handler")
 
 // RECEIVE A MESSAGE
 exports.all_messages = asyncHandler(async (req, res) => {
-    const chat = Chat.findById(req.params.id)
-        .lean()
-        .populate({
-            path: "chats",
-            select: "sender receiver",
-            populate: [
-                {
-                    path: "sender",
-                    select: "username emoji",
-                },
-                {
-                    path: "receiver",
-                    select: "username emoji",
-                },
-            ],
-        })
-        .exec()
+    const chat = Chat.findById(req.params.id).lean().populate("messages").exec()
 
     let status
 
