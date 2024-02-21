@@ -10,7 +10,7 @@ exports.all_messages = asyncHandler(async (req, res) => {
 })
 // SHOW ALL CONVERSATIONS
 exports.list_chats = asyncHandler(async (req, res) => {
-    const userChats = await User.findById(req.user).exec()
+    const userChats = await User.findById(req.user).populate("chats").exec()
     res.status(200).json({ success: true, chats: userChats.chats })
 })
 
