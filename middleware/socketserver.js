@@ -60,10 +60,11 @@ const initSocketServer = () => {
             io.emit("get-users", onlineUsers)
         })
 
-        socket.on("send-message", (poster, sender, receiver, message) => {
+        socket.on("send-message", (chatId, poster, sender, receiver, message) => {
             // Since we have a sender and receiver which are constant on the database, we have to kind of reverse the
             //process of choosing whom to send the notification to.
             // We define sendTo for readability, probably not required by rewriting this whole section
+            // // console.log("Chat ID: " + chatId);
             let sendTo = ""
             if (poster._id === sender) sendTo = receiver
             else if (poster._id === receiver) sendTo = sender
@@ -84,6 +85,7 @@ const initSocketServer = () => {
                     // // console.log("Socket sent to user " + sendTo)
                     // // TODO: Maybe send the poster User, so frontend can display notifications nicely?
                     io.to(onlineUser.socketId).emit("message-received", {
+                        chatId,
                         sender: {
                             username: poster.username,
                             emoji: poster.emoji,
