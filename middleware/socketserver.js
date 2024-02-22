@@ -65,15 +65,15 @@ const initSocketServer = () => {
             //process of choosing whom to send the notification to.
             // We define sendTo for readability, probably not required by rewriting this whole section
             let sendTo = ""
-            if (poster === sender) sendTo = receiver
-            else if (poster === receiver) sendTo = sender
+            if (poster._id === sender) sendTo = receiver
+            else if (poster._id === receiver) sendTo = sender
 
             // // Let's combine the console logs altogether
             // // const DATA = { poster, sender, receiver, message }
             // // console.log(`DATA: ${JSON.stringify(DATA)}`)
 
             // Make sure poster is not the person we're supposed to send a notification to
-            if (poster !== sendTo) {
+            if (poster._id !== sendTo) {
                 // Check if receiver is online
                 const onlineUser = onlineUsers.find(
                     (user) => user.userId === sendTo
@@ -84,7 +84,10 @@ const initSocketServer = () => {
                     // // console.log("Socket sent to user " + sendTo)
                     // TODO: Maybe send the poster User, so frontend can display notifications nicely?
                     io.to(onlineUser.socketId).emit("message-received", {
-                        sender: poster,
+                        sender: {
+                            username: poster.username,
+                            emoji: poster.emoji,
+                        },
                         message,
                     })
                 }
