@@ -60,8 +60,14 @@ const initSocketServer = () => {
             io.emit("get-users", onlineUsers)
         })
 
-        socket.on("send-message", (data, data2, data3) => {
-            console.log(data, data2, data3)
+        socket.on("send-message", (sender, receiver, message) => {
+            const onlineUser = onlineUsers.find(
+                (user) => user.userId === receiver
+            )
+
+            if (onlineUser) {
+                io.to(onlineUser).emit("receive-message", { sender, message })
+            }
         })
     })
 
