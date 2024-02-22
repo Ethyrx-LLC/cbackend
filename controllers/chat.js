@@ -22,14 +22,14 @@ exports.all_messages = asyncHandler(async (req, res) => {
 
     // https://stackoverflow.com/questions/11637353/comparing-mongoose-id-and-strings
     // This is our check to prevent other users being able to view other peoples' conversations
-    if (
-        chat.sender._id &&
-        !req.user._id.equals(chat.sender._id) &&
-        chat.receiver._id &&
-        !req.user._id.equals(chat.receiver._id)
-    ) {
-        return res.status(401).json({ success: false })
-    }
+    // if (
+    //     chat.sender._id &&
+    //     !req.user._id.equals(chat.sender._id) &&
+    //     chat.receiver._id &&
+    //     !req.user._id.equals(chat.receiver._id)
+    // ) {
+    //     return res.status(401).json({ success: false })
+    // }
 
     res.status(200).json({
         chat: chat,
@@ -81,14 +81,14 @@ exports.send_message = asyncHandler(async (req, res) => {
 
     // https://stackoverflow.com/questions/11637353/comparing-mongoose-id-and-strings
     // This is our check to prevent other users being able to post into other conversations
-    if (
-        chat.sender._id &&
-        !req.user._id.equals(chat.sender._id) &&
-        chat.receiver._id &&
-        !req.user._id.equals(chat.receiver._id)
-    ) {
-        return res.status(401).json({ success: false })
-    }
+    // if (
+    //     chat.sender._id &&
+    //     !req.user._id.equals(chat.sender._id) &&
+    //     chat.receiver._id &&
+    //     !req.user._id.equals(chat.receiver._id)
+    // ) {
+    //     return res.status(401).json({ success: false })
+    // }
 
     const message = new Message({
         sender: sender,
