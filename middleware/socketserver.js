@@ -67,9 +67,13 @@ const initSocketServer = () => {
             const onlineUser = onlineUsers.find(
                 (user) => user.userId === receiver
             )
+            console.log(onlineUser)
             if (onlineUser) {
                 console.log("SOCKET SENT TO USER")
-                io.to(onlineUser).emit("receive-message", { sender, message })
+                io.to(onlineUser.socketId).emit("receive-message", {
+                    sender,
+                    message,
+                })
             }
         })
     })
