@@ -66,6 +66,7 @@ const initSocketServer = () => {
             )
 
             if (onlineUser) {
+                console.log("SOCKET SENT TO USER")
                 io.to(onlineUser).emit("receive-message", { sender, message })
             }
         })
