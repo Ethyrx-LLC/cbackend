@@ -75,7 +75,7 @@ const initSocketServer = () => {
                 // // const DATA = { poster, sender, receiver, message }
                 // // console.log(`DATA: ${JSON.stringify(DATA)}`)
 
-                console.log(chatId, poster._id, sender, receiver, message);
+                console.log(chatId, poster._id, sender, receiver);
 
                 // Make sure poster is not the person we're supposed to send a notification to
                 console.log("Poster ID: " + poster._id);
