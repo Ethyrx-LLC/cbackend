@@ -61,23 +61,27 @@ const initSocketServer = () => {
         })
 
         socket.on("send-message", (poster, sender, receiver, message) => {
-            // Let's combine the console logs altogether
-            let sendTo = "";
-            if (poster === sender) sendTo = receiver;
-            else if (poster === receiver) sendTo = sender;
+            // Since we have a sender and receiver which are constant on the database, we have to kind of reverse the
+            //process of choosing whom to send the notification to.
+            // We define sendTo for readability, probably not required by rewriting this whole section
+            let sendTo = ""
+            if (poster === sender) sendTo = receiver
+            else if (poster === receiver) sendTo = sender
 
-            const DATA = { poster, sender, receiver, message }
-            console.log(`DATA: ${JSON.stringify(DATA)}`)
+            // // Let's combine the console logs altogether
+            // // const DATA = { poster, sender, receiver, message }
+            // // console.log(`DATA: ${JSON.stringify(DATA)}`)
 
-            // Make sure poster is not receiver
+            // Make sure poster is not the person we're supposed to send a notification to
             if (poster !== sendTo) {
                 // Check if receiver is online
                 const onlineUser = onlineUsers.find(
                     (user) => user.userId === sendTo
                 )
-                console.log("Online: " + JSON.stringify(onlineUser))
+                // // console.log("Online: " + JSON.stringify(onlineUser))
+                // The receiver is online, here we send the socket event to the receiver.
                 if (onlineUser) {
-                    console.log("Socket sent to user " + sendTo)
+                    // // console.log("Socket sent to user " + sendTo)
                     io.to(onlineUser.socketId).emit("message-received", {
                         sender,
                         message,
