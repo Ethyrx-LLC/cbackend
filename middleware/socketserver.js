@@ -84,7 +84,7 @@ const initSocketServer = () => {
                     // // console.log("Socket sent to user " + sendTo)
                     // TODO: Maybe send the poster User, so frontend can display notifications nicely?
                     io.to(onlineUser.socketId).emit("message-received", {
-                        poster,
+                        sendTo,
                         message,
                     })
                 }
