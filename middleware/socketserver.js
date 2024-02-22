@@ -60,21 +60,27 @@ const initSocketServer = () => {
             io.emit("get-users", onlineUsers)
         })
 
-        socket.on("send-message", (sender, receiver, message) => {
-            console.log(`SENDER IS ${sender}`)
-            console.log(`RECEIVER IS ${receiver}`)
-            console.log(`MESSAGE IS ${message}`)
-            const onlineUser = onlineUsers.find(
-                (user) => user.userId === receiver
-            )
-            console.log(onlineUser)
-            if (onlineUser) {
-                console.log("SOCKET SENT TO USER")
-                console.log(`this is the sender again ${sender}`)
-                io.to(onlineUser.socketId).emit("message-received", {
-                    sender,
-                    message,
-                })
+        socket.on("send-message", (poster, sender, receiver, message) => {
+            // Let's combine the console logs altogether
+            const DATA = {poster, sender, receiver, message};
+            console.log(`DATA: ${JSON.stringify(DATA)}`);
+
+            // Make sure poster is not receiver
+            if (poster !== receiver) {
+                // Check if receiver is online
+                const onlineUser = onlineUsers.find(
+                    (user) => user.userId === receiver
+                )
+                console.log("Online: " + onlineUser);
+                if (onlineUser) {
+                    console.log("Socket sent to user " + receiver);
+                    io.to(onlineUser.socketId).emit("message-received", {
+                        sender,
+                        message,
+                    });
+                }
+            } else if (poster !== sender) {
+                console.log("Poster is the same as the receiver, we did not send the socket event.");
             }
         })
     })
