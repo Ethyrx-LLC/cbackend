@@ -53,12 +53,6 @@ exports.list_chats = asyncHandler(async (req, res) => {
 
 // START A NEW CONVERSATION
 exports.new_chat = asyncHandler(async (req, res) => {
-    const sender = await User.findById(req.user).exec()
-    const receiver = await User.findById(req.params.id).exec()
-    const chat = new Chat({
-        sender: sender,
-        receiver: receiver,
-    })
     const existingChat = await Chat.findOne({
         sender: sender._id,
         receiver: receiver._id,
@@ -66,6 +60,13 @@ exports.new_chat = asyncHandler(async (req, res) => {
     if (existingChat) {
         return res.status(200).json({ success: true, chat: existingChat })
     }
+    const sender = await User.findById(req.user).exec()
+    const receiver = await User.findById(req.params.id).exec()
+    const chat = new Chat({
+        sender: sender,
+        receiver: receiver,
+    })
+
     sender.chats.push(chat)
     receiver.chats.push(chat)
     await Promise.all([sender.save(), receiver.save(), chat.save()])
