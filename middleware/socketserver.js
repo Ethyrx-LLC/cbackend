@@ -61,11 +61,12 @@ const initSocketServer = () => {
         })
 
         socket.on("send-message", (sender, receiver, message) => {
-            console.log(`CURRENT ONLINE USERS ${onlineUsers}`)
+            console.log(`SENDER IS ${sender}`)
+            console.log(`RECEIVER IS ${receiver}`)
+            console.log(`MESSAGE IS ${message}`)
             const onlineUser = onlineUsers.find(
                 (user) => user.userId === receiver
             )
-            console.log(`USER YOU ARE LOOKING FOR ${onlineUser}`)
             if (onlineUser) {
                 console.log("SOCKET SENT TO USER")
                 io.to(onlineUser).emit("receive-message", { sender, message })
