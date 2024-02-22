@@ -73,6 +73,8 @@ const initSocketServer = () => {
             // // const DATA = { poster, sender, receiver, message }
             // // console.log(`DATA: ${JSON.stringify(DATA)}`)
 
+            console.log(chatId, poster, sender, receiver, message);
+
             // Make sure poster is not the person we're supposed to send a notification to
             if (poster._id !== sendTo) {
                 // Check if receiver is online
