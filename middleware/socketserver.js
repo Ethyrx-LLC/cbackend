@@ -71,7 +71,7 @@ const initSocketServer = () => {
             if (onlineUser) {
                 console.log("SOCKET SENT TO USER")
                 console.log(`this is the sender again ${sender}`)
-                io.to(onlineUser.socketId).emit("receive-message", {
+                io.to(onlineUser.socketId).emit("message-received", {
                     sender,
                     message,
                 })
