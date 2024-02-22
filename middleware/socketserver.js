@@ -62,18 +62,22 @@ const initSocketServer = () => {
 
         socket.on("send-message", (poster, sender, receiver, message) => {
             // Let's combine the console logs altogether
+            let sendTo = "";
+            if (poster === sender) sendTo = receiver;
+            else if (poster === receiver) sendTo = sender;
+
             const DATA = { poster, sender, receiver, message }
             console.log(`DATA: ${JSON.stringify(DATA)}`)
 
             // Make sure poster is not receiver
-            if (poster !== receiver) {
+            if (poster !== sendTo) {
                 // Check if receiver is online
                 const onlineUser = onlineUsers.find(
-                    (user) => user.userId === receiver
+                    (user) => user.userId === sendTo
                 )
                 console.log("Online: " + JSON.stringify(onlineUser))
                 if (onlineUser) {
-                    console.log("Socket sent to user " + receiver)
+                    console.log("Socket sent to user " + sendTo)
                     io.to(onlineUser.socketId).emit("message-received", {
                         sender,
                         message,
