@@ -16,7 +16,7 @@ function verifyListingsCache(parameter) {
         try {
             const cacheResults = await redisClient.get(cache)
             const listings = JSON.parse(cacheResults)
-            console.log(listings.length)
+
             if (cacheResults) {
                 return res.status(200).json({
                     listings,
@@ -32,16 +32,16 @@ function verifyListingsCache(parameter) {
     }
 }
 
-function verifyListingDetailCache(parameter) {
+function verifyUsersCache(parameter) {
     return async (req, res, next) => {
         const cache = parameter
 
         try {
             const cacheResults = await redisClient.get(cache)
+            const users = JSON.parse(cacheResults)
             if (cacheResults) {
-                const listing = JSON.parse(cacheResults)
-                res.status(200).json({
-                    listing,
+                return res.status(200).json({
+                    users,
                 })
             } else {
                 next()
@@ -54,4 +54,99 @@ function verifyListingDetailCache(parameter) {
     }
 }
 
-module.exports = { verifyListingsCache, verifyListingDetailCache }
+function verifyUserCache(parameter) {
+    return async (req, res, next) => {
+        const cache = parameter
+
+        try {
+            const cacheResults = await redisClient.get(cache)
+            const user = JSON.parse(cacheResults)
+            if (cacheResults) {
+                return res.status(200).json({
+                    user,
+                })
+            } else {
+                next()
+            }
+        } catch (error) {
+            console.error(error)
+            res.status(404)
+            next()
+        }
+    }
+}
+
+function verifyAlertsCache(parameter) {
+    return async (req, res, next) => {
+        const cache = parameter
+
+        try {
+            const cacheResults = await redisClient.get(cache)
+            const alerts = JSON.parse(cacheResults)
+            if (cacheResults) {
+                return res.status(200).json({
+                    alerts,
+                })
+            } else {
+                next()
+            }
+        } catch (error) {
+            console.error(error)
+            res.status(404)
+            next()
+        }
+    }
+}
+
+function verifyCookieCache(parameter) {
+    return async (req, res, next) => {
+        const cache = parameter
+
+        try {
+            const cacheResults = await redisClient.get(cache)
+            if (cacheResults) {
+                const user = JSON.parse(cacheResults)
+                res.status(200).json({
+                    user,
+                })
+            } else {
+                next()
+            }
+        } catch (error) {
+            console.error(error)
+            res.status(404)
+            next()
+        }
+    }
+}
+
+function verifyChatsCache(parameter) {
+    return async (req, res, next) => {
+        const cache = parameter
+
+        try {
+            const cacheResults = await redisClient.get(cache)
+            if (cacheResults) {
+                const userChats = JSON.parse(cacheResults)
+                res.status(200).json({
+                    userChats,
+                })
+            } else {
+                next()
+            }
+        } catch (error) {
+            console.error(error)
+            res.status(404)
+            next()
+        }
+    }
+}
+
+module.exports = {
+    verifyListingsCache,
+    verifyUsersCache,
+    verifyUserCache,
+    verifyAlertsCache,
+    verifyCookieCache,
+    verifyChatsCache,
+}
