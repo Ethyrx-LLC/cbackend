@@ -13,7 +13,6 @@ const {
     verifyUsersCache,
     verifyUserCache,
     verifyAlertsCache,
-    verifyCookieCache,
     verifyChatsCache,
 } = require("../middleware/redis")
 const multer = require("multer")
@@ -95,6 +94,6 @@ router.delete(
 )
 
 // USER API
-router.get("/cookies", verifyCookieCache("cookie"), user_controller.cookie)
+router.get("/cookies", user_controller.cookie)
 
 module.exports = router

@@ -98,28 +98,6 @@ function verifyAlertsCache(parameter) {
     }
 }
 
-function verifyCookieCache(parameter) {
-    return async (req, res, next) => {
-        const cache = parameter
-
-        try {
-            const cacheResults = await redisClient.get(cache)
-            if (cacheResults) {
-                const user = JSON.parse(cacheResults)
-                res.status(200).json({
-                    user,
-                })
-            } else {
-                next()
-            }
-        } catch (error) {
-            console.error(error)
-            res.status(404)
-            next()
-        }
-    }
-}
-
 function verifyChatsCache(parameter) {
     return async (req, res, next) => {
         const cache = parameter
@@ -147,6 +125,5 @@ module.exports = {
     verifyUsersCache,
     verifyUserCache,
     verifyAlertsCache,
-    verifyCookieCache,
     verifyChatsCache,
 }

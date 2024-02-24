@@ -237,9 +237,5 @@ exports.cookie = asyncHandler(async (req, res) => {
         .populate("comments")
         .exec()
     console.log(user)
-    await redisClient.SET("cookie", JSON.stringify(user), {
-        EX: 60,
-        NX: true,
-    })
     res.status(200).json(user)
 })
