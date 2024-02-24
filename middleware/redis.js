@@ -105,9 +105,10 @@ function verifyChatsCache(parameter) {
         try {
             const cacheResults = await redisClient.get(cache)
             if (cacheResults) {
-                const userChats = JSON.parse(cacheResults)
+                const chats = JSON.parse(cacheResults)
+                console.log(chats)
                 res.status(200).json({
-                    userChats,
+                    chats,
                 })
             } else {
                 next()
