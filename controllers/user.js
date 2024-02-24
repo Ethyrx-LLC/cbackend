@@ -171,8 +171,6 @@ exports.logout_post = async (req, res) => {
 
 // Set emoji for a user
 exports.emoji_set = asyncHandler(async (req, res) => {
-    await redisClient.DEL("user")
-    await redisClient.DEL("users")
     const user = await User.findById(req.params.id).exec()
     const userEmoji = emoji.unemojify(req.body.emoji)
     if (userEmoji === undefined) {
