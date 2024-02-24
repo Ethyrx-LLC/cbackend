@@ -63,7 +63,7 @@ router.post("/users/login", user_controller.login_post)
 router.post("/users/logout", user_controller.logout_post)
 router.get("/users", verifyUsersCache("users"), user_controller.users_get)
 router.post("/users/:id/emoji", user_controller.emoji_set)
-router.get("/users/:id", verifyUserCache("user"), user_controller.user_get)
+router.get("/users/:id", user_controller.user_get)
 
 // COMMENT ROUTES
 router.post(
