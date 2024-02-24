@@ -9,10 +9,22 @@ const bcrypt = require("bcryptjs")
 const passport = require("passport")
 const { ROLE } = require("../middleware/permissions")
 const mongoose = require("mongoose")
+const redis = require("redis")
+let redisClient
+;(async () => {
+    redisClient = redis.createClient()
 
+    redisClient.on("error", (error) => console.error(`Error : ${error}`))
+
+    await redisClient.connect()
+})()
 // Get all users with populated listings and comments
 exports.users_get = asyncHandler(async (req, res) => {
     const users = await User.find().lean().exec()
+    await redisClient.SET("users", JSON.stringify(users), {
+        EX: 3600,
+        NX: true,
+    })
     res.status(200).json({ users: users })
 })
 
@@ -37,7 +49,10 @@ exports.user_get = asyncHandler(async (req, res) => {
         .populate("listings")
         .populate("comments")
         .exec()
-
+    await redisClient.SET("user", JSON.stringify(user), {
+        EX: 10,
+        NX: true,
+    })
     res.status(200).json({ user: user })
 })
 
@@ -86,6 +101,7 @@ exports.create_users_post = [
                     res.status(401).json({ error: errors.array() })
                 } else {
                     // Save the new user
+                    await redisClient.FLUSHALL()
                     await user.save()
                     res.status(200).json({ success: true })
                 }
@@ -116,6 +132,8 @@ exports.login_post = [
             res.status(403).json({ error: errors.array() })
         } else {
             // Authenticate the user using passport
+            await redisClient.DEL("users")
+            await redisClient.DEL("user")
             passport.authenticate(
                 "local",
                 { successRedirect: "/cookies" },
@@ -140,7 +158,6 @@ exports.login_post = [
                             })
                             return
                         }
-
                         res.status(200).json({ errors: false, success: true })
                     })
                 }
@@ -150,7 +167,8 @@ exports.login_post = [
 ]
 
 // Process user logout
-exports.logout_post = (req, res) => {
+exports.logout_post = async (req, res) => {
+    await redisClient.FLUSHALL()
     res.status(200)
         .clearCookie("connect.sid", { domain: "kameelist.com" })
         .json({ message: "Logged out" })
@@ -158,6 +176,8 @@ exports.logout_post = (req, res) => {
 
 // Set emoji for a user
 exports.emoji_set = asyncHandler(async (req, res) => {
+    await redisClient.DEL("user")
+    await redisClient.DEL("users")
     const user = await User.findById(req.params.id).exec()
     const userEmoji = emoji.unemojify(req.body.emoji)
     if (userEmoji === undefined) {
@@ -192,13 +212,17 @@ exports.alerts_get = asyncHandler(async (req, res) => {
         .sort({ created_at: -1 })
         .limit(10) // Limit to the latest 10 notifications
 
+    await redisClient.DEL("alerts", JSON.stringify(notifications), {
+        EX: 3600,
+        NX: true,
+    })
     res.json(notifications)
 })
 
 exports.mark_as_read = asyncHandler(async (req, res) => {
     const update = { is_read: true }
     await Alerts.findByIdAndUpdate(req.params.id, update).exec()
-
+    await redisClient.DEL("alerts")
     res.status(200).json({ message: "Notification marked as read" })
 })
 
@@ -209,7 +233,7 @@ exports.mark_all_as_read = asyncHandler(async (req, res) => {
         { user_id: user, is_read: false },
         { $set: { is_read: true } }
     ).exec()
-
+    await redisClient.DEL("alerts")
     res.status(200).json({ message: "All notifications marked as read" })
 })
 
@@ -219,5 +243,10 @@ exports.cookie = asyncHandler(async (req, res) => {
         .populate("listings")
         .populate("comments")
         .exec()
+    console.log(user)
+    await redisClient.SET("cookie", JSON.stringify(user), {
+        EX: 60,
+        NX: true,
+    })
     res.status(200).json(user)
 })
