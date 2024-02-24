@@ -11,7 +11,7 @@ const chat_controller = require("../controllers/chat")
 const {
     verifyListingsCache,
     verifyUsersCache,
-    verifyUserCache,
+    /*     verifyUserCache, */
     verifyAlertsCache,
     verifyChatsCache,
 } = require("../middleware/redis")
