@@ -38,7 +38,7 @@ exports.display_listings_all = asyncHandler(async (req, res) => {
         })
         .exec()
     await redisClient.SET("listings", JSON.stringify(listings), {
-        EX: 60,
+        EX: 1800,
         NX: true,
     })
     // Respond with the populated listings
