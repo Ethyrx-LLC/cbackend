@@ -3,16 +3,11 @@ const express = require("express")
 const router = express.Router()
 const listing_controller = require("../controllers/listing")
 const user_controller = require("../controllers/user")
+/* const { cacheRoute, clearCache, cacheCookie } = require("../middleware/cache") */
 const findUserLocation = require("../middleware/location")
 const comments_controller = require("../controllers/comments")
 const categories_controller = require("../controllers/category")
 const chat_controller = require("../controllers/chat")
-
-const ExpressRedisCache = require("express-redis-cache")
-const cache = ExpressRedisCache({
-    expire: 10,
-})
-
 const multer = require("multer")
 const env = process.env.NODE_ENV || "development"
 const upload = multer({
@@ -27,24 +22,20 @@ router.post(
     findUserLocation,
     listing_controller.create_listing_post
 )
-router.get("/listings", cache.route(), listing_controller.display_listings_all)
-router.get(
-    "/listings/:id",
-    cache.route(),
-    listing_controller.display_listing_detail
-)
+router.get("/listings", listing_controller.display_listings_all)
+router.get("/listings/:id", listing_controller.display_listing_detail)
 router.delete("/listings/:id/delete", listing_controller.delete_listing_post)
 router.put("/listings/:id/upvote", listing_controller.upvote_listing_post)
 
 // USER ALERT ROUTES
-router.get("/users/alerts", cache.route(), user_controller.alerts_get)
+router.get("/users/alerts", user_controller.alerts_get)
 router.put("/users/alerts/:id/read", user_controller.mark_as_read)
 router.put("/users/alerts/read", user_controller.mark_all_as_read)
 
 // USER CHAT ROUTES
 router.post("/users/chats/create/:id", chat_controller.new_chat)
 router.post("/users/chats/:id/messages/create", chat_controller.send_message)
-router.get("/users/chats", cache.route(), chat_controller.list_chats)
+router.get("/users/chats", chat_controller.list_chats)
 router.get("/users/chats/:id/messages", chat_controller.all_messages)
 
 // USERS ROUTES
