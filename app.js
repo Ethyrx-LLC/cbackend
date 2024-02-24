@@ -13,13 +13,12 @@ const helmet = require("helmet")
 const passport = require("passport")
 const initSocketServer = require("./middleware/socketserver")
 const app = express()
+
 // Import passport middleware configuration
 require("./middleware/passport")(passport)
 
 // Import routes
 const indexRouter = require("./routes/index")
-
-// Create an Express application
 
 // Enable trust proxy
 app.set("trust proxy", 1)
