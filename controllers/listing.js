@@ -137,6 +137,8 @@ exports.create_listing_post = [
                 success: true,
                 listing: listing,
             })
+
+            await redisClient.DEL("listings")
         }
     }),
 ]
@@ -157,6 +159,7 @@ exports.delete_listing_post = asyncHandler(async (req, res) => {
         }).exec()
         // Respond with success
         res.json({ success: true, error: "Post deleted" })
+        await redisClient.SET("listings")
     }
 })
 
@@ -181,6 +184,7 @@ exports.upvote_listing_post = asyncHandler(async (req, res) => {
             listing.likes -= 1
             await user.save()
             await listing.save()
+            await redisClient.DEL("listings")
             // Respond with success and updated like information
             return res.json({
                 success: true,
