@@ -8,7 +8,7 @@ const User = require("../models/user")
 const redis = require("redis")
 let redisClient
 ;(async () => {
-    redisClient = redis.createClient()
+    redisClient = redis.createClient({ url: process.env.REDIS })
 
     redisClient.on("error", (error) => console.error(`Error : ${error}`))
 

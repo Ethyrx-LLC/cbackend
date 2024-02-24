@@ -12,7 +12,7 @@ const mongoose = require("mongoose")
 const redis = require("redis")
 let redisClient
 ;(async () => {
-    redisClient = redis.createClient()
+    redisClient = redis.createClient({ url: process.env.REDIS })
 
     redisClient.on("error", (error) => console.error(`Error : ${error}`))
 
@@ -49,10 +49,6 @@ exports.user_get = asyncHandler(async (req, res) => {
         .populate("listings")
         .populate("comments")
         .exec()
-    await redisClient.SET("user", JSON.stringify(user), {
-        EX: 10,
-        NX: true,
-    })
     res.status(200).json({ user: user })
 })
 
@@ -133,7 +129,6 @@ exports.login_post = [
         } else {
             // Authenticate the user using passport
             await redisClient.DEL("users")
-            await redisClient.DEL("user")
             passport.authenticate(
                 "local",
                 { successRedirect: "/cookies" },
