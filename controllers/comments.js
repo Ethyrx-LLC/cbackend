@@ -71,7 +71,7 @@ exports.create_comment_post = asyncHandler(async (req, res) => {
 
     await Promise.all([
         comment.save(),
-        env === "development" ? "" :redisClient.DEL("alerts"),
+        env === "development" ? "" : redisClient.DEL("alerts"),
         await alert.save(),
         await listing.save(),
         await user.save(),

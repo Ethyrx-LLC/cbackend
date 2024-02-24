@@ -10,7 +10,7 @@ let redisClient
 
     redisClient.on("error", (error) => console.error(`Error : ${error}`))
 
-    env === "development" ? "" :await redisClient.connect()
+    env === "development" ? "" : await redisClient.connect()
 })()
 // RECEIVE A MESSAGE
 exports.all_messages = asyncHandler(async (req, res) => {
