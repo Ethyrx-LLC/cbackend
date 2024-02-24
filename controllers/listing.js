@@ -6,7 +6,15 @@ const { body, validationResult } = require("express-validator")
 const Category = require("../models/category")
 const Comments = require("../models/comments")
 const User = require("../models/user")
+const redis = require("redis")
+let redisClient
+;(async () => {
+    redisClient = redis.createClient({ url: process.env.REDIS })
 
+    redisClient.on("error", (error) => console.error(`Error : ${error}`))
+
+    await redisClient.connect()
+})()
 // Returns an array of listings with populated user and comments data
 exports.display_listings_all = asyncHandler(async (req, res) => {
     const page = parseInt(req.query.page) || 1
@@ -29,9 +37,14 @@ exports.display_listings_all = asyncHandler(async (req, res) => {
             },
         })
         .exec()
-
+    await redisClient.SET("listings", JSON.stringify(listings), {
+        EX: 60,
+        NX: true,
+    })
     // Respond with the populated listings
+    console.log("BEFORE END OF ROUTE")
     res.status(200).json({ user: req.user, success: true, listings })
+    console.log("END OF ROUTE")
 })
 
 // Returns details of a specific listing based on ID
@@ -54,6 +67,10 @@ exports.display_listing_detail = asyncHandler(async (req, res) => {
             user: req.user,
             success: true,
             listing: listing,
+        })
+        await redisClient.SET("listing-detail", JSON.stringify(listing), {
+            EX: 120,
+            NX: true,
         })
     }
 })
@@ -120,6 +137,8 @@ exports.create_listing_post = [
                 success: true,
                 listing: listing,
             })
+
+            await redisClient.DEL("listings")
         }
     }),
 ]
@@ -140,6 +159,7 @@ exports.delete_listing_post = asyncHandler(async (req, res) => {
         }).exec()
         // Respond with success
         res.json({ success: true, error: "Post deleted" })
+        await redisClient.SET("listings")
     }
 })
 
@@ -164,6 +184,7 @@ exports.upvote_listing_post = asyncHandler(async (req, res) => {
             listing.likes -= 1
             await user.save()
             await listing.save()
+            await redisClient.DEL("listings")
             // Respond with success and updated like information
             return res.json({
                 success: true,

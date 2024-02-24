@@ -8,6 +8,17 @@ const findUserLocation = require("../middleware/location")
 const comments_controller = require("../controllers/comments")
 const categories_controller = require("../controllers/category")
 const chat_controller = require("../controllers/chat")
+<<<<<<< HEAD
+=======
+const {
+    verifyListingsCache,
+    verifyUsersCache,
+    verifyUserCache,
+    verifyAlertsCache,
+    verifyCookieCache,
+    verifyChatsCache,
+} = require("../middleware/redis")
+>>>>>>> main
 const multer = require("multer")
 const env = process.env.NODE_ENV || "development"
 const upload = multer({
@@ -22,29 +33,53 @@ router.post(
     findUserLocation,
     listing_controller.create_listing_post
 )
+<<<<<<< HEAD
 router.get("/listings", listing_controller.display_listings_all)
+=======
+router.get(
+    "/listings",
+    verifyListingsCache("listings"),
+    listing_controller.display_listings_all
+)
+>>>>>>> main
 router.get("/listings/:id", listing_controller.display_listing_detail)
 router.delete("/listings/:id/delete", listing_controller.delete_listing_post)
 router.put("/listings/:id/upvote", listing_controller.upvote_listing_post)
 
 // USER ALERT ROUTES
+<<<<<<< HEAD
 router.get("/users/alerts", user_controller.alerts_get)
+=======
+router.get(
+    "/users/alerts",
+    verifyAlertsCache("alerts"),
+    user_controller.alerts_get
+)
+>>>>>>> main
 router.put("/users/alerts/:id/read", user_controller.mark_as_read)
 router.put("/users/alerts/read", user_controller.mark_all_as_read)
 
 // USER CHAT ROUTES
 router.post("/users/chats/create/:id", chat_controller.new_chat)
 router.post("/users/chats/:id/messages/create", chat_controller.send_message)
+<<<<<<< HEAD
 router.get("/users/chats", chat_controller.list_chats)
+=======
+router.get(
+    "/users/chats",
+    verifyChatsCache("chats"),
+    chat_controller.list_chats
+)
+>>>>>>> main
 router.get("/users/chats/:id/messages", chat_controller.all_messages)
 
 // USERS ROUTES
 router.post("/users/create", user_controller.create_users_post)
 router.post("/users/login", user_controller.login_post)
 router.post("/users/logout", user_controller.logout_post)
-router.get("/users", user_controller.users_get)
+router.get("/users", verifyUsersCache("users"), user_controller.users_get)
 router.post("/users/:id/emoji", user_controller.emoji_set)
-router.get("/users/:id", user_controller.user_get)
+router.get("/users/:id", verifyUserCache("user"), user_controller.user_get)
 
 // COMMENT ROUTES
 router.post(
@@ -75,6 +110,6 @@ router.delete(
 )
 
 // USER API
-router.get("/cookies", user_controller.cookie)
+router.get("/cookies", verifyCookieCache("cookie"), user_controller.cookie)
 
 module.exports = router

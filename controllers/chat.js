@@ -2,7 +2,15 @@ const User = require("../models/user")
 const Message = require("../models/messages")
 const Chat = require("../models/chat")
 const asyncHandler = require("express-async-handler")
+const redis = require("redis")
+let redisClient
+;(async () => {
+    redisClient = redis.createClient({ url: process.env.REDIS })
 
+    redisClient.on("error", (error) => console.error(`Error : ${error}`))
+
+    await redisClient.connect()
+})()
 // RECEIVE A MESSAGE
 exports.all_messages = asyncHandler(async (req, res) => {
     const chat = await Chat.findById(req.params.id)
@@ -50,6 +58,10 @@ exports.list_chats = asyncHandler(async (req, res) => {
             ],
         })
         .exec()
+    await redisClient.SET("chats", JSON.stringify(userChats), {
+        EX: 3600,
+        NX: true,
+    })
     res.status(200).json({ success: true, chats: userChats.chats })
 })
 
@@ -70,7 +82,12 @@ exports.new_chat = asyncHandler(async (req, res) => {
     }
     sender.chats.push(chat)
     receiver.chats.push(chat)
-    await Promise.all([sender.save(), receiver.save(), chat.save()])
+    await Promise.all([
+        sender.save(),
+        receiver.save(),
+        chat.save(),
+        redisClient.DEL("chats"),
+    ])
     res.status(200).json({ success: true, chat })
 })
 
@@ -98,6 +115,7 @@ exports.send_message = asyncHandler(async (req, res) => {
 
     chat.messages.push(message)
     message.save()
+    await redisClient.DEL("chats")
     chat.save()
     res.json({ success: true, chat })
 })

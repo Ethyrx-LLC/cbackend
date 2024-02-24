@@ -5,7 +5,15 @@ const asyncHandler = require("express-async-handler")
 const Alerts = require("../models/alerts")
 const Listings = require("../models/listing")
 const User = require("../models/user")
+const redis = require("redis")
+let redisClient
+;(async () => {
+    redisClient = redis.createClient({ url: process.env.REDIS })
 
+    redisClient.on("error", (error) => console.error(`Error : ${error}`))
+
+    await redisClient.connect()
+})()
 // Get comments for a specific listing
 exports.list_comments_get = asyncHandler(async (req, res) => {
     // Fetch comments with user and listing population
@@ -56,14 +64,17 @@ exports.create_comment_post = asyncHandler(async (req, res) => {
     })
 
     // Save the new comment, update references in listing and user
-    await comment.save()
 
-    await alert.save()
     listing.comments.push(comment)
     user.comments.push(comment)
-    await listing.save()
-    await user.save()
 
+    await Promise.all([
+        comment.save(),
+        redisClient.DEL("alerts"),
+        await alert.save(),
+        await listing.save(),
+        await user.save(),
+    ])
     // Respond with success message
     res.status(200).json({ success: true, message: "Posted" })
 })
@@ -113,6 +124,7 @@ exports.upvote_comment_post = asyncHandler(async (req, res) => {
     await comment.save()
     await user.save()
     // Respond with success and updated like information
+
     res.json({
         success: true,
         likes: comment.likes,
@@ -141,6 +153,7 @@ exports.downvote_comment_post = asyncHandler(async (req, res) => {
             comment.dislikes -= 1
             await user.save()
             await comment.save()
+
             // Respond with success and updated dislike information
             return res.json({
                 success: true,
