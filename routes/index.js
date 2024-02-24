@@ -3,7 +3,6 @@ const express = require("express")
 const router = express.Router()
 const listing_controller = require("../controllers/listing")
 const user_controller = require("../controllers/user")
-/* const { cacheRoute, clearCache, cacheCookie } = require("../middleware/cache") */
 const findUserLocation = require("../middleware/location")
 const comments_controller = require("../controllers/comments")
 const categories_controller = require("../controllers/category")
@@ -11,7 +10,6 @@ const chat_controller = require("../controllers/chat")
 const {
     verifyListingsCache,
     verifyUsersCache,
-    /*     verifyUserCache, */
     verifyAlertsCache,
     verifyChatsCache,
 } = require("../middleware/redis")
@@ -29,19 +27,23 @@ router.post(
     findUserLocation,
     listing_controller.create_listing_post
 )
+router.get("/listings/:id", listing_controller.display_listing_detail)
 router.get(
     "/listings",
-    env === "development" ? "" : verifyListingsCache("listings"),
+    env === "development"
+        ? listing_controller.display_listings_all
+        : verifyListingsCache("listings"),
     listing_controller.display_listings_all
 )
-router.get("/listings/:id", listing_controller.display_listing_detail)
 router.delete("/listings/:id/delete", listing_controller.delete_listing_post)
 router.put("/listings/:id/upvote", listing_controller.upvote_listing_post)
 
 // USER ALERT ROUTES
 router.get(
     "/users/alerts",
-    env === "development" ? "" : verifyAlertsCache("alerts"),
+    env === "development"
+        ? user_controller.alerts_get
+        : verifyAlertsCache("alerts"),
     user_controller.alerts_get
 )
 router.put("/users/alerts/:id/read", user_controller.mark_as_read)
@@ -52,7 +54,9 @@ router.post("/users/chats/create/:id", chat_controller.new_chat)
 router.post("/users/chats/:id/messages/create", chat_controller.send_message)
 router.get(
     "/users/chats",
-    env === "development" ? "" : verifyChatsCache("chats"),
+    env === "development"
+        ? chat_controller.list_chats
+        : verifyChatsCache("chats"),
     chat_controller.list_chats
 )
 router.get("/users/chats/:id/messages", chat_controller.all_messages)
@@ -63,7 +67,9 @@ router.post("/users/login", user_controller.login_post)
 router.post("/users/logout", user_controller.logout_post)
 router.get(
     "/users",
-    env === "development" ? "" : verifyUsersCache("users"),
+    env === "development"
+        ? user_controller.users_get
+        : verifyUsersCache("users"),
     user_controller.users_get
 )
 router.post("/users/:id/emoji", user_controller.emoji_set)

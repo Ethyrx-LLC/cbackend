@@ -6,7 +6,9 @@ const env = process.env.NODE_ENV || "development"
 const redis = require("redis")
 let redisClient
 ;(async () => {
-    redisClient = redis.createClient({ url: process.env.REDIS })
+    env === "development"
+        ? (redisClient = redis.createClient())
+        : (redisClient = redis.createClient({ url: process.env.REDIS }))
 
     redisClient.on("error", (error) => console.error(`Error : ${error}`))
 
@@ -98,18 +100,6 @@ exports.new_chat = asyncHandler(async (req, res) => {
 exports.send_message = asyncHandler(async (req, res) => {
     const chat = await Chat.findById(req.params.id).exec()
     const sender = await User.findById(req.user).exec()
-
-    // https://stackoverflow.com/questions/11637353/comparing-mongoose-id-and-strings
-    // This is our check to prevent other users being able to post into other conversations
-    // if (
-    //     chat.sender._id &&
-    //     !req.user._id.equals(chat.sender._id) &&
-    //     chat.receiver._id &&
-    //     !req.user._id.equals(chat.receiver._id)
-    // ) {
-    //     return res.status(401).json({ success: false })
-    // }
-
     const message = new Message({
         sender: sender,
         message: req.body.message,

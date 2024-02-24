@@ -13,7 +13,9 @@ const env = process.env.NODE_ENV || "development"
 const redis = require("redis")
 let redisClient
 ;(async () => {
-    redisClient = redis.createClient({ url: process.env.REDIS })
+    env === "development"
+        ? (redisClient = redis.createClient())
+        : (redisClient = redis.createClient({ url: process.env.REDIS }))
 
     redisClient.on("error", (error) => console.error(`Error : ${error}`))
 
@@ -186,7 +188,6 @@ exports.emoji_set = asyncHandler(async (req, res) => {
 
 exports.alerts_get = asyncHandler(async (req, res) => {
     const userId = req.user.id
-    console.log(userId)
     const notifications = await Alerts.find({ user_id: userId })
         .lean()
         .populate({
@@ -241,6 +242,5 @@ exports.cookie = asyncHandler(async (req, res) => {
         .populate("listings")
         .populate("comments")
         .exec()
-    console.log(user)
     res.status(200).json(user)
 })

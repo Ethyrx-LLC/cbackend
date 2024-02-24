@@ -1,14 +1,17 @@
+require("dotenv").config()
 const redis = require("redis")
+const env = process.env.NODE_ENV || "development"
 let redisClient
 async function RunRedis() {
-    redisClient = redis.createClient()
+    env === "development"
+        ? (redisClient = redis.createClient())
+        : (redisClient = redis.createClient({ url: process.env.REDIS }))
 
     redisClient.on("error", (error) => console.error(`Error : ${error}`))
 
-    await redisClient.connect()
+    env === "development" ? "" : await redisClient.connect()
 }
-
-RunRedis()
+env === "development" ? "" : RunRedis()
 function verifyListingsCache(parameter) {
     return async (req, res, next) => {
         const cache = parameter

@@ -10,7 +10,9 @@ const env = process.env.NODE_ENV || "development"
 const redis = require("redis")
 let redisClient
 ;(async () => {
-    redisClient = redis.createClient({ url: process.env.REDIS })
+    env === "development"
+        ? (redisClient = redis.createClient())
+        : (redisClient = redis.createClient({ url: process.env.REDIS }))
 
     redisClient.on("error", (error) => console.error(`Error : ${error}`))
 
@@ -189,7 +191,7 @@ exports.upvote_listing_post = asyncHandler(async (req, res) => {
             listing.likes -= 1
             await user.save()
             await listing.save()
-            await redisClient.DEL("listings")
+            env === "development" ? "" : await redisClient.DEL("listings")
             // Respond with success and updated like information
             return res.json({
                 success: true,

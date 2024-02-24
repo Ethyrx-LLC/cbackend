@@ -13,15 +13,6 @@ const helmet = require("helmet")
 const passport = require("passport")
 const initSocketServer = require("./middleware/socketserver")
 const app = express()
-const redis = require("redis")
-let redisClient
-;(async () => {
-    redisClient = redis.createClient()
-
-    redisClient.on("error", (error) => console.error(`Error : ${error}`))
-
-    await redisClient.connect()
-})()
 
 // Import passport middleware configuration
 require("./middleware/passport")(passport)
