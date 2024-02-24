@@ -5,6 +5,7 @@ const asyncHandler = require("express-async-handler")
 const Alerts = require("../models/alerts")
 const Listings = require("../models/listing")
 const User = require("../models/user")
+const env = process.env.NODE_ENV || "development"
 const redis = require("redis")
 let redisClient
 ;(async () => {
@@ -12,7 +13,7 @@ let redisClient
 
     redisClient.on("error", (error) => console.error(`Error : ${error}`))
 
-    await redisClient.connect()
+    env === "development" ? "" : await redisClient.connect()
 })()
 // Get comments for a specific listing
 exports.list_comments_get = asyncHandler(async (req, res) => {
@@ -70,7 +71,7 @@ exports.create_comment_post = asyncHandler(async (req, res) => {
 
     await Promise.all([
         comment.save(),
-        redisClient.DEL("alerts"),
+        env === "development" ? "" :redisClient.DEL("alerts"),
         await alert.save(),
         await listing.save(),
         await user.save(),

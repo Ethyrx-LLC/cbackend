@@ -9,6 +9,7 @@ const bcrypt = require("bcryptjs")
 const passport = require("passport")
 const { ROLE } = require("../middleware/permissions")
 const mongoose = require("mongoose")
+const env = process.env.NODE_ENV || "development"
 const redis = require("redis")
 let redisClient
 ;(async () => {
@@ -16,15 +17,17 @@ let redisClient
 
     redisClient.on("error", (error) => console.error(`Error : ${error}`))
 
-    await redisClient.connect()
+    env === "development" ? "" : await redisClient.connect()
 })()
 // Get all users with populated listings and comments
 exports.users_get = asyncHandler(async (req, res) => {
     const users = await User.find().lean().exec()
-    await redisClient.SET("users", JSON.stringify(users), {
-        EX: 3600,
-        NX: true,
-    })
+    env === "development"
+        ? ""
+        : await redisClient.SET("users", JSON.stringify(users), {
+              EX: 3600,
+              NX: true,
+          })
     res.status(200).json({ users: users })
 })
 
@@ -97,7 +100,7 @@ exports.create_users_post = [
                     res.status(401).json({ error: errors.array() })
                 } else {
                     // Save the new user
-                    await redisClient.FLUSHALL()
+                    env === "development" ? "" : await redisClient.FLUSHALL()
                     await user.save()
                     res.status(200).json({ success: true })
                 }
@@ -128,7 +131,7 @@ exports.login_post = [
             res.status(403).json({ error: errors.array() })
         } else {
             // Authenticate the user using passport
-            await redisClient.DEL("users")
+            env === "development" ? "" : await redisClient.DEL("users")
             passport.authenticate(
                 "local",
                 { successRedirect: "/cookies" },
@@ -163,7 +166,7 @@ exports.login_post = [
 
 // Process user logout
 exports.logout_post = async (req, res) => {
-    await redisClient.FLUSHALL()
+    env === "development" ? "" : await redisClient.FLUSHALL()
     res.status(200)
         .clearCookie("connect.sid", { domain: "kameelist.com" })
         .json({ message: "Logged out" })
@@ -205,17 +208,19 @@ exports.alerts_get = asyncHandler(async (req, res) => {
         .sort({ created_at: -1 })
         .limit(10) // Limit to the latest 10 notifications
 
-    await redisClient.DEL("alerts", JSON.stringify(notifications), {
-        EX: 3600,
-        NX: true,
-    })
+    env === "development"
+        ? ""
+        : await redisClient.DEL("alerts", JSON.stringify(notifications), {
+              EX: 3600,
+              NX: true,
+          })
     res.json(notifications)
 })
 
 exports.mark_as_read = asyncHandler(async (req, res) => {
     const update = { is_read: true }
     await Alerts.findByIdAndUpdate(req.params.id, update).exec()
-    await redisClient.DEL("alerts")
+    env === "development" ? "" : await redisClient.DEL("alerts")
     res.status(200).json({ message: "Notification marked as read" })
 })
 
@@ -226,7 +231,7 @@ exports.mark_all_as_read = asyncHandler(async (req, res) => {
         { user_id: user, is_read: false },
         { $set: { is_read: true } }
     ).exec()
-    await redisClient.DEL("alerts")
+    env === "development" ? "" : await redisClient.DEL("alerts")
     res.status(200).json({ message: "All notifications marked as read" })
 })
 

@@ -31,7 +31,7 @@ router.post(
 )
 router.get(
     "/listings",
-    verifyListingsCache("listings"),
+    env === "development" ? "" : verifyListingsCache("listings"),
     listing_controller.display_listings_all
 )
 router.get("/listings/:id", listing_controller.display_listing_detail)
@@ -41,7 +41,7 @@ router.put("/listings/:id/upvote", listing_controller.upvote_listing_post)
 // USER ALERT ROUTES
 router.get(
     "/users/alerts",
-    verifyAlertsCache("alerts"),
+    env === "development" ? "" : verifyAlertsCache("alerts"),
     user_controller.alerts_get
 )
 router.put("/users/alerts/:id/read", user_controller.mark_as_read)
@@ -52,7 +52,7 @@ router.post("/users/chats/create/:id", chat_controller.new_chat)
 router.post("/users/chats/:id/messages/create", chat_controller.send_message)
 router.get(
     "/users/chats",
-    verifyChatsCache("chats"),
+    env === "development" ? "" : verifyChatsCache("chats"),
     chat_controller.list_chats
 )
 router.get("/users/chats/:id/messages", chat_controller.all_messages)
@@ -61,7 +61,11 @@ router.get("/users/chats/:id/messages", chat_controller.all_messages)
 router.post("/users/create", user_controller.create_users_post)
 router.post("/users/login", user_controller.login_post)
 router.post("/users/logout", user_controller.logout_post)
-router.get("/users", verifyUsersCache("users"), user_controller.users_get)
+router.get(
+    "/users",
+    env === "development" ? "" : verifyUsersCache("users"),
+    user_controller.users_get
+)
 router.post("/users/:id/emoji", user_controller.emoji_set)
 router.get("/users/:id", user_controller.user_get)
 

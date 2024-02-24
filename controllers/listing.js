@@ -6,6 +6,7 @@ const { body, validationResult } = require("express-validator")
 const Category = require("../models/category")
 const Comments = require("../models/comments")
 const User = require("../models/user")
+const env = process.env.NODE_ENV || "development"
 const redis = require("redis")
 let redisClient
 ;(async () => {
@@ -13,7 +14,7 @@ let redisClient
 
     redisClient.on("error", (error) => console.error(`Error : ${error}`))
 
-    await redisClient.connect()
+    env === "development" ? "" : await redisClient.connect()
 })()
 // Returns an array of listings with populated user and comments data
 exports.display_listings_all = asyncHandler(async (req, res) => {
@@ -37,10 +38,12 @@ exports.display_listings_all = asyncHandler(async (req, res) => {
             },
         })
         .exec()
-    await redisClient.SET("listings", JSON.stringify(listings), {
-        EX: 1800,
-        NX: true,
-    })
+    env === "development"
+        ? ""
+        : await redisClient.SET("listings", JSON.stringify(listings), {
+              EX: 1800,
+              NX: true,
+          })
     // Respond with the populated listings
     console.log("BEFORE END OF ROUTE")
     res.status(200).json({ user: req.user, success: true, listings })
@@ -68,10 +71,12 @@ exports.display_listing_detail = asyncHandler(async (req, res) => {
             success: true,
             listing: listing,
         })
-        await redisClient.SET("listing-detail", JSON.stringify(listing), {
-            EX: 120,
-            NX: true,
-        })
+        env === "development"
+            ? ""
+            : await redisClient.SET("listing-detail", JSON.stringify(listing), {
+                  EX: 120,
+                  NX: true,
+              })
     }
 })
 
@@ -138,7 +143,7 @@ exports.create_listing_post = [
                 listing: listing,
             })
 
-            await redisClient.DEL("listings")
+            env === "development" ? "" : await redisClient.DEL("listings")
         }
     }),
 ]
@@ -159,7 +164,7 @@ exports.delete_listing_post = asyncHandler(async (req, res) => {
         }).exec()
         // Respond with success
         res.json({ success: true, error: "Post deleted" })
-        await redisClient.SET("listings")
+        env === "development" ? "" : await redisClient.SET("listings")
     }
 })
 
