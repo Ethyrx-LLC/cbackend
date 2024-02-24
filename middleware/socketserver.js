@@ -2,6 +2,7 @@ const { Server } = require("socket.io")
 
 // Array to store information about online users
 let onlineUsers = []
+const sockets = {}
 
 // Function to initialize the Socket.IO server
 const initSocketServer = () => {
@@ -60,7 +61,31 @@ const initSocketServer = () => {
             io.emit("get-users", onlineUsers)
         })
 
-        socket.on(
+        socket.on("send-message", (data) => {
+            if (data.userId === undefined) {
+                return console.log("receiver is offline")
+            }
+            const isReceiverOnline = onlineUsers.find(
+                (receiver) => receiver.userId === data.receiver
+            )
+
+            if (isReceiverOnline !== undefined) {
+                console.log(data.message)
+                io.to(isReceiverOnline.socketId).emit("message-received", {
+                    chatId: data.chatId,
+                    message: data.message,
+                })
+            }
+
+            if (isSenderOnline !== undefined) {
+                console.log(data.message)
+                io.to(isSenderOnline.socketId).emit("message-received", {
+                    chatId: data.chatId,
+                    message: data.message,
+                })
+            }
+        })
+        /*    socket.on(
             "send-message",
             (chatId, poster, sender, receiver, message) => {
                 // Since we have a sender and receiver which are constant on the database, we have to kind of reverse the
@@ -105,7 +130,7 @@ const initSocketServer = () => {
                     )
                 }
             }
-        )
+        ) */
     })
 
     // Return the configured Socket.IO server instance
