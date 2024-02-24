@@ -1,38 +1,95 @@
-/* const redis = require("redis")
-const fetch = require("node-fetch")
-const { promisify } = require("util")
+const redis = require("redis")
+let redisClient
 
-const client = redis.createClient()
+function verifyListingsCache(parameter) {
+    ;(async () => {
+        redisClient = redis.createClient()
 
-// Promisify the Redis client methods
-const getAsync = promisify(client.GET).bind(client)
-const setexAsync = promisify(client.SETEX).bind(client)
+        redisClient.on("error", (error) => console.error(`Error : ${error}`))
 
-async function checkCache(time) {
+        await redisClient.connect()
+    })()
     return async (req, res, next) => {
-        const key = req.originalUrl
+        const cache = parameter
 
         try {
-            const cachedData = await getAsync(key)
-
-            if (cachedData) {
-                res.json(JSON.parse(cachedData))
+            const cacheResults = await redisClient.get(cache)
+            const listings = JSON.parse(cacheResults)
+            console.log(listings.length)
+            if (cacheResults) {
+                isCached = true
+                return res.status(200).json({
+                    listings,
+                })
             } else {
-                const apiUrl = "https://staging.kameelist.com/" + req.path
-                const response = await fetch(apiUrl)
-                const data = await response.json()
-
-                await setexAsync(key, time, JSON.stringify(data))
-
-                res.json(data)
+                next()
             }
         } catch (error) {
-            console.error("Cache error:", error)
-            res.status(500).json({
-                error: "An error occurred while processing the request.",
-            })
+            console.error(error)
+            res.status(404)
+            next()
         }
     }
 }
-module.exports = checkCache
- */
+
+function verifyListingDetailCache(parameter) {
+    ;(async () => {
+        redisClient = redis.createClient()
+
+        redisClient.on("error", (error) => console.error(`Error : ${error}`))
+
+        await redisClient.connect()
+    })()
+    return async (req, res, next) => {
+        const cache = parameter
+
+        try {
+            const cacheResults = await redisClient.get(cache)
+            if (cacheResults) {
+                listing = JSON.parse(cacheResults)
+                res.status(200).json({
+                    listing,
+                })
+            } else {
+                next()
+            }
+        } catch (error) {
+            console.error(error)
+            res.status(404)
+            next()
+        }
+    }
+}
+
+function verifyListingDetailCache(parameter) {
+    ;(async () => {
+        redisClient = redis.createClient()
+
+        redisClient.on("error", (error) => console.error(`Error : ${error}`))
+
+        await redisClient.connect()
+    })()
+    return async (req, res, next) => {
+        const cache = parameter
+
+        try {
+            const cacheResults = await redisClient.get(cache)
+            if (cacheResults) {
+                isCached = true
+                results = JSON.parse(cacheResults)
+
+                res.status(200).json({
+                    listing,
+                })
+            } else {
+                next()
+            }
+        } catch (error) {
+            console.error(error)
+            res.status(404)
+            next()
+        }
+    }
+}
+
+module.exports = { verifyListingsCache, verifyListingDetailCache }
