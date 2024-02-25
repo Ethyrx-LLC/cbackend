@@ -68,11 +68,10 @@ const initSocketServer = () => {
             console.log(receiver)
 
             if (receiver !== undefined) {
-                io.to(receiver.socketId).emit(
-                    "message-received",
-                    data.chatId,
-                    data.message
-                )
+                io.to(receiver.socketId).emit("message-received", {
+                    chatId: data.chatId,
+                    chatMessage: data.message,
+                })
             }
         })
     })
