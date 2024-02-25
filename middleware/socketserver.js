@@ -66,7 +66,6 @@ const initSocketServer = () => {
             const receiver = onlineUsers.find(
                 (receiver) => receiver.userId === data.receiverId
             )
-            console.log(req.user)
 
             if (receiver !== undefined) {
                 io.to(receiver.socketId).emit("message-received", {
