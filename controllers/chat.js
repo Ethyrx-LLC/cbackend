@@ -50,12 +50,6 @@ exports.list_chats = asyncHandler(async (req, res) => {
             ],
         })
         .exec()
-    env === "development"
-        ? ""
-        : await redisClient.SET("chats", JSON.stringify(userChats), {
-              EX: 3600,
-              NX: true,
-          })
     res.status(200).json({ success: true, chats: userChats.chats })
 })
 

@@ -79,7 +79,7 @@ function verifyAlertsCache(parameter) {
     }
 }
 
-function verifyChatsCache(parameter) {
+/* function verifyChatsCache(parameter) {
     return async (req, res, next) => {
         const cache = parameter
 
@@ -100,7 +100,7 @@ function verifyChatsCache(parameter) {
             next()
         }
     }
-}
+} */
 
 module.exports = {
     verifyListingsCache,

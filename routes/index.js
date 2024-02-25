@@ -52,13 +52,7 @@ router.put("/users/alerts/read", user_controller.mark_all_as_read)
 // USER CHAT ROUTES
 router.post("/users/chats/create/:id", chat_controller.new_chat)
 router.post("/users/chats/:id/messages/create", chat_controller.send_message)
-router.get(
-    "/users/chats",
-    env === "development"
-        ? chat_controller.list_chats
-        : verifyChatsCache("chats"),
-    chat_controller.list_chats
-)
+router.get("/users/chats", chat_controller.list_chats)
 router.get("/users/chats/:id/messages", chat_controller.all_messages)
 
 // USERS ROUTES
