@@ -2,7 +2,7 @@ const { Server } = require("socket.io")
 
 // Array to store information about online users
 let onlineUsers = []
-let chatSocket = new Map()
+//const sockets = {}
 
 // Function to initialize the Socket.IO server
 const initSocketServer = () => {
