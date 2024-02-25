@@ -73,8 +73,8 @@ const initSocketServer = () => {
                     chatMessage: data.message,
                     sender: {
                         username: data.sender.username,
-                        emoji: data.sender.emoji
-                    }
+                        emoji: data.sender.emoji,
+                    },
                 })
             }
         })
