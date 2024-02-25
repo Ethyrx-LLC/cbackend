@@ -8,6 +8,12 @@ const MessageSchema = new Schema({
         required: true,
         index: true,
     },
+    receiver: {
+        type: Schema.Types.ObjectId,
+        ref: "User",
+        required: true,
+        index: true,
+    },
     message: { type: String, required: true },
     createdAt: { type: Date, default: Date.now, index: true },
 })
