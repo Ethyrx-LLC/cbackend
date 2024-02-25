@@ -62,15 +62,17 @@ const initSocketServer = () => {
         })
 
         socket.on("send-message", (data) => {
+            console.log(data)
             const receiver = onlineUsers.find(
                 (receiver) => receiver.userId === data.receiverId
             )
-            console.log(receiver)
+            console.log(req.user)
 
             if (receiver !== undefined) {
                 io.to(receiver.socketId).emit("message-received", {
                     chatId: data.chatId,
                     chatMessage: data.message,
+                    sender: data.sender,
                 })
             }
         })

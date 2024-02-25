@@ -87,11 +87,9 @@ exports.new_chat = asyncHandler(async (req, res) => {
 exports.send_message = asyncHandler(async (req, res) => {
     const chat = await Chat.findById(req.params.id).exec()
     const sender = await User.findById(req.user).exec()
-    console.log(req.user.id)
     const receiver = chat.participants.filter(
         (user) => user._id.toString() !== req.user.id
     )[0]
-    console.log(receiver)
     const message = new Message({
         sender: sender,
         receiver: receiver,
