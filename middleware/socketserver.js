@@ -71,7 +71,10 @@ const initSocketServer = () => {
                 io.to(receiver.socketId).emit("message-received", {
                     chatId: data.chatId,
                     chatMessage: data.message,
-                    sender: data.sender,
+                    sender: {
+                        username: data.sender.username,
+                        emoji: data.sender.emoji
+                    }
                 })
             }
         })
