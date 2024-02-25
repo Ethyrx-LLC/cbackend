@@ -21,9 +21,13 @@ exports.all_messages = asyncHandler(async (req, res) => {
         .populate({
             path: "messages",
             populate: {
-                path: "participants",
+                path: "sender",
                 select: "username emoji",
             },
+        })
+        .populate({
+            path: "participants",
+            select: "username emoji",
         })
         .exec()
 
