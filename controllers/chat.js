@@ -21,26 +21,11 @@ exports.all_messages = asyncHandler(async (req, res) => {
         .populate({
             path: "messages",
             populate: {
-                path: "sender",
+                path: "participants",
                 select: "username emoji",
             },
         })
-        .populate({
-            path: "sender receiver",
-            select: "username emoji",
-        })
         .exec()
-
-    // https://stackoverflow.com/questions/11637353/comparing-mongoose-id-and-strings
-    // This is our check to prevent other users being able to view other peoples' conversations
-    // if (
-    //     chat.sender._id &&
-    //     !req.user._id.equals(chat.sender._id) &&
-    //     chat.receiver._id &&
-    //     !req.user._id.equals(chat.receiver._id)
-    // ) {
-    //     return res.status(401).json({ success: false })
-    // }
 
     res.status(200).json({
         chat: chat,
@@ -52,10 +37,10 @@ exports.list_chats = asyncHandler(async (req, res) => {
         .lean()
         .populate({
             path: "chats",
-            select: "sender receiver",
+            select: "participants",
             populate: [
                 {
-                    path: "sender receiver",
+                    path: "participants",
                     select: "username emoji",
                 },
             ],
@@ -75,12 +60,10 @@ exports.new_chat = asyncHandler(async (req, res) => {
     const sender = await User.findById(req.user).exec()
     const receiver = await User.findById(req.params.id).exec()
     const chat = new Chat({
-        sender: sender,
-        receiver: receiver,
+        participants: [sender, receiver],
     })
     const existingChat = await Chat.findOne({
-        sender: sender._id,
-        receiver: receiver._id,
+        participants: [sender, receiver],
     })
     if (existingChat) {
         return res.status(200).json({ success: true, chat: existingChat })
