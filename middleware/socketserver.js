@@ -60,6 +60,17 @@ const initSocketServer = () => {
             // Send updated list of online users to all users
             io.emit("get-users", onlineUsers)
         })
+
+        socket.on("send-message", (data) => {
+            const receiver = onlineUsers.find(
+                (receiver) => receiver.userId === data.receiverId
+            )
+            console.log(receiver)
+
+            if (receiver !== undefined) {
+                io.to(receiver.socketId).emit("message-received", data.message)
+            }
+        })
     })
 
     // Return the configured Socket.IO server instance
