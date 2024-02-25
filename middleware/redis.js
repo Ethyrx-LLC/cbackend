@@ -106,5 +106,5 @@ module.exports = {
     verifyListingsCache,
     verifyUsersCache,
     verifyAlertsCache,
-    verifyChatsCache,
+    /*     verifyChatsCache, */
 }

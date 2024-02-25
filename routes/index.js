@@ -11,7 +11,7 @@ const {
     verifyListingsCache,
     verifyUsersCache,
     verifyAlertsCache,
-    verifyChatsCache,
+    /* verifyChatsCache */
 } = require("../middleware/redis")
 const multer = require("multer")
 const env = process.env.NODE_ENV || "development"
