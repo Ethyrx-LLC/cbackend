@@ -28,7 +28,6 @@ exports.display_listings_all = asyncHandler(async (req, res) => {
         .skip(startIndex)
         .limit(limit)
         .sort({ createdAt: -1 })
-        .hint({ createdAt: -1 })
         .lean()
         .populate({ path: "user", select: "username emoji" })
         .populate({
