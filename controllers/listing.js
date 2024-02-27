@@ -99,8 +99,7 @@ exports.create_listing_post = [
         .escape(),
     body("content", "Content must be more than 10 letters long")
         .trim()
-        .isLength({ min: 10 })
-        .escape(),
+        .isLength({ min: 10 }),
     body("category", "Please select a category").notEmpty(),
 
     // Process the creation of a new listing
