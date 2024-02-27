@@ -42,6 +42,7 @@ module.exports = function (passport) {
                 console.log(`The request is ${request}`)
                 console.log(`The access token is ${accessToken}`)
                 console.log(`The profile is ${profile}`)
+                done(null, profile)
             }
         )
     )
