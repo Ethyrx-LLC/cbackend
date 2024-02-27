@@ -21,4 +21,4 @@ jobs:
                       git reset --hard
                       git clean -f -d
                       npm i
-                      pm2 restart 'Kameelist Backend'
+                      pm2 reload '[Production] Kameelist Backend'
