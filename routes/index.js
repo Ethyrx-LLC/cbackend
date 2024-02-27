@@ -97,6 +97,14 @@ router.delete(
     categories_controller.category_delete_post
 )
 
+// GOOGLE REDIRECT
+router.get("/google", passport.authenticate("google"), (req, res) =>
+    res.status(200)
+)
+router.get("/google/redirect", passport.authenticate("google"), (req, res) =>
+    res.status(200)
+)
+
 // USER API
 router.get("/cookies", user_controller.cookie)
 

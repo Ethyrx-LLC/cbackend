@@ -1,3 +1,4 @@
+require("dotenv").config()
 const passport = require("passport")
 const LocalStrategy = require("passport-local").Strategy
 const GoogleStrategy = require("passport-google-oauth2").Strategy
@@ -27,21 +28,24 @@ module.exports = function (passport) {
             }
         })
     )
-}
 
-passport.use(
-    new GoogleStrategy(
-        {
-            clientID: "here use the clientID given by google",
-            clientSecret: "here use the client secret given by google",
-            callbackURL: "http://localhost:5000/google/callback",
-            passReqToCallback: true,
-        },
-        function (request, accessToken, refreshToken, profile, done) {
-            return done(null, profile)
-        }
+    passport.use(
+        new GoogleStrategy(
+            {
+                clientID: process.env.CLIENT_ID,
+                clientSecret: process.env.CLIENT_SECRET,
+                callbackURL: process.env.REDIRECT_URL,
+                passReqToCallback: true,
+                scope: ["email", "profile"],
+            },
+            function (request, accessToken, refreshToken, profile, done) {
+                console.log(`The request is ${request}`)
+                console.log(`The access token is ${accessToken}`)
+                console.log(`The profile is ${profile}`)
+            }
+        )
     )
-)
+}
 
 passport.serializeUser((user, done) => {
     done(null, user.id)
