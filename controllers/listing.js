@@ -2,7 +2,7 @@
 require("dotenv").config()
 const Listings = require("../models/listing")
 const asyncHandler = require("express-async-handler")
-const { body, validationResult } = require("express-validator")
+const { body, validationResult, unescape } = require("express-validator")
 const Category = require("../models/category")
 const Comments = require("../models/comments")
 const User = require("../models/user")
@@ -99,7 +99,8 @@ exports.create_listing_post = [
         .escape(),
     body("content", "Content must be more than 10 letters long")
         .trim()
-        .isLength({ min: 10 }),
+        .isLength({ min: 10 })
+        .escape(),
     body("category", "Please select a category").notEmpty(),
 
     // Process the creation of a new listing
@@ -113,11 +114,14 @@ exports.create_listing_post = [
         // Fetch the category based on the title provided in the request body
         const category = await Category.findById(req.body.category)
 
+        const unescapedTitle = unescape(req.body.title)
+        const unescapedContent = unescape(req.body.content)
+
         // Create a new listing object
         const listing = new Listings({
             user: req.user._id,
-            title: req.body.title,
-            content: req.body.content,
+            title: unescapedTitle,
+            content: unescapedContent,
             category: req.body.category,
             location: req.userLocation,
             photos: req.files,
