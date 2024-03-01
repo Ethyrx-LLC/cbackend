@@ -170,7 +170,12 @@ exports.login_post = [
 exports.logout_post = async (req, res) => {
     env === "development" ? "" : await redisClient.FLUSHALL()
     res.status(200)
-        .clearCookie("connect.sid", { domain: process.env.NODE_ENV === "development" ? "localhost" : "kameelist.com" })
+        .clearCookie("connect.sid", {
+            domain:
+                process.env.NODE_ENV === "development"
+                    ? "localhost"
+                    : "kameelist.com",
+        })
         .json({ message: "Logged out" })
 }
 
