@@ -20,11 +20,13 @@ function findUserLocation(req, res, next) {
     const userCountry =
         env === "development" ? lookup(GeneratePublicIPv4()) : lookup(req.ip)
     const fullCountryName = iso3166.country(userCountry.country)
+    const fullRegion = iso3166.country(userCountry.region)
     // Location can be undefined
     req.userLocation = {
         country: userCountry.country,
-        fullCountry: fullCountryName.name,
+        country_full: fullCountryName.name,
         region: userCountry.region,
+        region_full: fullRegion,
         city: userCountry.city,
         timezone: userCountry.timezone,
     }
