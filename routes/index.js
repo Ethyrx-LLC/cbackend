@@ -4,7 +4,6 @@ const router = express.Router()
 const listing_controller = require("../controllers/listing")
 const user_controller = require("../controllers/user")
 const findUserLocation = require("../middleware/location")
-const passport = require("passport")
 const comments_controller = require("../controllers/comments")
 const categories_controller = require("../controllers/category")
 const chat_controller = require("../controllers/chat")
@@ -96,19 +95,6 @@ router.post("/categories/create", categories_controller.category_add_post)
 router.delete(
     "/categories/:id/delete",
     categories_controller.category_delete_post
-)
-
-// GOOGLE REDIRECT
-router.get(
-    "passport/google",
-    passport.authenticate("google", { scope: ["email", "profile"] })
-)
-router.get(
-    "passport/google/callback",
-    passport.authenticate("google", { failureRedirect: "/login" }),
-    function (req, res) {
-        res.redirect("/")
-    }
 )
 
 // USER API
