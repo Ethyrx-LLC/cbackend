@@ -39,10 +39,11 @@ module.exports = function (passport) {
                 scope: ["email", "profile"],
             },
             function (request, accessToken, refreshToken, profile, done) {
+                console.log("Function Running")
                 console.log(`The request is ${request}`)
                 console.log(`The access token is ${accessToken}`)
                 console.log(`The profile is ${profile}`)
-                done(null, profile)
+                return done(null, profile)
             }
         )
     )
