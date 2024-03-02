@@ -35,7 +35,6 @@ module.exports = function (passport) {
                 clientID: process.env.GOOGLE_CLIENT_ID,
                 clientSecret: process.env.GOOGLE_CLIENT_SECRET,
                 callbackURL: process.env.GOOGLE_REDIRECT_URL,
-                passReqToCallback: true,
                 scope: ["email", "profile"],
             },
             function (req, accessToken, refreshToken, profile, done) {
