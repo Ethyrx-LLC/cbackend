@@ -101,8 +101,9 @@ router.delete(
 router.get("/", passport.authenticate("google"))
 router.get(
     "/callback",
-    passport.authenticate("google", { failureRedirect: "/login" }),
+    passport.authenticate("google", { failureRedirect: "/auth/login" }),
     function (req, res) {
+        console.log("Hey there")
         res.redirect("/")
     }
 )
