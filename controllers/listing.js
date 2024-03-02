@@ -2,7 +2,7 @@
 require("dotenv").config()
 const Listings = require("../models/listing")
 const asyncHandler = require("express-async-handler")
-const { body, validationResult, unescape } = require("express-validator")
+const { body, validationResult } = require("express-validator")
 const Category = require("../models/category")
 const Comments = require("../models/comments")
 const User = require("../models/user")
@@ -96,11 +96,13 @@ exports.create_listing_post = [
     body("title", "Title must be more than 3 characters long")
         .trim()
         .isLength({ min: 3 })
-        .escape(),
+        .escape()
+        .unescape("'"),
     body("content", "Content must be more than 10 letters long")
         .trim()
         .isLength({ min: 10 })
-        .escape(),
+        .escape()
+        .unescape("'"),
     body("category", "Please select a category").notEmpty(),
 
     // Process the creation of a new listing
