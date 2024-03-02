@@ -31,6 +31,7 @@ module.exports = function (passport) {
 
     passport.use(
         new GoogleStrategy(
+            console.log("GOOGLE STRAT RUNNING"),
             {
                 clientID: process.env.GOOGLE_CLIENT_ID,
                 clientSecret: process.env.GOOGLE_CLIENT_SECRET,
