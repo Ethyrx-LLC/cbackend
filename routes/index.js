@@ -100,10 +100,10 @@ router.delete(
 
 // GOOGLE REDIRECT
 router.get("/google", passport.authenticate("google"), (req, res) =>
-    res.status(200)
+    res.status(200).json(req.user)
 )
 router.get("/google/redirect", passport.authenticate("google"), (req, res) =>
-    res.status(200)
+    res.status(200).json(req.user)
 )
 
 // USER API
