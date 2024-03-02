@@ -1,4 +1,5 @@
 const { lookup } = require("geoip-lite")
+const iso3166 = require("iso-3166-2")
 
 function GeneratePublicIPv4() {
     let firstOctet = Math.floor(Math.random() * 191) + 1
@@ -18,10 +19,10 @@ const env = process.env.NODE_ENV || "development"
 function findUserLocation(req, res, next) {
     const userCountry =
         env === "development" ? lookup(GeneratePublicIPv4()) : lookup(req.ip)
-    console.log(userCountry)
+    const fullCountryName = iso3166.country(userCountry.country)
     // Location can be undefined
     req.userLocation = {
-        country: userCountry.country,
+        country: fullCountryName.name,
         region: userCountry.region,
         city: userCountry.city,
         timezone: userCountry.timezone,
