@@ -15,10 +15,11 @@ const initSocketServer = require("./middleware/socketserver")
 const app = express()
 
 // Import passport middleware configuration
-require("./middleware/passport")(passport)
-
+require("./middleware/strategies/passport")(passport)
+require("./middleware/strategies/google")
 // Import routes
 const indexRouter = require("./routes/index")
+const googleRouter = require("./routes/google")
 
 // Enable trust proxy
 app.set("trust proxy", 1)
@@ -101,6 +102,7 @@ app.use(express.urlencoded({ extended: false }))
 
 // Use the routes defined in indexRouter
 app.use("/", indexRouter)
+app.use("/google", googleRouter)
 
 // Error handling middleware
 // eslint-disable-next-line no-unused-vars
