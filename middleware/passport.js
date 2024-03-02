@@ -32,9 +32,9 @@ module.exports = function (passport) {
     passport.use(
         new GoogleStrategy(
             {
-                clientID: process.env.CLIENT_GOOGLE_ID,
-                clientSecret: process.env.CLIENT_GOOGLE_SECRET,
-                callbackURL: process.env.REDIRECT_GOOGLE_URL,
+                clientID: process.env.GOOGLE_CLIENT_ID,
+                clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+                callbackURL: process.env.GOOGLE_REDIRECT_URL,
                 passReqToCallback: true,
                 scope: ["email", "profile"],
             },
