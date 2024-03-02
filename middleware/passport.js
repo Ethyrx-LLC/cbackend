@@ -38,8 +38,8 @@ module.exports = function (passport) {
                 passReqToCallback: true,
                 scope: ["email", "profile"],
             },
-            function (request, accessToken, refreshToken, profile, done) {
-                console.log(`The request is ${request}`)
+            function (req, accessToken, refreshToken, profile, done) {
+                console.log(`The request is ${req}`)
                 console.log(`The access token is ${accessToken}`)
                 console.log(`The profile is ${profile}`)
                 done(null, profile)
