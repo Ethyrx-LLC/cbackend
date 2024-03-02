@@ -96,13 +96,11 @@ exports.create_listing_post = [
     body("title", "Title must be more than 3 characters long")
         .trim()
         .isLength({ min: 3 })
-        .escape()
-        .unescape("'"),
+        .escape(),
     body("content", "Content must be more than 10 letters long")
         .trim()
         .isLength({ min: 10 })
-        .escape()
-        .unescape("'"),
+        .escape(),
     body("category", "Please select a category").notEmpty(),
 
     // Process the creation of a new listing
