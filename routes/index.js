@@ -5,6 +5,7 @@ const listing_controller = require("../controllers/listing")
 const user_controller = require("../controllers/user")
 const findUserLocation = require("../middleware/location")
 const comments_controller = require("../controllers/comments")
+const passport = require("passport")
 const categories_controller = require("../controllers/category")
 const chat_controller = require("../controllers/chat")
 const {
@@ -95,6 +96,15 @@ router.post("/categories/create", categories_controller.category_add_post)
 router.delete(
     "/categories/:id/delete",
     categories_controller.category_delete_post
+)
+
+router.get("/", passport.authenticate("google"))
+router.get(
+    "/callback",
+    passport.authenticate("google", { failureRedirect: "/login" }),
+    function (req, res) {
+        res.redirect("/")
+    }
 )
 
 // USER API
