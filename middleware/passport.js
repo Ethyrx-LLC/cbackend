@@ -35,14 +35,13 @@ module.exports = function (passport) {
                 clientID: process.env.GOOGLE_CLIENT_ID,
                 clientSecret: process.env.GOOGLE_CLIENT_SECRET,
                 callbackURL: process.env.GOOGLE_REDIRECT_URL,
-                passReqToCallback: true,
+                /*                 passReqToCallback: true, */
                 scope: ["email", "profile"],
             },
             function (request, accessToken, refreshToken, profile, done) {
-                console.log("Function Running")
-                console.log(`The request is ${request}`)
-                console.log(`The access token is ${accessToken}`)
-                console.log(`The profile is ${profile}`)
+                console.log("===== GOOGLE PROFILE =======")
+                console.log(profile)
+                console.log("======== END ===========")
                 return done(null, profile)
             }
         )
