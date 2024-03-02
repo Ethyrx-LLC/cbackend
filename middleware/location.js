@@ -22,7 +22,8 @@ function findUserLocation(req, res, next) {
     const fullCountryName = iso3166.country(userCountry.country)
     // Location can be undefined
     req.userLocation = {
-        country: fullCountryName.name,
+        country: userCountry.country,
+        fullCountry: fullCountryName.name,
         region: userCountry.region,
         city: userCountry.city,
         timezone: userCountry.timezone,
