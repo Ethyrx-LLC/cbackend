@@ -49,10 +49,12 @@ module.exports = function (passport) {
 }
 
 passport.serializeUser((user, done) => {
+    console.log(user)
     done(null, user.id)
 })
 
 passport.deserializeUser(async (id, done) => {
+    console.log(id)
     try {
         const user = await User.findById(id)
         done(null, user)
