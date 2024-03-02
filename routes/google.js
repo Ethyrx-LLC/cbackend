@@ -3,12 +3,13 @@ const express = require("express")
 const router = express.Router()
 
 // GOOGLE REDIRECT
-router.get("/", passport.authenticate("google"))
-router.get(
+app.get("/", passport.authenticate("google"))
+
+app.get(
     "/callback",
-    passport.authenticate("google", { failureRedirect: "/login" }),
+    passport.authenticate("google", { failureRedirect: "/auth/login" }),
     function (req, res) {
-        console.log("Hey there")
+        // Successful authentication, redirect home.
         res.redirect("/")
     }
 )

@@ -98,12 +98,13 @@ router.delete(
     categories_controller.category_delete_post
 )
 
-router.get("/", passport.authenticate("google"))
-router.get(
-    "/callback",
+app.get("/google", passport.authenticate("google"))
+
+app.get(
+    "/google/callback",
     passport.authenticate("google", { failureRedirect: "/auth/login" }),
     function (req, res) {
-        console.log("Hey there")
+        // Successful authentication, redirect home.
         res.redirect("/")
     }
 )
