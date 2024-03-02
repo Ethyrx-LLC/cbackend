@@ -100,11 +100,11 @@ router.delete(
 
 // GOOGLE REDIRECT
 router.get(
-    "/google",
+    "passport/google",
     passport.authenticate("google", { scope: ["email", "profile"] })
 )
 router.get(
-    "/google/callback",
+    "passport/google/callback",
     passport.authenticate("google", { failureRedirect: "/login" }),
     function (req, res) {
         res.redirect("/")
