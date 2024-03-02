@@ -99,11 +99,16 @@ router.delete(
 )
 
 // GOOGLE REDIRECT
-router.get("/google", passport.authenticate("google"), (req, res) =>
-    res.status(200).json("GOOGLE ROUTE")
+router.get(
+    "/google",
+    passport.authenticate("google", { scope: ["email", "profile"] })
 )
-router.get("/google/callback", passport.authenticate("google"), (req, res) =>
-    res.status(200).json("CALLBACK ROUTE")
+router.get(
+    "/google/callback",
+    passport.authenticate("google", { failureRedirect: "/login" }),
+    function (req, res) {
+        res.redirect("/")
+    }
 )
 
 // USER API
