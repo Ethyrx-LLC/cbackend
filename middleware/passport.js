@@ -31,30 +31,29 @@ module.exports = function (passport) {
 
     passport.use(
         new GoogleStrategy(
+            console.log("GOOGLE STRAT RUNNING"),
             {
-                clientID: process.env.GOOGLE_CLIENT_ID,
-                clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-                callbackURL: process.env.GOOGLE_REDIRECT_URL,
-                /*                 passReqToCallback: true, */
+                clientID: process.env.CLIENT_GOOGLE_ID,
+                clientSecret: process.env.CLIENT_GOOGLE_SECRET,
+                callbackURL: process.env.REDIRECT_GOOGLE_URL,
+                passReqToCallback: true,
                 scope: ["email", "profile"],
             },
             function (request, accessToken, refreshToken, profile, done) {
-                console.log("===== GOOGLE PROFILE =======")
-                console.log(profile)
-                console.log("======== END ===========")
-                return done(null, profile)
+                console.log(`The request is ${request}`)
+                console.log(`The access token is ${accessToken}`)
+                console.log(`The profile is ${profile}`)
+                done(null, profile)
             }
         )
     )
 }
 
 passport.serializeUser((user, done) => {
-    console.log(user)
     done(null, user.id)
 })
 
 passport.deserializeUser(async (id, done) => {
-    console.log(id)
     try {
         const user = await User.findById(id)
         done(null, user)
