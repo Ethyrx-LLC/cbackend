@@ -95,12 +95,10 @@ exports.create_listing_post = [
     // Validation for the request body
     body("title", "Title must be more than 3 characters long")
         .trim()
-        .isLength({ min: 3 })
-        .escape(),
+        .isLength({ min: 3 }),
     body("content", "Content must be more than 10 letters long")
         .trim()
-        .isLength({ min: 10 })
-        .escape(),
+        .isLength({ min: 10 }),
     body("category", "Please select a category").notEmpty(),
 
     // Process the creation of a new listing
@@ -114,14 +112,11 @@ exports.create_listing_post = [
         // Fetch the category based on the title provided in the request body
         const category = await Category.findById(req.body.category)
 
-        const unescapedTitle = unescape(req.body.title)
-        const unescapedContent = unescape(req.body.content)
-
         // Create a new listing object
         const listing = new Listings({
             user: req.user._id,
-            title: unescapedTitle,
-            content: unescapedContent,
+            title: req.body.title,
+            content: req.body.content,
             category: req.body.category,
             location: req.userLocation,
             photos: req.files,
