@@ -1,5 +1,5 @@
 const { Server } = require("socket.io")
-
+const User = require("../models/user")
 // Array to store information about online users
 let onlineUsers = []
 //const sockets = {}
@@ -39,6 +39,10 @@ const initSocketServer = () => {
 
         // Event handler for "disconnect" event
         socket.on("disconnect-socket", () => {
+            const userId = onlineUsers.find(
+                (receiver) => receiver.userId === data.receiverId
+            )
+            console.log(userId)
             // Remove the disconnected user from onlineUsers array
             onlineUsers = onlineUsers.filter(
                 (user) => user.socketId !== socket.id
@@ -56,7 +60,7 @@ const initSocketServer = () => {
                 (user) => user.socketId !== socket.id
             )
             console.log("user is offline", onlineUsers)
-
+            /*  lastSeen = Date.now() */
             // Send updated list of online users to all users
             io.emit("get-users", onlineUsers)
         })
