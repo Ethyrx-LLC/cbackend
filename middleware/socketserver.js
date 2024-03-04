@@ -40,7 +40,7 @@ const initSocketServer = () => {
         // Event handler for "disconnect" event
         socket.on("disconnect-socket", () => {
             const userId = onlineUsers.find(
-                (receiver) => receiver.userId === data.receiverId
+                (user) => user.socketId === socket.id
             )
             console.log(userId)
             // Remove the disconnected user from onlineUsers array
@@ -55,6 +55,10 @@ const initSocketServer = () => {
 
         // Event handler for "offline" event
         socket.on("offline", () => {
+            const userId = onlineUsers.find(
+                (user) => user.socketId === socket.id
+            )
+            console.log(userId)
             // Remove the user from active users when they go offline
             onlineUsers = onlineUsers.filter(
                 (user) => user.socketId !== socket.id
