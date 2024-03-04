@@ -13,6 +13,7 @@ const UserSchema = new Schema({
     comment_dislikes: [{ type: Schema.Types.ObjectId, ref: "Comments" }],
     listings: [{ type: Schema.Types.ObjectId, ref: "Listing" }],
     comments: [{ type: Schema.Types.ObjectId, ref: "Comments" }],
+    last_seen: { type: Date, default: Date.now },
     createdAt: { type: Date, default: Date.now },
 })
 
