@@ -2,8 +2,8 @@ const { Server } = require("socket.io")
 const User = require("../models/user")
 // Array to store information about online users
 let onlineUsers = []
-/* let lastSeen
-let lastMessage */
+let lastSeen
+/* let lastMessage  */
 //const sockets = {}
 
 // Function to initialize the Socket.IO server
