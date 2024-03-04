@@ -46,6 +46,7 @@ const initSocketServer = () => {
                 (user) => user.socketId !== socket.id
             )
 
+            console.log(lastSeen)
             console.log(`THE USER WHO JUST DISCONNECTED IS ${userId}`)
             await User.findById(userId)
             // Remove the disconnected user from onlineUsers array
