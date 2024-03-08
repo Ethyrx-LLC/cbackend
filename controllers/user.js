@@ -78,9 +78,14 @@ exports.create_users_post = [
     // Process the creation of a new user
     asyncHandler(async (req, res) => {
         // Check if the user already exists
-        const userExist = await User.findOne({ email: req.body.email }).exec()
+        const userEmailExist = await User.findOne({
+            email: req.body.email,
+        }).exec()
+        const userUsernameExist = await User.findOne({
+            email: req.body.username,
+        }).exec()
 
-        if (userExist === null) {
+        if (userEmailExist === null && userUsernameExist === null) {
             // Validate request body
             const errors = validationResult(req)
             const randomEmoji = emoji.random()
