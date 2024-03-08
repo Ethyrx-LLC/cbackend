@@ -12,6 +12,10 @@ exports.display_listings_all = asyncHandler(async (req, res) => {
     const page = parseInt(req.query.page) || 1
     const limit = parseInt(req.query.limit) || 10
     const startIndex = (page - 1) * limit
+
+    const total = await Listings.countDocuments()
+    const pages = Math.ceil(total / limit)
+    const max = page >= pages
     // Fetch listings with user and comments population
     const listings = await Listings.find()
         .skip(startIndex)
@@ -34,7 +38,7 @@ exports.display_listings_all = asyncHandler(async (req, res) => {
         .exec()
     // Respond with the populated listings
     console.log("BEFORE END OF ROUTE")
-    res.status(200).json({ user: req.user, success: true, listings })
+    res.status(200).json({ user: req.user, success: true, listings, max })
     console.log("END OF ROUTE")
 })
 
