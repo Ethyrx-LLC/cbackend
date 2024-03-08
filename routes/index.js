@@ -8,18 +8,12 @@ const comments_controller = require("../controllers/comments")
 const passport = require("passport")
 const categories_controller = require("../controllers/category")
 const chat_controller = require("../controllers/chat")
-const {
-    verifyListingsCache,
-    verifyUsersCache,
-    verifyAlertsCache,
-    /* verifyChatsCache */
-} = require("../middleware/redis")
+const permissions = require("../middleware/authorization/permissions")
 const multer = require("multer")
 const env = process.env.NODE_ENV || "development"
 const upload = multer({
     dest: env === "development" ? "" : "/hdd/kameelist/images",
 })
-
 // LISTINGS ROUTE
 router.get("/listings/create", listing_controller.create_listing_get)
 router.post(
@@ -29,24 +23,12 @@ router.post(
     listing_controller.create_listing_post
 )
 router.get("/listings/:id", listing_controller.display_listing_detail)
-router.get(
-    "/listings",
-    env === "development"
-        ? listing_controller.display_listings_all
-        : verifyListingsCache("listings"),
-    listing_controller.display_listings_all
-)
+router.get("/listings", listing_controller.display_listings_all)
 router.delete("/listings/:id/delete", listing_controller.delete_listing_post)
 router.put("/listings/:id/upvote", listing_controller.upvote_listing_post)
 
 // USER ALERT ROUTES
-router.get(
-    "/users/alerts",
-    env === "development"
-        ? user_controller.alerts_get
-        : verifyAlertsCache("alerts"),
-    user_controller.alerts_get
-)
+router.get("/users/alerts", user_controller.alerts_get)
 router.put("/users/alerts/:id/read", user_controller.mark_as_read)
 router.put("/users/alerts/read", user_controller.mark_all_as_read)
 
@@ -60,13 +42,7 @@ router.get("/users/chats/:id/messages", chat_controller.all_messages)
 router.post("/users/create", user_controller.create_users_post)
 router.post("/users/login", user_controller.login_post)
 router.post("/users/logout", user_controller.logout_post)
-router.get(
-    "/users",
-    env === "development"
-        ? user_controller.users_get
-        : verifyUsersCache("users"),
-    user_controller.users_get
-)
+router.get("/users", user_controller.users_get)
 router.post("/users/:id/emoji", user_controller.emoji_set)
 router.get("/users/:id", user_controller.user_get)
 
@@ -78,6 +54,7 @@ router.post(
 router.get("/listings/:id/comments", comments_controller.list_comments_get)
 router.delete(
     "/listings/:id/comments/:id/delete",
+    permissions.deleteListingCheck,
     comments_controller.delete_comment_post
 )
 router.put(
