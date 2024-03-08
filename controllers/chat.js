@@ -57,24 +57,25 @@ exports.list_chats = asyncHandler(async (req, res) => {
 exports.new_chat = asyncHandler(async (req, res) => {
     const sender = await User.findById(req.user).exec()
     const receiver = await User.findById(req.params.id).exec()
-    const chat = new Chat({
-        participants: [sender, receiver],
-    })
-    const existingChat = await Chat.findOne({
-        participants: [sender, receiver],
-    })
-    if (existingChat) {
-        return res.status(200).json({ success: true, chat: existingChat })
+    const chatExists = await Chat.findOne({ participants: [sender, receiver] })
+
+    if (chatExists === null) {
+        const chat = new Chat({
+            participants: [sender, receiver],
+        })
+        sender.chats.push(chat)
+        receiver.chats.push(chat)
+        await Promise.all([
+            sender.save(),
+            receiver.save(),
+            chat.save(),
+            env === "development" ? "" : redisClient.DEL("chats"),
+        ])
+
+        res.status(200).json({ success: true, chat })
+    } else {
+        res.status(401).json({ success: false, message: "Chat already exists" })
     }
-    sender.chats.push(chat)
-    receiver.chats.push(chat)
-    await Promise.all([
-        sender.save(),
-        receiver.save(),
-        chat.save(),
-        env === "development" ? "" : redisClient.DEL("chats"),
-    ])
-    res.status(200).json({ success: true, chat })
 })
 
 // SEND A MESSAGE
