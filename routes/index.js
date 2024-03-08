@@ -22,7 +22,11 @@ router.post(
     findUserLocation,
     listing_controller.create_listing_post
 )
-router.get("/listings/:id", listing_controller.display_listing_detail)
+router.get(
+    "/listings/:id",
+    findUserLocation,
+    listing_controller.display_listing_detail
+)
 router.get("/listings", listing_controller.display_listings_all)
 router.delete(
     "/listings/:id/delete",

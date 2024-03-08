@@ -31,6 +31,8 @@ function findUserLocation(req, res, next) {
         timezone: userCountry.timezone,
     }
 
+    console.log(req.userLocation)
+
     next()
 }
 
