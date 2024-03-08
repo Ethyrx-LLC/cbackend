@@ -24,7 +24,11 @@ router.post(
 )
 router.get("/listings/:id", listing_controller.display_listing_detail)
 router.get("/listings", listing_controller.display_listings_all)
-router.delete("/listings/:id/delete", listing_controller.delete_listing_post)
+router.delete(
+    "/listings/:id/delete",
+    permissions.deleteListingCheck,
+    listing_controller.delete_listing_post
+)
 router.put("/listings/:id/upvote", listing_controller.upvote_listing_post)
 
 // USER ALERT ROUTES
@@ -54,7 +58,6 @@ router.post(
 router.get("/listings/:id/comments", comments_controller.list_comments_get)
 router.delete(
     "/listings/:id/comments/:id/delete",
-    permissions.deleteListingCheck,
     comments_controller.delete_comment_post
 )
 router.put(

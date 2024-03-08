@@ -3,8 +3,8 @@ require("dotenv").config()
 
 // Import necessary modules and models
 const asyncHandler = require("express-async-handler")
-const { ROLE } = require("./roles") // Assuming "./roles" is the correct path to your roles module
-const Listing = require("../../models/listing") // Assuming the correct path to your Listing model
+const { ROLE } = require("./roles")
+const Listing = require("../../models/listing")
 
 // Middleware function to check authorization before deleting a listing
 exports.deleteListingCheck = asyncHandler(async (req, res, next) => {
