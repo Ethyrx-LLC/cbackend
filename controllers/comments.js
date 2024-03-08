@@ -5,18 +5,6 @@ const asyncHandler = require("express-async-handler")
 const Alerts = require("../models/alerts")
 const Listings = require("../models/listing")
 const User = require("../models/user")
-const env = process.env.NODE_ENV || "development"
-const redis = require("redis")
-let redisClient
-;(async () => {
-    env === "development"
-        ? (redisClient = redis.createClient())
-        : (redisClient = redis.createClient({ url: process.env.REDIS }))
-
-    redisClient.on("error", (error) => console.error(`Error : ${error}`))
-
-    env === "development" ? "" : await redisClient.connect()
-})()
 // Get comments for a specific listing
 exports.list_comments_get = asyncHandler(async (req, res) => {
     // Fetch comments with user and listing population
@@ -73,7 +61,6 @@ exports.create_comment_post = asyncHandler(async (req, res) => {
 
     await Promise.all([
         comment.save(),
-        env === "development" ? "" : redisClient.DEL("alerts"),
         await alert.save(),
         await listing.save(),
         await user.save(),

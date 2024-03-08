@@ -6,18 +6,7 @@ const { body, validationResult } = require("express-validator")
 const Category = require("../models/category")
 const Comments = require("../models/comments")
 const User = require("../models/user")
-const env = process.env.NODE_ENV || "development"
-const redis = require("redis")
-let redisClient
-;(async () => {
-    env === "development"
-        ? (redisClient = redis.createClient())
-        : (redisClient = redis.createClient({ url: process.env.REDIS }))
 
-    redisClient.on("error", (error) => console.error(`Error : ${error}`))
-
-    env === "development" ? "" : await redisClient.connect()
-})()
 // Returns an array of listings with populated user and comments data
 exports.display_listings_all = asyncHandler(async (req, res) => {
     const page = parseInt(req.query.page) || 1
@@ -39,12 +28,6 @@ exports.display_listings_all = asyncHandler(async (req, res) => {
             },
         })
         .exec()
-    env === "development"
-        ? ""
-        : await redisClient.SET("listings", JSON.stringify(listings), {
-              EX: 1800,
-              NX: true,
-          })
     // Respond with the populated listings
     console.log("BEFORE END OF ROUTE")
     res.status(200).json({ user: req.user, success: true, listings })
@@ -72,12 +55,6 @@ exports.display_listing_detail = asyncHandler(async (req, res) => {
             success: true,
             listing: listing,
         })
-        env === "development"
-            ? ""
-            : await redisClient.SET("listing-detail", JSON.stringify(listing), {
-                  EX: 120,
-                  NX: true,
-              })
     }
 })
 
@@ -141,8 +118,6 @@ exports.create_listing_post = [
                 success: true,
                 listing: listing,
             })
-
-            env === "development" ? "" : await redisClient.DEL("listings")
         }
     }),
 ]
@@ -163,7 +138,6 @@ exports.delete_listing_post = asyncHandler(async (req, res) => {
         }).exec()
         // Respond with success
         res.json({ success: true, error: "Post deleted" })
-        env === "development" ? "" : await redisClient.SET("listings")
     }
 })
 
@@ -188,7 +162,6 @@ exports.upvote_listing_post = asyncHandler(async (req, res) => {
             listing.likes -= 1
             await user.save()
             await listing.save()
-            env === "development" ? "" : await redisClient.DEL("listings")
             // Respond with success and updated like information
             return res.json({
                 success: true,

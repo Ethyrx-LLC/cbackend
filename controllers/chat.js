@@ -2,18 +2,7 @@ const User = require("../models/user")
 const Message = require("../models/messages")
 const Chat = require("../models/chat")
 const asyncHandler = require("express-async-handler")
-const env = process.env.NODE_ENV || "development"
-const redis = require("redis")
-let redisClient
-;(async () => {
-    env === "development"
-        ? (redisClient = redis.createClient())
-        : (redisClient = redis.createClient({ url: process.env.REDIS }))
 
-    redisClient.on("error", (error) => console.error(`Error : ${error}`))
-
-    env === "development" ? "" : await redisClient.connect()
-})()
 // RECEIVE A MESSAGE
 exports.all_messages = asyncHandler(async (req, res) => {
     const chat = await Chat.findById(req.params.id)
@@ -65,12 +54,7 @@ exports.new_chat = asyncHandler(async (req, res) => {
         })
         sender.chats.push(chat)
         receiver.chats.push(chat)
-        await Promise.all([
-            sender.save(),
-            receiver.save(),
-            chat.save(),
-            env === "development" ? "" : redisClient.DEL("chats"),
-        ])
+        await Promise.all([sender.save(), receiver.save(), chat.save()])
 
         res.status(200).json({ success: true, chat })
     } else {
@@ -94,7 +78,6 @@ exports.send_message = asyncHandler(async (req, res) => {
 
     chat.messages.push(message)
     message.save()
-    env === "development" ? "" : await redisClient.DEL("chats")
     chat.save()
     res.json({ success: true, chat })
 })
