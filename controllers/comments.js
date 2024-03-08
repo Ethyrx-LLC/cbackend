@@ -17,9 +17,14 @@ exports.list_comments_get = asyncHandler(async (req, res) => {
     // Filter comments based on the provided listing ID
     let commentsInListing = []
     for (let comment of comments) {
+        console.log("===========LISTING IDS==========")
         console.log(comment.listing.id)
+        console.log("===========PARAMS ID IDS==========")
+        console.log(req.params.id)
         if (comment.listing.id === req.params.id)
-            commentsInListing.push(comment)
+            console.log("===========MATCHING COMMENTS==========")
+        console.log(comment)
+        commentsInListing.push(comment)
     }
 
     // Respond with the filtered comments
