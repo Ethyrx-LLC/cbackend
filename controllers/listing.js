@@ -29,7 +29,7 @@ exports.display_listings_all = asyncHandler(async (req, res) => {
         })
         .populate({
             path: "category",
-            select: "title",
+            select: "_id title",
         })
         .exec()
     // Respond with the populated listings

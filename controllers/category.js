@@ -30,7 +30,7 @@ exports.category_detail_get = asyncHandler(async (req, res) => {
 exports.category_add_post = asyncHandler(async (req, res) => {
     // Create a new category
     const category = new Categories({
-        user: req.variableName._id, // Replace "variableName" with the actual variable name
+        user: req.variableName._id,
         title: req.body.title,
     })
 
