@@ -6,22 +6,17 @@ const Alerts = require("../models/alerts")
 const Listings = require("../models/listing")
 const User = require("../models/user")
 // Get comments for a specific listing
-exports.list_comments_get = asyncHandler(async (req, res, next) => {
+exports.list_comments_get = asyncHandler(async (req, res) => {
     // Fetch comments with user and listing population
     const comments = await Comments.find()
         .populate({ path: "user", select: "username emoji" })
         .populate({ path: "listing", select: "_id" })
         .exec()
-    console.log(comments)
 
     // Filter comments based on the provided listing ID
     let commentsInListing = []
     for (let comment of comments) {
-        console.log(comment.listing)
-        // console.log("===========LISTING IDS==========")
-        // //console.log(comment.listing._id)
-        // console.log("===========PARAMS ID IDS==========")
-        // console.log(req.params.id)
+        // We do toString because _id is an objectId
         if (comment.listing?._id.toString() === req.params.id.toString())
             commentsInListing.push(comment)
     }
