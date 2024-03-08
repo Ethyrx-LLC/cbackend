@@ -6,7 +6,7 @@ const Alerts = require("../models/alerts")
 const Listings = require("../models/listing")
 const User = require("../models/user")
 // Get comments for a specific listing
-exports.list_comments_get = asyncHandler(async (req, res) => {
+exports.list_comments_get = asyncHandler(async (req, res, next) => {
     // Fetch comments with user and listing population
     const comments = await Comments.find()
         .populate({ path: "user", select: "username emoji" })
@@ -17,14 +17,13 @@ exports.list_comments_get = asyncHandler(async (req, res) => {
     // Filter comments based on the provided listing ID
     let commentsInListing = []
     for (let comment of comments) {
-        console.log("===========LISTING IDS==========")
-        console.log(comment.listing.id)
-        console.log("===========PARAMS ID IDS==========")
-        console.log(req.params.id)
-        if (comment.listing.id === req.params.id)
-            console.log("===========MATCHING COMMENTS==========")
-        console.log(comment)
-        commentsInListing.push(comment)
+        console.log(comment.listing)
+        // console.log("===========LISTING IDS==========")
+        // //console.log(comment.listing._id)
+        // console.log("===========PARAMS ID IDS==========")
+        // console.log(req.params.id)
+        if (comment.listing?._id.toString() === req.params.id.toString())
+            commentsInListing.push(comment)
     }
 
     // Respond with the filtered comments
