@@ -58,7 +58,7 @@ exports.new_chat = asyncHandler(async (req, res) => {
 
         res.status(200).json({ success: true, chat })
     } else {
-        res.status(200).json({ success: false, chatId: chatExists })
+        res.status(200).json({ success: true, chatExists })
     }
 })
 
