@@ -27,6 +27,10 @@ exports.display_listings_all = asyncHandler(async (req, res) => {
                 select: "username emoji",
             },
         })
+        .populate({
+            path: "category",
+            select: "title",
+        })
         .exec()
     // Respond with the populated listings
     console.log("BEFORE END OF ROUTE")
