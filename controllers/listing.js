@@ -89,12 +89,14 @@ exports.create_listing_post = [
         // Fetch the category based on the title provided in the request body
         const category = await Category.findById(req.body.category)
 
+        console.log(category)
+
         // Create a new listing object
         const listing = new Listings({
             user: req.user._id,
             title: req.body.title,
             content: req.body.content,
-            category: req.body.category,
+            category: category,
             location: req.userLocation,
             photos: req.files,
             likes: 0,
