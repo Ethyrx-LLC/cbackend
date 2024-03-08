@@ -12,7 +12,7 @@ exports.list_comments_get = asyncHandler(async (req, res) => {
         .populate({ path: "user", select: "username emoji" })
         .populate({ path: "listing", select: "_id" })
         .exec()
-    console.log(req.params.id)
+    console.log(comments)
 
     // Filter comments based on the provided listing ID
     let commentsInListing = []
