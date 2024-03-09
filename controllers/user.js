@@ -43,10 +43,18 @@ exports.user_get = asyncHandler(async (req, res) => {
 // Create a new user
 exports.create_users_post = [
     // Validation for the request body
-    body("username", "Username must be more than 1 letter")
+    body("username")
         .trim()
-        .isLength({ min: 1, max: 32 })
-        .escape(),
+        .isLength({ min: 1 })
+        .withMessage("Username must be more than 1 letter")
+        .isLength({ max: 32 })
+        .withMessage("Username must be less than or equal to 32 characters")
+        .custom((value) => !/\s/.test(value))
+        .withMessage("No spaces are allowed in the username")
+        .matches(/^[A-Za-z0-9_]+$/)
+        .withMessage(
+            "🚫 Username can only contain letters, numbers, and underscores (_)."
+        ),
     body("email", "Please use correct email form").trim().isEmail().escape(),
     body("password", "Password must be more than 6 characters")
         .trim()
