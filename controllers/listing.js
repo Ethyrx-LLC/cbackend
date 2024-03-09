@@ -80,7 +80,7 @@ exports.create_listing_post = [
     // Validation for the request body
     body("title", "Title must be more than 3 characters long")
         .trim()
-        .isLength({ min: 3 }),
+        .isLength({ min: 3, max: 32 }),
     body("content", "Content must be more than 10 letters long")
         .trim()
         .isLength({ min: 10 }),

@@ -45,7 +45,7 @@ exports.create_users_post = [
     // Validation for the request body
     body("username", "Username must be more than 1 letter")
         .trim()
-        .isLength({ min: 1 })
+        .isLength({ min: 1, max: 32 })
         .escape(),
     body("email", "Please use correct email form").trim().isEmail().escape(),
     body("password", "Password must be more than 6 characters")
