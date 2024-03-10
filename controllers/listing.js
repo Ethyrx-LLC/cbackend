@@ -10,16 +10,21 @@ const mongoose = require("mongoose")
 
 // Returns an array of listings with populated user and comments data
 exports.display_listings_all = asyncHandler(async (req, res) => {
-    let categoryQuery = {};
-    const categoryId = String(req.query.category || "");
+    let categoryQuery = {}
+    const categoryId = String(req.query.category || "")
 
     // If categoryId is provided, validate it
     if (categoryId && !mongoose.Types.ObjectId.isValid(categoryId)) {
-        return res.status(400).json({ success: false, message: "Invalid query. Retrying will not help." });
+        return res
+            .status(400)
+            .json({
+                success: false,
+                message: "Invalid query. Retrying will not help.",
+            })
     }
 
     if (categoryId) {
-        categoryQuery = { category: categoryId };
+        categoryQuery = { category: categoryId }
     }
 
     const page = parseInt(req.query.page) || 1
