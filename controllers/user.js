@@ -45,8 +45,8 @@ exports.create_users_post = [
     // Validation for the request body
     body("username")
         .trim()
-        .isLength({ min: 1 })
-        .withMessage("Username must be more than 1 letter")
+        .isLength({ min: 3 })
+        .withMessage("Username must be more than 3 letters")
         .isLength({ max: 32 })
         .withMessage("Username must be less than or equal to 32 characters")
         .custom((value) => !/\s/.test(value))
