@@ -15,12 +15,10 @@ exports.display_listings_all = asyncHandler(async (req, res) => {
 
     // If categoryId is provided, validate it
     if (categoryId && !mongoose.Types.ObjectId.isValid(categoryId)) {
-        return res
-            .status(400)
-            .json({
-                success: false,
-                message: "Invalid query. Retrying will not help.",
-            })
+        return res.status(400).json({
+            success: false,
+            message: "Invalid query. Retrying will not help.",
+        })
     }
 
     if (categoryId) {
