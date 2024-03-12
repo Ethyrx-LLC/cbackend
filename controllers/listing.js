@@ -6,9 +6,27 @@ const { body, validationResult } = require("express-validator")
 const Category = require("../models/category")
 const Comments = require("../models/comments")
 const User = require("../models/user")
+const mongoose = require("mongoose")
 
 // Returns an array of listings with populated user and comments data
 exports.display_listings_all = asyncHandler(async (req, res) => {
+    let categoryQuery = {}
+    const categoryId = String(req.query.category || "")
+
+    // If categoryId is provided, validate it
+    if (categoryId && !mongoose.Types.ObjectId.isValid(categoryId)) {
+        return res
+            .status(400)
+            .json({
+                success: false,
+                message: "Invalid query. Retrying will not help.",
+            })
+    }
+
+    if (categoryId) {
+        categoryQuery = { category: categoryId }
+    }
+
     const page = parseInt(req.query.page) || 1
     const limit = parseInt(req.query.limit) || 10
     const startIndex = (page - 1) * limit
@@ -17,7 +35,7 @@ exports.display_listings_all = asyncHandler(async (req, res) => {
     const pages = Math.ceil(total / limit)
     const max = page >= pages
     // Fetch listings with user and comments population
-    const listings = await Listings.find()
+    const listings = await Listings.find(categoryQuery)
         .skip(startIndex)
         .limit(limit)
         .sort({ createdAt: -1 })
@@ -37,9 +55,7 @@ exports.display_listings_all = asyncHandler(async (req, res) => {
         })
         .exec()
     // Respond with the populated listings
-    console.log("BEFORE END OF ROUTE")
     res.status(200).json({ user: req.user, success: true, listings, max })
-    console.log("END OF ROUTE")
 })
 
 // Returns details of a specific listing based on ID
