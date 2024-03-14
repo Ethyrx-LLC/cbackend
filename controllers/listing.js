@@ -62,6 +62,7 @@ exports.display_listing_detail = asyncHandler(async (req, res) => {
     const listing = await Listings.findById(req.params.id)
         .populate({ path: "user", select: "_id username emoji createdAt" })
         .populate("comments")
+        .populate("category")
         .exec()
 
     // Check if the listing exists
