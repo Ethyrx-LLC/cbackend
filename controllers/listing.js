@@ -60,7 +60,10 @@ exports.display_listings_all = asyncHandler(async (req, res) => {
 exports.display_listing_detail = asyncHandler(async (req, res) => {
     // Fetch listing by ID with user and comments population
     const listing = await Listings.findById(req.params.id)
-        .populate({ path: "user", select: "_id username emoji createdAt last_seen" })
+        .populate({
+            path: "user",
+            select: "_id username emoji createdAt last_seen",
+        })
         .populate("comments")
         .populate("category")
         .exec()
@@ -175,6 +178,11 @@ exports.upvote_listing_post = asyncHandler(async (req, res) => {
     // Check if the listing exists
     if (listing === null) {
         res.status(403).json({ success: false, error: "No post found" })
+    } else if (user === null) {
+        res.status(403).json({
+            success: false,
+            error: "Must be logged in to vote",
+        })
     }
 
     // Check if the user has already upvoted the listing

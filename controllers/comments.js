@@ -88,6 +88,11 @@ exports.upvote_comment_post = asyncHandler(async (req, res) => {
     // Check if the comment exists
     if (comment === null) {
         res.json({ success: false, error: "No post found" })
+    } else if (user === null) {
+        res.status(403).json({
+            success: false,
+            error: "Must be logged in to vote",
+        })
     }
 
     // Check if the user has already upvoted the comment
@@ -132,6 +137,11 @@ exports.downvote_comment_post = asyncHandler(async (req, res) => {
     // Check if the comment exists
     if (comment === null) {
         res.status(403).json({ success: false, error: "No post found" })
+    } else if (user === null) {
+        res.status(403).json({
+            success: false,
+            error: "Must be logged in to vote",
+        })
     }
 
     // Check if the user has already downvoted the comment
