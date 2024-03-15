@@ -8,7 +8,9 @@ module.exports = function (passport) {
     passport.use(
         new LocalStrategy(async (username, password, done) => {
             try {
-                const user = await User.findOne({ username: username })
+                const user = await User.findOne(
+                    { username: username } || { email: username }
+                )
                 if (!user) {
                     return done(null, false, {
                         message: "Incorrect credentials",
