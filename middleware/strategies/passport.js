@@ -8,7 +8,6 @@ module.exports = function (passport) {
     passport.use(
         new LocalStrategy(async (username, password, done) => {
             try {
-                console.log(username)
                 const user = await User.findOne({
                     $or: [{ username: username }, { email: username }],
                 })
