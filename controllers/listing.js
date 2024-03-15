@@ -60,7 +60,7 @@ exports.display_listings_all = asyncHandler(async (req, res) => {
 exports.display_listing_detail = asyncHandler(async (req, res) => {
     // Fetch listing by ID with user and comments population
     const listing = await Listings.findById(req.params.id)
-        .populate({ path: "user", select: "_id username emoji createdAt" })
+        .populate({ path: "user", select: "_id username emoji createdAt last_seen" })
         .populate("comments")
         .populate("category")
         .exec()
