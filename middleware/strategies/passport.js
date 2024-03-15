@@ -9,9 +9,9 @@ module.exports = function (passport) {
         new LocalStrategy(async (username, password, done) => {
             try {
                 console.log(username)
-                const user = await User.findOne(
-                    { username: username } || { email: username }
-                )
+                const user = await User.findOne({
+                    $or: [{ username: username }, { email: username }],
+                })
                 if (!user) {
                     return done(null, false, {
                         message: "Incorrect credentials",
