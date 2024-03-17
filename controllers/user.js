@@ -65,7 +65,6 @@ exports.create_users_post = [
         .custom((value, { req }) => {
             return value === req.body.password
         }),
-
     // Process the creation of a new user
     asyncHandler(async (req, res) => {
         // Check if the user already exists
