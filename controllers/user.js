@@ -99,7 +99,16 @@ exports.create_users_post = [
                 } else {
                     // Save the new user
                     await user.save()
-                    res.status(200).json({ success: true })
+                    req.login(user, (err) => {
+                        console.log(user)
+                        if (err) {
+                            res.status(500).json({
+                                message: "Session save went bad.",
+                            })
+                            return
+                        }
+                        res.status(200).json({ errors: false, success: true })
+                    })
                 }
             })
         } else {
