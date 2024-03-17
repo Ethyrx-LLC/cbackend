@@ -1,4 +1,4 @@
-module.exports = async function turnstileSignUp(req, res, next) {
+module.exports = async function turnstileSignUp(req) {
     // Turnstile injects a token in "cf-turnstile-response".
 
     console.log(req.body)
